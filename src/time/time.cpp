@@ -1,7 +1,6 @@
 #include "sky/time.h"
-#include <iostream>
+#include <ctime>
 
-using namespace std;
 using namespace sky;
 
 class time time::epoch() {
@@ -14,7 +13,7 @@ class time time::epoch() {
 class time time::now()
 {
     time t;
-    clock_gettime(CLOCK_REALTIME, &t.spec);
+    clock_gettime(CLOCK_REALTIME, reinterpret_cast<timespec *>(&t));
     return t;
 }
 

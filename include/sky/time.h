@@ -1,8 +1,6 @@
 #ifndef TIME_H
 #define TIME_H
 
-#include <ctime>
-
 namespace sky {
 
 class time {
@@ -15,13 +13,8 @@ public:
     static time now();
     static time epoch();
 private:
-    union {
-        struct {
-            long s;
-            long ns;
-        };
-        timespec spec;
-    };
+    long s;
+    long ns;
 };
 
 } // namespace sky

@@ -1,0 +1,9 @@
+!CXX = |> g++ $(CXXFLAGS) -c %f -o %o |>
+!AR = |> ar cr %o %f |>
+
+ifeq (@(VARIANT),release)
+    CXXFLAGS += -O2
+endif
+
+CXXFLAGS += -Wall
+CXXFLAGS += -I$(TUP_CWD)/include/

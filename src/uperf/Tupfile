@@ -1,3 +1,2 @@
 include_rules
 : foreach *.cpp |> !CXX |> %B.o
-: *.o |> !AR |> libuperf.a

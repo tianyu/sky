@@ -1,3 +1,6 @@
 .tup
 build-*
 *.pro*
+*.a
+*.o
+*.swp

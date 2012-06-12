@@ -4,7 +4,6 @@
 #include "sky/time.h"
 
 namespace sky {
-namespace perf {
 
 class timer {
 public:
@@ -15,7 +14,6 @@ private:
     time start;
 };
 
-} // namespace perf
 } // namespace sky
 
 #endif // TIMER_H

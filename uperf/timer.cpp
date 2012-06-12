@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace sky;
-using namespace perf;
 using namespace std;
 
 timer::timer(const char* name) :

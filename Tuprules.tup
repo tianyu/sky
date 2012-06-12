@@ -1,12 +1,10 @@
 !CXX = |> g++ $(CFLAGS) -c %f -o %o |>
 !AR = |> ar -cr %o %f |>
 
-ifeq (@(VARIANT),release)
-CFLAGS += -O2
-endif
-
 ifeq (@(VARIANT),debug)
 CFLAGS += -g
+else
+CFLAGS += -O2
 endif
 
 CFLAGS += -Wall

@@ -13,6 +13,7 @@ class time time::epoch() {
 class time time::now()
 {
     time t;
+    // TODO Check for error
     clock_gettime(CLOCK_REALTIME, reinterpret_cast<timespec *>(&t));
     return t;
 }

@@ -1,3 +1,5 @@
+SRC=$(TUP_CWD)/src
+
 !CXX = |> g++ $(CFLAGS) -c %f -o %o |>
 !AR = |> ar -cr %o %f |>
 

@@ -16,8 +16,4 @@ class time timer::duration() const
 
 timer::~timer()
 {
-    long millis = duration().millis();
-    cout << name << ": "
-         << millis
-         << "ms" << endl;
 }

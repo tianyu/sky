@@ -8,6 +8,7 @@ namespace sky {
 class timer {
 public:
     timer(const char* name);
+    time duration() const;
     ~timer();
 private:
     const char* name;

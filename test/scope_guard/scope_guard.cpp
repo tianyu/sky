@@ -83,6 +83,7 @@ TEST(ScopeGuard, PerformOnce)
     int n = 0;
     {
         auto g = scope_guard(std::bind(increment, std::ref(n)));
+        ASSERT_EQ(0, n);
         (void)g;
     }
     EXPECT_EQ(1, n);
@@ -94,6 +95,7 @@ TEST(ScopeGuard, PerformOnce_Lvalue)
     auto todo = std::bind(increment, std::ref(n));
     {
         auto g = scope_guard(todo);
+        ASSERT_EQ(0, n);
         (void)g;
     }
     EXPECT_EQ(1, n);
@@ -105,6 +107,7 @@ TEST(ScopeGuard, PerformTwice)
     {
         auto g1 = scope_guard(std::bind(increment, std::ref(n)));
         auto g2 = scope_guard(std::bind(increment, std::ref(n)));
+        ASSERT_EQ(0, n);
         (void)g1;
         (void)g2;
     }
@@ -118,6 +121,7 @@ TEST(ScopeGuard, PerformTwice_Lvalue)
     {
         auto g1 = scope_guard(todo);
         auto g2 = scope_guard(todo);
+        ASSERT_EQ(0, n);
         (void)g1;
         (void)g2;
     }
@@ -130,6 +134,7 @@ TEST(ScopeGuard, DismissOnce)
     {
         auto g1 = scope_guard(std::bind(increment, std::ref(n)));
         auto g2 = scope_guard(std::bind(increment, std::ref(n)));
+        ASSERT_EQ(0, n);
         (void)g1;
         g2.dismiss();
     }
@@ -143,6 +148,7 @@ TEST(ScopeGuard, DismissOnce_Lvalue)
     {
         auto g1 = scope_guard(todo);
         auto g2 = scope_guard(todo);
+        ASSERT_EQ(0, n);
         (void)g1;
         g2.dismiss();
     }
@@ -155,6 +161,7 @@ TEST(ScopeGuard, DismissTwice)
     {
         auto g1 = scope_guard(std::bind(increment, std::ref(n)));
         auto g2 = scope_guard(std::bind(increment, std::ref(n)));
+        ASSERT_EQ(0, n);
         g1.dismiss();
         g2.dismiss();
     }
@@ -168,6 +175,7 @@ TEST(ScopeGuard, DismissTwice_Lvalue)
     {
         auto g1 = scope_guard(todo);
         auto g2 = scope_guard(todo);
+        ASSERT_EQ(0, n);
         g1.dismiss();
         g2.dismiss();
     }

@@ -1,0 +1,10 @@
+include_rules
+
+OBJECTS += $(BIN)/*.a
+
+TEST_OBJECTS += $(LIB)/libgtest_main.a
+TEST_OBJECTS += $(TEST)/scope_guard/*.o
+
+# Make unit tests
+LIBS = -lpthread
+: $(TEST_OBJECTS) $(OBJECTS) |> !LINK |> tests

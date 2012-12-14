@@ -1,14 +1,25 @@
 SRC=$(TUP_CWD)/src
+TEST=$(TUP_CWD)/test
+LIB=$(TUP_CWD)/lib
+BIN=$(TUP_CWD)/bin
 
-!CXX = |> g++ $(CFLAGS) -c %f -o %o |>
+!CXX = |> $(CXX) $(CFLAGS) -c %f -o %o |>
+!LINK = |> ld $(LFLAGS) -o %o %f $(LIBS) |>
 !AR = |> ar -cr %o %f |>
-
-ifeq (@(VARIANT),debug)
-CFLAGS += -g
-else
-CFLAGS += -O2
-endif
 
 CFLAGS += -Wall
 CFLAGS += -std=c++11
 CFLAGS += -I$(TUP_CWD)/include/
+
+ifeq (@(VARIANT),debug)
+
+CXX = clang++
+# LFLAGS += --verbose
+CFLAGS += -g
+
+else
+
+CXX = g++
+CFLAGS += -O2
+
+endif

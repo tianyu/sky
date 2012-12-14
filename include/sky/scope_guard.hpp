@@ -6,7 +6,7 @@
 namespace sky {
 
 template<typename Routine>
-class _scope_guard;
+class __scope_guard;
 
 /**
  * @brief Creates a scope guard on the stack.
@@ -37,10 +37,9 @@ class __scope_guard
     explicit __scope_guard(Routine &);
     explicit __scope_guard(Routine &&);
 
-    template<>
     friend
     __scope_guard<Routine>
-    scope_guard(Routine &&);
+    scope_guard<Routine>(Routine &&);
 
 public:
 
@@ -73,14 +72,12 @@ scope_guard(Routine &&todo)
 }
 
 template<typename Routine>
-explicit
 __scope_guard<Routine>::
 __scope_guard(Routine &todo) :
 todo(todo)
 {}
 
 template<typename Routine>
-explicit
 __scope_guard<Routine>::
 __scope_guard(Routine &&todo) :
 todo(std::move(todo))
@@ -96,7 +93,7 @@ perform(g.perform)
 }
 
 template<typename Routine>
-__scope_guard &
+__scope_guard<Routine> &
 __scope_guard<Routine>::
 operator =(__scope_guard &&g) noexcept
 {

@@ -34,8 +34,8 @@ class __scope_guard
 {
     // Copy and move constructors. Private use only.
 
-    explicit __scope_guard(Routine &);
-    explicit __scope_guard(Routine &&);
+    template<typename R>
+    explicit __scope_guard(R &&);
 
     friend
     __scope_guard<Routine>
@@ -72,21 +72,16 @@ scope_guard(Routine &&todo)
 }
 
 template<typename Routine>
+template<typename R>
 __scope_guard<Routine>::
-__scope_guard(Routine &todo) :
-todo(todo)
-{}
-
-template<typename Routine>
-__scope_guard<Routine>::
-__scope_guard(Routine &&todo) :
-todo(std::move(todo))
+__scope_guard(R &&todo) :
+todo(std::forward<R>(todo))
 {}
 
 template<typename Routine>
 __scope_guard<Routine>::
 __scope_guard(__scope_guard &&g) :
-todo(std::move(g.todo)),
+todo(g.todo),
 perform(g.perform)
 {
     g.dismiss();

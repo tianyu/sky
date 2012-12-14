@@ -4,7 +4,7 @@ LIB=$(TUP_CWD)/lib
 BIN=$(TUP_CWD)/bin
 
 !CXX = |> $(CXX) $(CFLAGS) -c %f -o %o |>
-!LINK = |> ld $(LFLAGS) -o %o %f $(LIBS) |>
+!LINK = |> $(CXX) $(LFLAGS) -o %o %f $(LIBS) |>
 !AR = |> ar -cr %o %f |>
 
 CFLAGS += -Wall
@@ -14,7 +14,6 @@ CFLAGS += -I$(TUP_CWD)/include/
 ifeq (@(VARIANT),debug)
 
 CXX = clang++
-# LFLAGS += --verbose
 CFLAGS += -g
 
 else

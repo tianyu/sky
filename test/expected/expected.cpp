@@ -97,38 +97,27 @@ TEST(Expected, MoveInvalid)
 
 namespace {
 
+template<typename T, typename E, typename Cast = expected<T>&>
+void try_expect_error(expected<T> value, E error)
+try {
+    (void)(T)(Cast)value;
+    FAIL()
+            << "Expected an exception of type \""
+            << typeid(E).name() << "\".";
+} catch (E &e) {
+    EXPECT_EQ(error, e);
+} catch (...) {
+    FAIL()
+            << "Unexpected exception! "
+               "Expected exception of type \""
+            << typeid(E).name() << "\".";
+}
+
 template<typename T, typename E>
 void expect_error(expected<T> value, E error)
 {
-    try {
-        (void)(T)value;
-        FAIL()
-                << "Expected an exception of type "
-                << typeid(E).name();
-    } catch (E &e) {
-        EXPECT_EQ(error, e);
-        return;
-    } catch (...) {
-        FAIL()
-                << "Unexpected exception!"
-                   "Expected exception of type "
-                << typeid(E).name();
-    }
-
-    try {
-        (void)(T)(const expected<T>&)value;
-        FAIL()
-                << "Expected an exception of type "
-                << typeid(E).name();
-    } catch (E &e) {
-        EXPECT_EQ(error, e);
-        return;
-    } catch (...) {
-        FAIL()
-                << "Unexpected exception!"
-                   "Expected exception of type "
-                << typeid(E).name();
-    }
+    try_expect_error<T,E>(value, error);
+    try_expect_error<T,E,expected<T> const&>(value, error);
 }
 
 }

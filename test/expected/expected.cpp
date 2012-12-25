@@ -49,7 +49,9 @@ TEST(Expected, ConstructWithCurrentException)
         throw 5;
 
     } catch (...) {
-        expected<int> x = error(); // Fix after uniform initialization works
+        // We shouldn't depend on the copy/move constructor here
+        // Fix after uniform initialization works.
+        expected<int> x = error();
         EXPECT_FALSE(x.valid());
         expect_error(x, 5);
     }

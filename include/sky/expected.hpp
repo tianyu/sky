@@ -4,6 +4,8 @@
 #include <exception>
 #include <utility>
 
+namespace sky {
+
 class error
 {
     template<typename T>
@@ -89,5 +91,7 @@ private:
     };
     bool _valid;
 };
+
+} // namespace sky
 
 #endif // EXPECTED_HPP

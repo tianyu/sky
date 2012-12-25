@@ -1,6 +1,9 @@
 #include "sky/expected.hpp"
 #include "gtest/gtest.h"
 
+using sky::error;
+using sky::expected;
+
 TEST(Expected, ConstructWithType)
 {
     expected<int> x(0);

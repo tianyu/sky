@@ -84,6 +84,16 @@ public:
         std::rethrow_exception(err);
     }
 
+    ~expected()
+    {
+        if (_valid) {
+            value.~ValueType();
+        } else {
+            using std::exception_ptr;
+            err.~exception_ptr();
+        }
+    }
+
 private:
     union {
         ValueType value;

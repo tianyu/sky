@@ -72,6 +72,12 @@ public:
         return _valid;
     }
 
+    void rethrow() const
+    {
+        if (_valid) return;
+        std::rethrow_exception(err);
+    }
+
     operator ValueType &()
     {
         if (_valid) return value;

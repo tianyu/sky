@@ -1,2 +1,4 @@
 include_rules
+# Use g++ exclusively, since only g++ picks up the correct stdlib
+CXX = g++
 : foreach *.cpp |> !CXX |> %B.o

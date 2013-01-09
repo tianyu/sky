@@ -1,18 +1,21 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "sky/time.h"
+#include <chrono>
 
 namespace sky {
 
-class timer {
+class timer
+{
+    typedef std::chrono::steady_clock clock;
+    typedef clock::time_point time_point;
+    typedef clock::duration duration;
+
 public:
-    timer(const char* name);
-    time duration() const;
-    ~timer();
+    timer();
+    duration split() const;
 private:
-    const char* name;
-    time start;
+    time_point start;
 };
 
 } // namespace sky

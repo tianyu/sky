@@ -5,6 +5,7 @@ OBJECTS += $(BIN)/*.a
 TEST_OBJECTS += $(LIB)/libgtest_main.a
 TEST_OBJECTS += $(TEST)/expected/*.o
 TEST_OBJECTS += $(TEST)/scope_guard/*.o
+TEST_OBJECTS += $(TEST)/string_template/*.o
 
 # Make unit tests
 LIBS = -lpthread

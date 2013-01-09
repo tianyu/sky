@@ -1,19 +1,12 @@
 #include "sky/timer.h"
-#include <iostream>
 
 using namespace sky;
-using namespace std;
 
-timer::timer(const char* name) :
-    name(name),
-    start(time::now())
+timer::timer() :
+    start(clock::now())
 {}
 
-class time timer::duration() const
+timer::duration timer::split() const
 {
-    return time::now() -= start;
-}
-
-timer::~timer()
-{
+    return std::chrono::duration_cast<duration>(clock::now() - start);
 }

@@ -32,8 +32,7 @@ scope_guard(Routine &&todo);
 template<typename Routine>
 class __scope_guard
 {
-    // Copy and move constructors. Private use only.
-
+    // Move constructor. Private use only.
     template<typename R>
     explicit __scope_guard(R &&);
 

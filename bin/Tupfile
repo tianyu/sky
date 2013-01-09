@@ -1,7 +1,5 @@
 include_rules
 
-TIME_OBJ = $(SRC)/time/*.o
-UPERF_OBJ = $(SRC)/uperf/*.o $(TIME_OBJ)
+UPERF_OBJ = $(SRC)/uperf/*.o
 
-: $(TIME_OBJ) |> !AR |> libtime.a
 : $(UPERF_OBJ) |> !AR |> libuperf.a

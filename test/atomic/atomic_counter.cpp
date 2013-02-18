@@ -38,9 +38,26 @@ TYPED_TEST(AtomicCounter, IsLockFree)
     EXPECT_EQ(variable.is_lock_free(), counter.is_lock_free());
 }
 
+TYPED_TEST(AtomicCounter, IsLockFree_volatile)
+{
+    volatile std::atomic<TypeParam> variable;
+    volatile atomic_counter<TypeParam> counter;
+
+    EXPECT_EQ(variable.is_lock_free(), counter.is_lock_free());
+}
+
 TYPED_TEST(AtomicCounter, PreIncrement)
 {
     atomic_counter<TypeParam> t(0);
+
+    ++t;
+
+    EXPECT_EQ(1, (TypeParam)t);
+}
+
+TYPED_TEST(AtomicCounter, PreIncrement_volatile)
+{
+    volatile atomic_counter<TypeParam> t(0);
 
     ++t;
 
@@ -56,9 +73,27 @@ TYPED_TEST(AtomicCounter, PostIncrement)
     EXPECT_EQ(1, (TypeParam)t);
 }
 
+TYPED_TEST(AtomicCounter, PostIncrement_volatile)
+{
+    volatile atomic_counter<TypeParam> t(0);
+
+    t++;
+
+    EXPECT_EQ(1, (TypeParam)t);
+}
+
 TYPED_TEST(AtomicCounter, IncrementValue)
 {
     atomic_counter<TypeParam> t(0);
+
+    t += 23;
+
+    EXPECT_EQ(23, (TypeParam)t);
+}
+
+TYPED_TEST(AtomicCounter, IncrementValue_volatile)
+{
+    volatile atomic_counter<TypeParam> t(0);
 
     t += 23;
 
@@ -74,6 +109,15 @@ TYPED_TEST(AtomicCounter, PreDecrement)
     EXPECT_EQ(-1, (TypeParam)t);
 }
 
+TYPED_TEST(AtomicCounter, PreDecrement_volatile)
+{
+    volatile atomic_counter<TypeParam> t(0);
+
+    --t;
+
+    EXPECT_EQ(-1, (TypeParam)t);
+}
+
 TYPED_TEST(AtomicCounter, PostDecrement)
 {
     atomic_counter<TypeParam> t(0);
@@ -83,9 +127,27 @@ TYPED_TEST(AtomicCounter, PostDecrement)
     EXPECT_EQ(-1, (TypeParam)t);
 }
 
+TYPED_TEST(AtomicCounter, PostDecrement_volatile)
+{
+    volatile atomic_counter<TypeParam> t(0);
+
+    t--;
+
+    EXPECT_EQ(-1, (TypeParam)t);
+}
+
 TYPED_TEST(AtomicCounter, DecrementValue)
 {
     atomic_counter<TypeParam> t(0);
+
+    t -= 23;
+
+    EXPECT_EQ(-23, (TypeParam)t);
+}
+
+TYPED_TEST(AtomicCounter, DecrementValue_volatile)
+{
+    volatile atomic_counter<TypeParam> t(0);
 
     t -= 23;
 

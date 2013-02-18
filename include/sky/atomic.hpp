@@ -141,9 +141,25 @@ is_lock_free() const noexcept
 }
 
 template<typename T>
+bool
+atomic_counter<T>::
+is_lock_free() const volatile noexcept
+{
+    return value.is_lock_free();
+}
+
+template<typename T>
 void
 atomic_counter<T>::
 operator ++() const noexcept
+{
+    operator +=(T(1));
+}
+
+template<typename T>
+void
+atomic_counter<T>::
+operator ++() const volatile noexcept
 {
     operator +=(T(1));
 }
@@ -159,7 +175,23 @@ operator ++(int) const noexcept
 template<typename T>
 void
 atomic_counter<T>::
+operator ++(int) const volatile noexcept
+{
+    operator +=(T(1));
+}
+
+template<typename T>
+void
+atomic_counter<T>::
 operator +=(T val) const noexcept
+{
+    value.fetch_add(val, std::memory_order_relaxed);
+}
+
+template<typename T>
+void
+atomic_counter<T>::
+operator +=(T val) const volatile noexcept
 {
     value.fetch_add(val, std::memory_order_relaxed);
 }
@@ -175,7 +207,23 @@ operator --() const noexcept
 template<typename T>
 void
 atomic_counter<T>::
+operator --() const volatile noexcept
+{
+    operator -=(T(1));
+}
+
+template<typename T>
+void
+atomic_counter<T>::
 operator --(int) const noexcept
+{
+    operator -=(T(1));
+}
+
+template<typename T>
+void
+atomic_counter<T>::
+operator --(int) const volatile noexcept
 {
     operator -=(T(1));
 }
@@ -189,6 +237,14 @@ operator -=(T val) const noexcept
 }
 
 template<typename T>
+void
+atomic_counter<T>::
+operator -=(T val) const volatile noexcept
+{
+    value.fetch_sub(val, std::memory_order_relaxed);
+}
+
+template<typename T>
 T
 atomic_counter<T>::
 load() noexcept
@@ -197,8 +253,23 @@ load() noexcept
 }
 
 template<typename T>
+T
+atomic_counter<T>::
+load() volatile noexcept
+{
+    return value.load(std::memory_order_relaxed);
+}
+
+template<typename T>
 atomic_counter<T>::
 operator T() noexcept
+{
+    return load();
+}
+
+template<typename T>
+atomic_counter<T>::
+operator T() volatile noexcept
 {
     return load();
 }

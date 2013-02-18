@@ -13,12 +13,10 @@ TYPED_TEST_CASE(AtomicCounter, Integrals);
 
 TYPED_TEST(AtomicCounter, ConstructDefault)
 {
-    atomic_counter<TypeParam> t;
-
-    EXPECT_EQ(0, (TypeParam)t);
+    atomic_counter<TypeParam>();
 }
 
-TYPED_TEST(AtomicCounter, ConstructEmplace)
+TYPED_TEST(AtomicCounter, ConstructInit)
 {
     atomic_counter<TypeParam> t(23);
 

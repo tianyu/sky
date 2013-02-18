@@ -23,6 +23,21 @@ TYPED_TEST(AtomicCounter, ConstructInit)
     EXPECT_EQ(23, (TypeParam)t);
 }
 
+TYPED_TEST(AtomicCounter, ConstructInit_constexpr)
+{
+    static const atomic_counter<TypeParam> t(42);
+
+    EXPECT_EQ(42, (TypeParam)const_cast<atomic_counter<TypeParam>&>(t));
+}
+
+TYPED_TEST(AtomicCounter, IsLockFree)
+{
+    std::atomic<TypeParam> variable;
+    atomic_counter<TypeParam> counter;
+
+    EXPECT_EQ(variable.is_lock_free(), counter.is_lock_free());
+}
+
 TYPED_TEST(AtomicCounter, PreIncrement)
 {
     atomic_counter<TypeParam> t(0);

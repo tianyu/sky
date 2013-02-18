@@ -133,6 +133,14 @@ atomic_counter(T val) noexcept :
 {}
 
 template<typename T>
+bool
+atomic_counter<T>::
+is_lock_free() const noexcept
+{
+    return value.is_lock_free();
+}
+
+template<typename T>
 void
 atomic_counter<T>::
 operator ++() const noexcept

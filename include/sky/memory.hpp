@@ -15,7 +15,8 @@ namespace sky {
  */
 template<typename T, typename... Args>
 std::unique_ptr<T>
-make_unique(Args&&... args);
+make_unique(Args&&... args)
+noexcept(std::is_nothrow_constructible<T, Args...>::value);
 
 namespace _ {
 
@@ -46,6 +47,7 @@ __make_unique(std::true_type, Args&&... args)
 template<typename T, typename... Args>
 std::unique_ptr<T>
 make_unique(Args&&... args)
+noexcept(std::is_nothrow_constructible<T, Args...>::value)
 {
     return _::__make_unique<T>(
                 std::is_array<T>(),

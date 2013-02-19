@@ -28,10 +28,3 @@ TEST(MakeUnique, ArrayType)
     EXPECT_EQ(20, p[1]);
     EXPECT_EQ(30, p[2]);
 }
-
-TEST(MakeUnique, NoExceptSpecifier)
-{
-    using std::string;
-    EXPECT_TRUE (noexcept(make_unique<int>(0)));
-    EXPECT_FALSE(noexcept(make_unique<string>("boom")));
-}

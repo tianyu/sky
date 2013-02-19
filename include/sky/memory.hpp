@@ -15,7 +15,7 @@ namespace sky {
  */
 template<typename T, typename... Args>
 std::unique_ptr<T>
-make_unique(Args&&... args)
+make_unique(Args&&... args);
 
 namespace _ {
 

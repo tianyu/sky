@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <type_traits>
 
 #include <sky/atomic.hpp>
 
@@ -10,6 +11,19 @@ class AtomicCounter : public testing::Test {};
 typedef testing::Types<char, int, unsigned int, long> Integrals;
 
 TYPED_TEST_CASE(AtomicCounter, Integrals);
+
+TYPED_TEST(AtomicCounter, TypeTraits)
+{
+    using namespace std;
+    typedef atomic_counter<TypeParam> counter_t;
+
+    EXPECT_TRUE (is_nothrow_default_constructible<counter_t>::value);
+    EXPECT_FALSE(is_copy_constructible<counter_t>::value);
+    EXPECT_FALSE(is_move_constructible<counter_t>::value);
+    EXPECT_FALSE(is_copy_assignable<counter_t>::value);
+    EXPECT_FALSE(is_move_assignable<counter_t>::value);
+    EXPECT_TRUE (is_destructible<counter_t>::value);
+}
 
 TYPED_TEST(AtomicCounter, ConstructDefault)
 {

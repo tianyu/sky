@@ -1,5 +1,7 @@
 include_rules
 
 UPERF_OBJ = $(SRC)/uperf/*.o
+ATOMIC_OBJ = $(SRC)/atomic/*.o
 
 : $(UPERF_OBJ) |> !AR |> libuperf.a
+: $(ATOMIC_OBJ) |> !AR |> libatomic.a

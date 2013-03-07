@@ -12,6 +12,12 @@ typedef testing::Types<char, int, unsigned int, long> Integrals;
 
 TYPED_TEST_CASE(AtomicCounter, Integrals);
 
+template<typename T>
+static void expect_eq(T expected, T actual)
+{
+    EXPECT_EQ(expected, actual);
+}
+
 TYPED_TEST(AtomicCounter, TypeTraits)
 {
     using namespace std;
@@ -34,14 +40,14 @@ TYPED_TEST(AtomicCounter, ConstructInit)
 {
     atomic_counter<TypeParam> t(23);
 
-    EXPECT_EQ(23, (TypeParam)t);
+    expect_eq<TypeParam>(23, t);
 }
 
 TYPED_TEST(AtomicCounter, ConstructInit_constexpr)
 {
     static const atomic_counter<TypeParam> t(42);
 
-    EXPECT_EQ(42, (TypeParam)const_cast<atomic_counter<TypeParam>&>(t));
+    expect_eq<TypeParam>(42, const_cast<atomic_counter<TypeParam>&>(t));
 }
 
 TYPED_TEST(AtomicCounter, IsLockFree)
@@ -49,7 +55,7 @@ TYPED_TEST(AtomicCounter, IsLockFree)
     std::atomic<TypeParam> variable;
     atomic_counter<TypeParam> counter;
 
-    EXPECT_EQ(variable.is_lock_free(), counter.is_lock_free());
+    expect_eq<TypeParam>(variable.is_lock_free(), counter.is_lock_free());
 }
 
 TYPED_TEST(AtomicCounter, IsLockFree_volatile)
@@ -57,7 +63,7 @@ TYPED_TEST(AtomicCounter, IsLockFree_volatile)
     volatile std::atomic<TypeParam> variable;
     volatile atomic_counter<TypeParam> counter;
 
-    EXPECT_EQ(variable.is_lock_free(), counter.is_lock_free());
+    expect_eq<TypeParam>(variable.is_lock_free(), counter.is_lock_free());
 }
 
 TYPED_TEST(AtomicCounter, PreIncrement)
@@ -66,7 +72,7 @@ TYPED_TEST(AtomicCounter, PreIncrement)
 
     ++t;
 
-    EXPECT_EQ(1, (TypeParam)t);
+    expect_eq<TypeParam>(1, t);
 }
 
 TYPED_TEST(AtomicCounter, PreIncrement_volatile)
@@ -75,7 +81,7 @@ TYPED_TEST(AtomicCounter, PreIncrement_volatile)
 
     ++t;
 
-    EXPECT_EQ(1, (TypeParam)t);
+    expect_eq<TypeParam>(1, t);
 }
 
 TYPED_TEST(AtomicCounter, PostIncrement)
@@ -84,7 +90,7 @@ TYPED_TEST(AtomicCounter, PostIncrement)
 
     t++;
 
-    EXPECT_EQ(1, (TypeParam)t);
+    expect_eq<TypeParam>(1, t);
 }
 
 TYPED_TEST(AtomicCounter, PostIncrement_volatile)
@@ -93,7 +99,7 @@ TYPED_TEST(AtomicCounter, PostIncrement_volatile)
 
     t++;
 
-    EXPECT_EQ(1, (TypeParam)t);
+    expect_eq<TypeParam>(1, t);
 }
 
 TYPED_TEST(AtomicCounter, IncrementValue)
@@ -102,7 +108,7 @@ TYPED_TEST(AtomicCounter, IncrementValue)
 
     t += 23;
 
-    EXPECT_EQ(23, (TypeParam)t);
+    expect_eq<TypeParam>(23, t);
 }
 
 TYPED_TEST(AtomicCounter, IncrementValue_volatile)
@@ -111,7 +117,7 @@ TYPED_TEST(AtomicCounter, IncrementValue_volatile)
 
     t += 23;
 
-    EXPECT_EQ(23, (TypeParam)t);
+    expect_eq<TypeParam>(23, t);
 }
 
 TYPED_TEST(AtomicCounter, PreDecrement)
@@ -120,7 +126,7 @@ TYPED_TEST(AtomicCounter, PreDecrement)
 
     --t;
 
-    EXPECT_EQ(-1, (TypeParam)t);
+    expect_eq<TypeParam>(-1, t);
 }
 
 TYPED_TEST(AtomicCounter, PreDecrement_volatile)
@@ -129,7 +135,7 @@ TYPED_TEST(AtomicCounter, PreDecrement_volatile)
 
     --t;
 
-    EXPECT_EQ(-1, (TypeParam)t);
+    expect_eq<TypeParam>(-1, t);
 }
 
 TYPED_TEST(AtomicCounter, PostDecrement)
@@ -138,7 +144,7 @@ TYPED_TEST(AtomicCounter, PostDecrement)
 
     t--;
 
-    EXPECT_EQ(-1, (TypeParam)t);
+    expect_eq<TypeParam>(-1, t);
 }
 
 TYPED_TEST(AtomicCounter, PostDecrement_volatile)
@@ -147,7 +153,7 @@ TYPED_TEST(AtomicCounter, PostDecrement_volatile)
 
     t--;
 
-    EXPECT_EQ(-1, (TypeParam)t);
+    expect_eq<TypeParam>(-1, t);
 }
 
 TYPED_TEST(AtomicCounter, DecrementValue)
@@ -156,7 +162,7 @@ TYPED_TEST(AtomicCounter, DecrementValue)
 
     t -= 23;
 
-    EXPECT_EQ(-23, (TypeParam)t);
+    expect_eq<TypeParam>(-23, t);
 }
 
 TYPED_TEST(AtomicCounter, DecrementValue_volatile)
@@ -165,5 +171,5 @@ TYPED_TEST(AtomicCounter, DecrementValue_volatile)
 
     t -= 23;
 
-    EXPECT_EQ(-23, (TypeParam)t);
+    expect_eq<TypeParam>(-23, t);
 }

@@ -2,6 +2,7 @@
 #define UTILITY_HPP
 
 #include <type_traits>
+#include <utility>
 
 namespace sky {
 
@@ -85,6 +86,25 @@ private:
     };
     const bool movable;
 };
+
+template<typename T>
+fwd<T>::fwd(T const&ref) :
+    to_copy(&ref),
+    movable(false)
+{}
+
+template<typename T>
+fwd<T>::fwd(T &&ref) :
+    to_move(&ref),
+    movable(true)
+{}
+
+template<typename T>
+fwd<T>::operator T()
+{
+    if (movable) return std::move(*to_move);
+    return *to_copy;
+}
 
 } // namespace sky
 

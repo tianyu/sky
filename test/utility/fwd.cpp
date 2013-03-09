@@ -54,33 +54,9 @@ TEST(Fwd, Constructible)
         std::is_constructible<sky::fwd<T>, T const&&>::value;
     EXPECT_TRUE(const_rvalue_constructible);
 
-    bool volatile_value_constructible =
-        std::is_constructible<sky::fwd<volatile T>, volatile T>::value;
-    EXPECT_TRUE(volatile_value_constructible);
-
-    bool volatile_lvalue_constructible =
-        std::is_constructible<sky::fwd<volatile T>, volatile T &>::value;
-    EXPECT_TRUE(volatile_lvalue_constructible);
-
-    bool volatile_const_lvalue_constructible =
-        std::is_constructible<sky::fwd<volatile T>, volatile T const&>::value;
-    EXPECT_TRUE(volatile_const_lvalue_constructible);
-
-    bool volatile_rvalue_constructible =
-        std::is_constructible<sky::fwd<volatile T>, volatile T &&>::value;
-    EXPECT_TRUE(volatile_rvalue_constructible);
-
-    bool volatile_const_rvalue_constructible =
-        std::is_constructible<sky::fwd<volatile T>, volatile T const&&>::value;
-    EXPECT_FALSE(volatile_const_rvalue_constructible);
-
     bool convertible_to_T =
         std::is_convertible<sky::fwd<T>, T>::value;
     EXPECT_TRUE(convertible_to_T);
-
-    bool convertible_to_volatile_T =
-        std::is_convertible<sky::fwd<volatile T>, volatile T>::value;
-    EXPECT_TRUE(convertible_to_volatile_T);
 }
 
 // Begin definitions for unit tests //

@@ -46,17 +46,17 @@ public:
     fwd(T &&);
 
     /**
-     * @brief Copy constructor
-     */
-    fwd(fwd const&);
-
-    /**
      * @brief Move constructor
      */
     fwd(fwd &&);
 
+    /**
+     * @brief Copy constructor is disabled.
+     */
+    fwd(fwd const&) = delete;
+
     /** @{
-     * @brief Copy and move assignment is disabled.
+     * @brief Assignment is disabled.
      */
     fwd &operator =(fwd const&) = delete;
     fwd &operator =(fwd &&) = delete;

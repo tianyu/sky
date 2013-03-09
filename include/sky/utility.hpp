@@ -1,6 +1,8 @@
 #ifndef UTILITY_HPP
 #define UTILITY_HPP
 
+#include <type_traits>
+
 namespace sky {
 
 /**
@@ -33,6 +35,12 @@ namespace sky {
 template <typename T>
 class fwd
 {
+    static_assert(!std::is_reference<T>::value,
+        "T cannot be a reference type.");
+
+    static_assert(!std::is_const<T>::value,
+        "T cannot be a const type.");
+
 public:
 
     /**

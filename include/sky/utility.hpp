@@ -3,6 +3,81 @@
 
 namespace sky {
 
+/**
+ * @brief A reference forwarding helper class.
+ *
+ * This class is designed specifically for use with contructors.
+ *
+ * Programmers and compilers can generally work together to enable optimizations
+ * for argument passing. For regular functions, fully optimized argument passing
+ * can be realized with relatively little effort. Constructors, however, often
+ * use their arguments to initialize their class's member variables. This can
+ * cause unnecessary copy or move operations.
+ *
+ * Several techniques are used to optimize the number of copy/move operations in
+ * a constructor. However each of them have problems:
+ *
+ * - Variadic templates + perfect forwarding: Achieves optimality, but only
+ *   works when the constructor takes a variable number of arguments.
+ * - Regular templates + perfect forwarding: Handles a constant number of
+ *   arguments, but can cause issues with multiple constructors that can only
+ *   be solved with complex template-metaprogramming (e.g. enable_if).
+ * - rvalue references + std::move: No longer depends on templates, but requires
+ *   an exponential number of constructors for optimality.
+ *
+ * This class is therefore designed to handle the optimal passing of a constant
+ * number of arguments without an exponential number of overloads. fwd objects
+ * remember lvalue/rvalue-ness of the reference they are constructed with and
+ * will copy or move the referenced object as appropriate.
+ */
+template <typename T>
+class fwd
+{
+public:
+
+    /**
+     * @brief Capture l-value references to be forwarded.
+     */
+    fwd(T const&);
+
+    /**
+     * @brief Capture r-value references to be forwarded.
+     */
+    fwd(T &&);
+
+    /**
+     * @brief Copy constructor
+     */
+    fwd(fwd const&);
+
+    /**
+     * @brief Move constructor
+     */
+    fwd(fwd &&);
+
+    /** @{
+     * @brief Copy and move assignment is disabled.
+     */
+    fwd &operator =(fwd const&) = delete;
+    fwd &operator =(fwd &&) = delete;
+    /// @}
+
+    /**
+     * @brief Convert the forwarded reference to an object.
+     *
+     * Moves the captured reference if it was an r-value reference.
+     * Copies the captured reference otherwise.
+     */
+    operator T();
+
+private:
+    union {
+        T const*to_copy;
+        T *to_move;
+    };
+    const bool movable;
+};
+
 } // namespace sky
 
 #endif // UTILITY_HPP

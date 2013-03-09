@@ -88,6 +88,12 @@ private:
 };
 
 template<typename T>
+fwd<T>::fwd(fwd &&f) :
+    to_copy(std::move(f.to_copy)),
+    movable(f.movable)
+{}
+
+template<typename T>
 fwd<T>::fwd(T const&ref) :
     to_copy(&ref),
     movable(false)

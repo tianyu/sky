@@ -122,3 +122,25 @@ TEST(Fwd, CaptureConstRvalue)
     EXPECT_EQ(Object::Copied, duplicate.state);
     EXPECT_EQ(1030, duplicate.data);
 }
+
+TEST(Fwd, MoveCapturedLvalue)
+{
+    Object original(59087);
+    fwd<Object> f1(original);
+    fwd<Object> f2(std::move(f1));
+    Object duplicate(f2);
+
+    EXPECT_EQ(Object::Copied, duplicate.state);
+    EXPECT_EQ(59087, duplicate.data);
+}
+
+TEST(Fwd, MoveCapturedRvalue)
+{
+    Object original(93841);
+    fwd<Object> f1(std::move(original));
+    fwd<Object> f2(std::move(f1));
+    Object duplicate(f2);
+
+    EXPECT_EQ(Object::Moved, duplicate.state);
+    EXPECT_EQ(93841, duplicate.data);
+}

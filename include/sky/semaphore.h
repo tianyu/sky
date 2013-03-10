@@ -28,6 +28,7 @@ public:
     explicit semaphore(std::size_t resources = 1);
 
     semaphore(signed) = delete;
+    semaphore(long) = delete;
 
     semaphore(const semaphore&) = delete;
     semaphore &operator =(const semaphore&) = delete;

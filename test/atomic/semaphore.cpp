@@ -10,7 +10,10 @@ TEST(Semaphore, Interface)
     typedef InterfaceOf<sky::semaphore> ISemaphore;
 
     ISemaphore::expect_default_constructible();
+    ISemaphore::expect_constructible<std::size_t>();
     ISemaphore::expect_constructible<unsigned int>();
+    ISemaphore::expect_constructible<int>(false);
+    ISemaphore::expect_constructible<unsigned long>(false);
 
     // Semaphores should not be move/copy constructible/assignable
     ISemaphore::expect_copy_constructible(false);

@@ -3,6 +3,7 @@
 
 #include <atomic>
 #include <condition_variable>
+#include <cstddef>
 
 namespace sky {
 
@@ -24,7 +25,9 @@ public:
      *
      * @param resources The number of resources available at the beginning.
      */
-    explicit semaphore(unsigned int resources = 1);
+    explicit semaphore(std::size_t resources = 1);
+
+    semaphore(signed) = delete;
 
     semaphore(const semaphore&) = delete;
     semaphore &operator =(const semaphore&) = delete;
@@ -59,7 +62,7 @@ public:
     bool is_lock_free();
 
 private:
-    std::atomic<unsigned int> counter;
+    std::atomic<std::size_t> counter;
     std::condition_variable available;
 };
 

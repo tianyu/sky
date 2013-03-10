@@ -58,9 +58,9 @@ public:
     /// @}
 
 private:
-    std::mutex counter_mutex;
-    std::condition_variable available;
-    size_t counter;
+    std::mutex resource_mutex;
+    std::condition_variable resource_available;
+    size_t resource_pool;
 };
 
 } // namespace sky

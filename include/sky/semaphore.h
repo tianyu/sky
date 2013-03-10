@@ -1,9 +1,9 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 
-#include <atomic>
 #include <condition_variable>
 #include <cstddef>
+#include <mutex>
 
 namespace sky {
 
@@ -25,7 +25,7 @@ public:
      *
      * @param resources The number of resources available at the beginning.
      */
-    explicit semaphore(std::size_t resources = 1);
+    explicit semaphore(size_t resources = 1);
 
     semaphore(signed) = delete;
     semaphore(long) = delete;
@@ -57,14 +57,10 @@ public:
     void V();
     /// @}
 
-    /**
-     * @return true iff this semaphore uses lock-free operations.
-     */
-    bool is_lock_free();
-
 private:
-    std::atomic<std::size_t> counter;
+    std::mutex counter_mutex;
     std::condition_variable available;
+    size_t counter;
 };
 
 } // namespace sky

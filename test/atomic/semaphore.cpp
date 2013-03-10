@@ -21,3 +21,25 @@ TEST(Semaphore, Interface)
     ISemaphore::expect_move_constructible(false);
     ISemaphore::expect_move_assignable(false);
 }
+
+// Unit Tests
+
+using sky::semaphore;
+
+TEST(Semaphore, DefaultConstruct)
+{
+    semaphore s;
+
+    EXPECT_TRUE(s.try_acquire());
+    EXPECT_FALSE(s.try_acquire());
+}
+
+TEST(Semaphore, ConstructWithResources)
+{
+    semaphore s(20u);
+
+    for (unsigned i = 0; i < 20u; ++i) {
+        EXPECT_TRUE(s.try_acquire());
+    }
+    EXPECT_FALSE(s.try_acquire());
+}

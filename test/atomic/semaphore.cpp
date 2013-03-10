@@ -34,7 +34,14 @@ TEST(Semaphore, DefaultConstruct)
     EXPECT_FALSE(s.try_acquire());
 }
 
-TEST(Semaphore, ConstructWithResources)
+TEST(Semaphore, ConstructWithNoResources)
+{
+    semaphore s(0u);
+
+    EXPECT_FALSE(s.try_acquire());
+}
+
+TEST(Semaphore, ConstructWithMultipleResources)
 {
     semaphore s(20u);
 
@@ -42,4 +49,44 @@ TEST(Semaphore, ConstructWithResources)
         EXPECT_TRUE(s.try_acquire());
     }
     EXPECT_FALSE(s.try_acquire());
+}
+
+TEST(Semaphore, Acquire)
+{
+    semaphore s(1u);
+
+    s.acquire();
+
+    EXPECT_FALSE(s.try_acquire());
+}
+
+TEST(Semaphore, P)
+{
+    semaphore s(1u);
+
+    s.P();
+
+    EXPECT_FALSE(s.try_acquire());
+}
+
+TEST(Semaphore, Release)
+{
+    semaphore s(0u);
+
+    EXPECT_FALSE(s.try_acquire());
+
+    s.release();
+
+    EXPECT_TRUE(s.try_acquire());
+}
+
+TEST(Semaphore, V)
+{
+    semaphore s(0u);
+
+    EXPECT_FALSE(s.try_acquire());
+
+    s.release();
+
+    EXPECT_TRUE(s.try_acquire());
 }

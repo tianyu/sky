@@ -2,6 +2,7 @@
 #define SEMAPHORE_H
 
 #include <atomic>
+#include <condition_variable>
 
 namespace sky {
 

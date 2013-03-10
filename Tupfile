@@ -7,6 +7,8 @@ TEST_OBJECTS += $(TEST)/expected/*.o
 TEST_OBJECTS += $(TEST)/scope_guard/*.o
 TEST_OBJECTS += $(TEST)/concurrent_queue/*.o
 TEST_OBJECTS += $(TEST)/atomic/*.o
+TEST_OBJECTS += $(TEST)/memory/*.o
+TEST_OBJECTS += $(TEST)/utility/*.o
 
 # Make unit tests
 LIBS = -lpthread

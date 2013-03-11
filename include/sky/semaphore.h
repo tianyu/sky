@@ -60,7 +60,7 @@ private:
     std::mutex resource_mutex;
     std::condition_variable resource_available;
     int resource_pool;
-    unsigned int released;
+    int released;
 };
 
 } // namespace sky

@@ -5,7 +5,7 @@ using namespace sky;
 
 semaphore::semaphore(int resources) :
     resource_pool(resources),
-    released(0)
+    released(resources < 0? resources : 0)
 {}
 
 bool semaphore::try_acquire()
@@ -30,7 +30,7 @@ void semaphore::acquire()
     if ((resource_pool--) > 0) return;
     do {
         resource_available.wait(lock);
-    } while (released == 0);
+    } while (released < 1);
     --released;
 }
 
@@ -49,10 +49,10 @@ void semaphore::release()
      * released resource.
      */
 
-    if ((resource_pool++) < 0) {
-        ++released;
+    if ((resource_pool++) > -1) return;
+    ++released;
+    if (released > 0)
         resource_available.notify_one();
-    }
 }
 
 void semaphore::V()

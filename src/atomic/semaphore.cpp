@@ -19,7 +19,12 @@ bool semaphore::try_acquire()
 
 bool semaphore::try_P()
 {
-    return semaphore::try_acquire();
+    return try_acquire();
+}
+
+bool semaphore::try_lock()
+{
+    return try_acquire();
 }
 
 void semaphore::acquire()
@@ -44,6 +49,11 @@ void semaphore::P()
     acquire();
 }
 
+void semaphore::lock()
+{
+    acquire();
+}
+
 void semaphore::release()
 {
     lock_guard<mutex> lock(resource_mutex);
@@ -61,6 +71,11 @@ void semaphore::release()
 }
 
 void semaphore::V()
+{
+    release();
+}
+
+void semaphore::unlock()
 {
     release();
 }

@@ -1,6 +1,7 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 
+#include <chrono>
 #include <condition_variable>
 #include <mutex>
 
@@ -15,6 +16,11 @@ namespace sky {
  * there are no resources to acquire, then the thread that called acquire() will
  * block until a resource has been released. Alternatively, a thread may call
  * the non-blocking try_acquire().
+ *
+ * sky::semaphore meets the requirements of a Lockable object and therefore
+ * can be used with std::unique_lock and std::lock_guard.
+ * This facilitates the creation of "critical sections" that allows concurrent
+ * access for up to a constant number of threads.
  */
 class semaphore
 {
@@ -38,6 +44,7 @@ public:
      */
     bool try_acquire();
     bool try_P();
+    bool try_lock();
     /// @}
 
     /** @{
@@ -47,6 +54,7 @@ public:
      */
     void acquire();
     void P();
+    void lock();
     /// @}
 
     /** @{
@@ -56,6 +64,7 @@ public:
      */
     void release();
     void V();
+    void unlock();
     /// @}
 
 private:

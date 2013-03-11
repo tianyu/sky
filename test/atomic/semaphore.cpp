@@ -24,6 +24,20 @@ TEST(Semaphore, Interface)
     ISemaphore::expect_move_assignable(false);
 }
 
+TEST(Semaphore, UsableWithLockGuard)
+{
+    sky::semaphore s;
+    std::lock_guard<sky::semaphore> lock(s);
+}
+
+TEST(Semaphore, UsableWithUniqueLock)
+{
+    sky::semaphore s;
+    std::unique_lock<sky::semaphore> lock(s, std::defer_lock_t());
+
+    EXPECT_TRUE(lock.try_lock());
+}
+
 TEST(Semaphore, SizeOf)
 {
     size_t expected

@@ -24,6 +24,16 @@ TEST(Semaphore, Interface)
     ISemaphore::expect_move_assignable(false);
 }
 
+TEST(Semaphore, SizeOf)
+{
+    size_t expected
+            = sizeof(std::mutex)
+            + sizeof(std::condition_variable)
+            + 2*sizeof(int);
+
+    EXPECT_EQ(expected, sizeof(sky::semaphore));
+}
+
 // Unit Tests
 
 using sky::semaphore;

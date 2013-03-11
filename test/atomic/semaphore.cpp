@@ -10,9 +10,11 @@ TEST(Semaphore, Interface)
     typedef InterfaceOf<sky::semaphore> ISemaphore;
 
     ISemaphore::expect_default_constructible();
-    ISemaphore::expect_constructible<std::size_t>();
-    ISemaphore::expect_constructible<unsigned int>();
-    ISemaphore::expect_constructible<int>(false);
+    ISemaphore::expect_constructible<char>();
+    ISemaphore::expect_constructible<unsigned short>();
+    ISemaphore::expect_constructible<int>();
+    ISemaphore::expect_constructible<std::size_t>(false);
+    ISemaphore::expect_constructible<unsigned int>(false);
     ISemaphore::expect_constructible<unsigned long>(false);
 
     // Semaphores should not be move/copy constructible/assignable
@@ -36,14 +38,23 @@ TEST(Semaphore, DefaultConstruct)
 
 TEST(Semaphore, ConstructWithNoResources)
 {
-    semaphore s(0u);
+    semaphore s(0);
 
     EXPECT_FALSE(s.try_acquire());
 }
 
-TEST(Semaphore, ConstructWithMultipleResources)
+TEST(Semaphore, ConstructWithNegativeResources)
 {
-    semaphore s(20u);
+    semaphore s(-1);
+
+    EXPECT_FALSE(s.try_acquire());
+    s.release();
+    EXPECT_FALSE(s.try_acquire());
+}
+
+TEST(Semaphore, ConstructWithPositiveResources)
+{
+    semaphore s(20);
 
     for (unsigned i = 0; i < 20u; ++i) {
         EXPECT_TRUE(s.try_acquire());
@@ -53,7 +64,7 @@ TEST(Semaphore, ConstructWithMultipleResources)
 
 TEST(Semaphore, Acquire)
 {
-    semaphore s(1u);
+    semaphore s(1);
 
     s.acquire();
 
@@ -62,7 +73,7 @@ TEST(Semaphore, Acquire)
 
 TEST(Semaphore, P)
 {
-    semaphore s(1u);
+    semaphore s(1);
 
     s.P();
 
@@ -71,7 +82,7 @@ TEST(Semaphore, P)
 
 TEST(Semaphore, Release)
 {
-    semaphore s(0u);
+    semaphore s(0);
 
     EXPECT_FALSE(s.try_acquire());
 
@@ -82,7 +93,7 @@ TEST(Semaphore, Release)
 
 TEST(Semaphore, V)
 {
-    semaphore s(0u);
+    semaphore s(0);
 
     EXPECT_FALSE(s.try_acquire());
 

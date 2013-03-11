@@ -2,7 +2,6 @@
 #define SEMAPHORE_H
 
 #include <condition_variable>
-#include <cstddef>
 #include <mutex>
 
 namespace sky {
@@ -25,9 +24,9 @@ public:
      *
      * @param resources The number of resources available at the beginning.
      */
-    explicit semaphore(size_t resources = 1);
+    explicit semaphore(int resources = 1);
 
-    semaphore(signed) = delete;
+    semaphore(unsigned int) = delete;
     semaphore(long) = delete;
 
     semaphore(const semaphore&) = delete;
@@ -60,7 +59,8 @@ public:
 private:
     std::mutex resource_mutex;
     std::condition_variable resource_available;
-    size_t resource_pool;
+    int resource_pool;
+    unsigned int released;
 };
 
 } // namespace sky

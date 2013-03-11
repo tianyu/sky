@@ -17,6 +17,11 @@ bool semaphore::try_acquire()
     return true;
 }
 
+bool semaphore::try_P()
+{
+    return semaphore::try_acquire();
+}
+
 void semaphore::acquire()
 {
     unique_lock<mutex> lock(resource_mutex);

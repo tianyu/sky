@@ -32,11 +32,13 @@ public:
     semaphore(const semaphore&) = delete;
     semaphore &operator =(const semaphore&) = delete;
 
-    /**
+    /** @{
      * @brief Try to acquire a resource from the semaphore
      * @return true iff a resource was acquired.
      */
     bool try_acquire();
+    bool try_P();
+    /// @}
 
     /** @{
      * @brief Acquires a resource from the semaphore.

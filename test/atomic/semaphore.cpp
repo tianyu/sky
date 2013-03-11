@@ -46,6 +46,14 @@ TEST(Semaphore, DefaultConstruct)
     EXPECT_FALSE(s.try_acquire());
 }
 
+TEST(Semaphore, TryP)
+{
+    semaphore s;
+
+    EXPECT_TRUE(s.try_P());
+    EXPECT_FALSE(s.try_P());
+}
+
 TEST(Semaphore, ConstructWithNoResources)
 {
     semaphore s(0);

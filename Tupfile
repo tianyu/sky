@@ -9,6 +9,7 @@ TEST_OBJECTS += $(TEST)/concurrent_queue/*.o
 TEST_OBJECTS += $(TEST)/atomic/*.o
 TEST_OBJECTS += $(TEST)/memory/*.o
 TEST_OBJECTS += $(TEST)/utility/*.o
+TEST_OBJECTS += $(TEST)/tuple/*.o
 
 # Make unit tests
 LIBS = -lpthread

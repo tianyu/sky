@@ -123,18 +123,14 @@ template <typename F, typename... Args, int... Index>
 void
 invoke_helper_no_return(F &&f, std::tuple<Args...> &args, int_list<Index...>)
 {
-    f(std::forward<
-        typename std::tuple_element<Index, std::tuple<Args...>>::type
-      >(std::get<Index>(args))...);
+    f(std::forward<Args>(std::get<Index>(args))...);
 }
 
 template <typename F, typename... Args, int... Index>
 typename std::result_of<F(Args...)>::type
 invoke_helper_with_return(F &&f, std::tuple<Args...> &args, int_list<Index...>)
 {
-    return f(std::forward<
-                typename std::tuple_element<Index, std::tuple<Args...>>::type
-             >(std::get<Index>(args))...);
+    return f(std::forward<Args>(std::get<Index>(args))...);
 }
 
 } // namespace _

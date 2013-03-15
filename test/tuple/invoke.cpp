@@ -6,6 +6,8 @@
 
 using sky::invoke;
 
+/* The following unit tests verify that the function is invoked */
+
 namespace { // Utility namespace
 
 template<typename Return, typename... Args>
@@ -247,7 +249,7 @@ TEST(Invoke, StdFunction_Int_Double_Int)
     expect_invoked(func);
 }
 
-// The following are tests for the efficiency of sky::invoke
+/* The following are tests for the efficiency of sky::invoke */
 
 namespace {
 

@@ -40,7 +40,7 @@ invoke_helper_with_return(F&&, std::tuple<Args...>&, int_list<Index...>);
  * }
  *
  * However, if foo() is supposed to call two overloaded functions,
- * bar1() and bar(2), then it becomes impossible to write foo() using only one
+ * bar1() and bar2(), then it becomes impossible to write foo() using only one
  * variadic template. A solution would be to use two variadic templates with
  * the parameters passed in tuples:
  *
@@ -50,8 +50,8 @@ invoke_helper_with_return(F&&, std::tuple<Args...>&, int_list<Index...>);
  * However, there is no standard way of calling bar1() or bar2() with the
  * arguments stored in tuples. This function provides such a solution:
  *
- * invoke(&bar1, args1); // Like bar1(args...)
- * invoke(&bar2, args2); // Like bar2(args...)
+ * invoke(&bar1, args1); // Like bar1(args1...)
+ * invoke(&bar2, args2); // Like bar2(args2...)
  *
  * Furthermore, the return value of invoking bar1() and bar2() can also be used.
  *

@@ -123,6 +123,11 @@ template <typename F, typename... Args, int... Index>
 void
 invoke_helper_no_return(F &&f, std::tuple<Args...> &args, int_list<Index...>)
 {
+    /*
+     * Generate the arguments:
+     * get<0>(args), get<1>(args), ...
+     * And forward them to the function f.
+     */
     f(std::forward<Args>(std::get<Index>(args))...);
 }
 
@@ -130,6 +135,11 @@ template <typename F, typename... Args, int... Index>
 typename std::result_of<F(Args...)>::type
 invoke_helper_with_return(F &&f, std::tuple<Args...> &args, int_list<Index...>)
 {
+    /*
+     * Generate the arguments:
+     * get<0>(args), get<1>(args), ...
+     * And forward them to the function f.
+     */
     return f(std::forward<Args>(std::get<Index>(args))...);
 }
 

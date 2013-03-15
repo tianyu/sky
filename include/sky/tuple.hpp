@@ -69,7 +69,7 @@ template <typename F, typename... Args>
 typename std::enable_if<
     std::is_void< typename std::result_of<F(Args...)>::type >::value
 >::type
-invoke(F &&f, std::tuple<Args...> &&args)
+invoke(F &&f, std::tuple<Args...> args)
 {
     using namespace _;
     typedef typename index_up_to<sizeof...(Args)>::type Index;
@@ -81,7 +81,7 @@ typename std::enable_if<
     !std::is_void< typename std::result_of<F(Args...)>::type >::value,
     typename std::result_of<F(Args...)>::type
 >::type
-invoke(F &&f, std::tuple<Args...> &&args)
+invoke(F &&f, std::tuple<Args...> args)
 {
     using namespace _;
     typedef typename index_up_to<sizeof...(Args)>::type Index;

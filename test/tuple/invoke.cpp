@@ -336,3 +336,21 @@ TEST(Invoke, Return_Value)
     EXPECT_EQ(0, test.copies); // Copies should be elided.
     EXPECT_EQ(0, test.moves);
 }
+
+/* Miscellaneous Tests */
+
+TEST(Invoke, LvalueTuple_NoReturn)
+{
+    auto func = function<void, int>;
+    auto args = std::make_tuple(1);
+
+    invoke(func, args);
+}
+
+TEST(Invoke, LvalueTuple_WithReturn)
+{
+    auto func = function<int, int>;
+    auto args = std::make_tuple(1);
+
+    int ret = invoke(func, args); (void)ret;
+}

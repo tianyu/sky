@@ -25,6 +25,9 @@ template <typename F, typename... Args, int... Index>
 typename std::result_of<F(Args...)>::type
 invoke_helper_with_return(F&&, std::tuple<Args...>&, int_list<Index...>);
 
+template <typename T, typename... Args, int... Index>
+T make_helper(std::tuple<Args...>&, int_list<Index...>);
+
 } // namespace _
 
 /** @{
@@ -90,7 +93,12 @@ invoke(F &&f, std::tuple<Args...> args)
 /// @}
 
 template <typename T, typename... Args>
-T make(std::tuple<Args...> args);
+T make(std::tuple<Args...> args)
+{
+    using namespace _;
+    typedef typename index_up_to<sizeof...(Args)>::type Index;
+    return make_helper<T>(args, Index());
+}
 
 namespace _ {
 
@@ -144,6 +152,17 @@ invoke_helper_with_return(F &&f, std::tuple<Args...> &args, int_list<Index...>)
      * And forward them to the function f.
      */
     return f(std::forward<Args>(std::get<Index>(args))...);
+}
+
+template <typename T, typename... Args, int... Index>
+T make_helper(std::tuple<Args...> &args, int_list<Index...>)
+{
+    /*
+     * Generate the arguments:
+     * get<0>(args), get<1>(args), ...
+     * And forward them to the constructor.
+     */
+    return T(std::forward<Args>(std::get<Index>(args))...);
 }
 
 } // namespace _

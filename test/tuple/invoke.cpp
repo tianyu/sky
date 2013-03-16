@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include "../test_argument_passing.hpp"
+
 #include "sky/tuple.hpp"
 
 #include <functional>
@@ -253,26 +255,6 @@ TEST(Invoke, StdFunction_Int_Double_Int)
 
 namespace {
 
-struct TestObject
-{
-    TestObject() :
-        copies(0),
-        moves(0)
-    {}
-
-    TestObject(TestObject const&o) :
-        copies(o.copies + 1),
-        moves(o.moves)
-    {}
-
-    TestObject(TestObject &&o) :
-        copies(o.copies),
-        moves(o.moves + 1)
-    {}
-
-    const int copies, moves;
-};
-
 template <typename T>
 std::tuple<int, int>
 test_capture(T o)
@@ -280,19 +262,19 @@ test_capture(T o)
     return std::make_tuple(o.copies, o.moves);
 }
 
-TestObject test_return()
+DataObject test_return()
 {
-    return TestObject();
+    return DataObject();
 }
 
 } // namespace
 
 TEST(Invoke, CaptureBy_Ref)
 {
-    TestObject o;
+    DataObject o;
     int copies, moves;
     std::tie(copies, moves) =
-            invoke(&test_capture<TestObject&>,
+            invoke(&test_capture<DataObject&>,
                    std::forward_as_tuple(o));
     EXPECT_EQ(0, copies);
     EXPECT_EQ(0, moves);
@@ -302,8 +284,8 @@ TEST(Invoke, CaptureBy_RefRef)
 {
     int copies, moves;
     std::tie(copies, moves) =
-            invoke(&test_capture<TestObject&&>,
-                   std::forward_as_tuple(TestObject()));
+            invoke(&test_capture<DataObject&&>,
+                   std::forward_as_tuple(DataObject()));
     EXPECT_EQ(0, copies);
     EXPECT_EQ(0, moves);
 }
@@ -312,8 +294,8 @@ TEST(Invoke, CaptureBy_ConstRef)
 {
     int copies, moves;
     std::tie(copies, moves) =
-            invoke(&test_capture<TestObject const&>,
-                   std::forward_as_tuple(TestObject()));
+            invoke(&test_capture<DataObject const&>,
+                   std::forward_as_tuple(DataObject()));
     EXPECT_EQ(0, copies);
     EXPECT_EQ(0, moves);
 }
@@ -322,15 +304,15 @@ TEST(Invoke, CaptureBy_Value)
 {
     int copies, moves;
     std::tie(copies, moves) =
-            invoke(&test_capture<TestObject>,
-                   std::forward_as_tuple(TestObject()));
+            invoke(&test_capture<DataObject>,
+                   std::forward_as_tuple(DataObject()));
     EXPECT_EQ(0, copies);
     EXPECT_EQ(1, moves); // Forwarding disables RVO, so we expect a move.
 }
 
 TEST(Invoke, Return_Value)
 {
-    TestObject test =
+    DataObject test =
             invoke(&test_return,
                    std::tuple<>());
     EXPECT_EQ(0, test.copies); // Copies should be elided.

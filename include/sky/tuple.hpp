@@ -89,6 +89,9 @@ invoke(F &&f, std::tuple<Args...> args)
 }
 /// @}
 
+template <typename T, typename... Args>
+T make(std::tuple<Args...> args);
+
 namespace _ {
 
 // Implementation of helper declarations //

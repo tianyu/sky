@@ -92,6 +92,11 @@ invoke(F &&f, std::tuple<Args...> args)
 }
 /// @}
 
+/**
+ * @brief make Constructs an object with parameters given in a tuple.
+ * @param args The arguments for the object's constructor, as a tuple.
+ * @return The constructed object.
+ */
 template <typename T, typename... Args>
 T make(std::tuple<Args...> args)
 {

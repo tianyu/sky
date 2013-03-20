@@ -8,10 +8,9 @@
 namespace sky {
 
 /**
- * @brief Constructs an object of type T and wraps it in
- * a @ref std::unique_ptr.
+ * @brief Constructs an object of type T and wraps it in a std::unique_ptr.
  * @param args The arguments to construct T with.
- * @return A @ref std::unique_ptr of type T.
+ * @return A std::unique_ptr of type T.
  */
 template<typename T, typename... Args>
 std::unique_ptr<T>

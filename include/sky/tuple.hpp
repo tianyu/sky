@@ -6,7 +6,44 @@
 #include <type_traits>
 #include <utility>
 
+
 namespace sky {
+
+/**
+ * @defgroup param_tuples Parameter Tuples
+ *
+ * Parameter forwarding is useful when one function is required to call another
+ * overloaded function. These functions can be regular functions, callable
+ * objects or even constructors. Variadic templates are sufficient if only one
+ * overloaded function is being called. However if multiple overloaded functions
+ * are to be called, then it's impossible to use only one variadic template.
+ *
+ * One solution is to use store the different sets of parameters in tuples, for
+ * example:
+ *
+ *     template <typename... Args1, typename... Args2>
+ *     Object foo(std::tuple<Args1...> args1, std::tuple<Args2...> args2) {
+ *         // Call bar() with arguments in args1.
+ *         Object o = // Consturct an Object wth arguments in args2.
+ *         return o;
+ *     }
+ *
+ * In this case, `foo` takes two arguments, `args1` and `args2`, both of which
+ * are tuples of any length. It is also clear which tuple of arguments are to be
+ * used with function. The only problem is that there is no convenient way to
+ * re-expand the arguments at the function's call site once they've been placed
+ * in a tuple.
+ *
+ * The invoke() and make() functions provided here make the above code possible
+ * and convenient:
+ *
+ *     template <typename... Args1, typename... Args2>
+ *     Object foo(std::tuple<Args1...> args1, std::tuple<Args2...> args2) {
+ *         invoke(&bar, args1);
+ *         Object o = make<Object>(args2);
+ *         return o;
+ *     }
+ */
 
 namespace _ {
 
@@ -30,43 +67,14 @@ T make_helper(std::tuple<Args...>&, int_list<Index...>);
 
 } // namespace _
 
-/** @{
+/**
  * @brief Invokes a function with the parameters given in the tuple.
  *
- * Suppose we had a function foo,() which calls an overloaded function bar().
- * It is possible to write only one definition of foo() that is able to call any
- * overload of bar() using variadic templates with perfect forwarding:
- *
- * template <typename... Args>
- * void foo(Args &&... args) {
- *    bar(std::forward<Args>(args)...);
- * }
- *
- * However, if foo() is supposed to call two overloaded functions,
- * bar1() and bar2(), then it becomes impossible to write foo() using only one
- * variadic template. A solution would be to use two variadic templates with
- * the parameters passed in tuples:
- *
- * template <typename... Args1, typename Args2>
- * void foo(std::tuple<Args1...> &&args1, std::tuple<Args2...> &&args2)
- *
- * However, there is no standard way of calling bar1() or bar2() with the
- * arguments stored in tuples. This function provides such a solution:
- *
- * invoke(&bar1, args1); // Like bar1(args1...)
- * invoke(&bar2, args2); // Like bar2(args2...)
- *
- * Furthermore, the return value of invoking bar1() and bar2() can also be used.
- *
- * Note: Since foo() takes two tuples instead of one variadic list of arguments,
- * it should be called in the following way, if perfect forwarding is desired:
- *
- *  foo(std::forward_as_tuple(args, for, bar1),
- *      std::forward_as_tuple(other, args, for, bar, 2));
+ * @ingroup param_tuples
  *
  * @param f The function or functor to invoke.
  * @param args The arguments of the function, as a tuple.
- * @return The value the function returns, if any.
+ * @return The value of returned by f(args...), if any.
  */
 template <typename F, typename... Args>
 typename std::enable_if<
@@ -90,10 +98,12 @@ invoke(F &&f, std::tuple<Args...> args)
     typedef typename index_up_to<sizeof...(Args)>::type Index;
     return invoke_helper_with_return(std::forward<F>(f), args, Index());
 }
-/// @}
 
 /**
  * @brief make Constructs an object with parameters given in a tuple.
+ *
+ * @ingroup param_tuples
+ *
  * @param args The arguments for the object's constructor, as a tuple.
  * @return The constructed object.
  */

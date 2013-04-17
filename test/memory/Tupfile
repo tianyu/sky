@@ -1,3 +1,2 @@
 include_rules
-CXX = g++
 : foreach *.cpp |> !CXX |> %B.o

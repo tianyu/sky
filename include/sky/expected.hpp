@@ -95,7 +95,6 @@ public:
         if (_valid) {
             value.~ValueType();
         } else {
-            using std::exception_ptr;
             error.~exception_ptr();
         }
     }

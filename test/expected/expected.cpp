@@ -1,13 +1,13 @@
 #include "sky/expected.hpp"
 #include "gtest/gtest.h"
 
-using sky::error;
+using sky::unexpected;
 using sky::expected;
 
 namespace {
 
 template<typename T, typename E>
-void expect_error(expected<T> value, E error);
+void expect_error(expected<T> value, E unexpected);
 
 }
 
@@ -38,7 +38,7 @@ TEST(Expected, ConstructWithReference)
 
 TEST(Expected, ConstructWithError)
 {
-    expected<int> x(error(5));
+    expected<int> x(unexpected(5));
     EXPECT_FALSE(x.valid());
     expect_error(x, 5);
 }
@@ -49,9 +49,7 @@ TEST(Expected, ConstructWithCurrentException)
         throw 5;
 
     } catch (...) {
-        // We shouldn't depend on the copy/move constructor here
-        // Fix after uniform initialization works.
-        expected<int> x = error();
+        expected<int> x { unexpected() };
         EXPECT_FALSE(x.valid());
         expect_error(x, 5);
     }
@@ -70,7 +68,7 @@ TEST(Expected, CopyValid)
 
 TEST(Expected, CopyInvalid)
 {
-    const expected<int> x(error(5));
+    const expected<int> x(unexpected(5));
     expected<int> y(x);
 
     EXPECT_FALSE(x.valid());
@@ -90,7 +88,7 @@ TEST(Expected, MoveValid)
 
 TEST(Expected, MoveInvalid)
 {
-    expected<int> x(error(5));
+    expected<int> x(unexpected(5));
     expected<int> y(std::move(x));
 
     EXPECT_FALSE(y.valid());
@@ -100,14 +98,14 @@ TEST(Expected, MoveInvalid)
 namespace {
 
 template<typename T, typename E, typename Cast = expected<T>&>
-void try_expect_error(expected<T> value, E error)
+void try_expect_error(expected<T> value, E unexpected)
 try {
     (void)(T)(Cast)value;
     FAIL()
             << "Expected an exception of type \""
             << typeid(E).name() << "\".";
 } catch (E &e) {
-    EXPECT_EQ(error, e);
+    EXPECT_EQ(unexpected, e);
 } catch (...) {
     FAIL()
             << "Unexpected exception! "
@@ -116,10 +114,10 @@ try {
 }
 
 template<typename T, typename E>
-void expect_error(expected<T> value, E error)
+void expect_error(expected<T> value, E unexpected)
 {
-    try_expect_error<T,E>(value, error);
-    try_expect_error<T,E,expected<T> const&>(value, error);
+    try_expect_error<T,E>(value, unexpected);
+    try_expect_error<T,E,expected<T> const&>(value, unexpected);
 }
 
 }

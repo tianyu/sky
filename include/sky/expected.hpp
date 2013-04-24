@@ -6,24 +6,24 @@
 
 namespace sky {
 
-class error
+class unexpected
 {
     template<typename T>
     friend class expected;
 
 public:
-    error() :
-        ex(std::current_exception())
+    unexpected() :
+        error(std::current_exception())
     {}
 
     template<typename E>
-    error(E &&e) :
-        ex(std::make_exception_ptr(
+    unexpected(E &&e) :
+        error(std::make_exception_ptr(
                 std::forward<E>(e)))
     {}
 
 private:
-    std::exception_ptr ex;
+    std::exception_ptr error;
 };
 
 template<typename T>
@@ -42,8 +42,8 @@ public:
         _valid(true)
     {}
 
-    expected(error &&err) :
-        err(std::move(err.ex)),
+    expected(unexpected &&e) :
+        error(std::move(e.error)),
         _valid(false)
     {}
 
@@ -53,7 +53,7 @@ public:
         if (_valid) {
             new (&value) ValueType(e.value);
         } else {
-            new (&err) std::exception_ptr(e.err);
+            new (&error) std::exception_ptr(e.error);
         }
     }
 
@@ -63,7 +63,7 @@ public:
         if (_valid) {
             new (&value) ValueType(std::move(e.value));
         } else {
-            new (&err) std::exception_ptr(std::move(e.err));
+            new (&error) std::exception_ptr(std::move(e.error));
         }
     }
 
@@ -75,19 +75,19 @@ public:
     void rethrow() const
     {
         if (_valid) return;
-        std::rethrow_exception(err);
+        std::rethrow_exception(error);
     }
 
     operator ValueType &()
     {
         if (_valid) return value;
-        std::rethrow_exception(err);
+        std::rethrow_exception(error);
     }
 
     operator ValueType const&() const
     {
         if (_valid) return value;
-        std::rethrow_exception(err);
+        std::rethrow_exception(error);
     }
 
     ~expected()
@@ -96,14 +96,14 @@ public:
             value.~ValueType();
         } else {
             using std::exception_ptr;
-            err.~exception_ptr();
+            error.~exception_ptr();
         }
     }
 
 private:
     union {
         ValueType value;
-        std::exception_ptr err;
+        std::exception_ptr error;
     };
     bool _valid;
 };

@@ -60,6 +60,26 @@ public:
         _valid(false)
     {}
 
+    expected(expected const& e) :
+        _valid(e._valid)
+    {
+        if (_valid) {
+            new (&value) ValueType(e.value);
+        } else {
+            new (&err) ErrorType(e.err);
+        }
+    }
+
+    expected(expected &&e) :
+        _valid(e._valid)
+    {
+        if (_valid) {
+            new (&value) ValueType(std::move(e.value));
+        } else {
+            new (&err) ErrorType(std::move(e.err));
+        }
+    }
+
     bool valid() const
     {
         return _valid;

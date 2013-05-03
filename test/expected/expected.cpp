@@ -107,10 +107,34 @@ TEST(Expected, CopyValid)
     EXPECT_EQ(5,y);
 }
 
+TEST(ExpectedOrE, CopyValid)
+{
+    typedef expected<int, int> expected_t;
+    const expected_t x(5);
+    expected_t y(x);
+
+    EXPECT_TRUE(x.valid());
+    EXPECT_EQ(5,x);
+    EXPECT_TRUE(y.valid());
+    EXPECT_EQ(5,y);
+}
+
 TEST(Expected, CopyInvalid)
 {
     const expected<int> x(error(5));
     expected<int> y(x);
+
+    EXPECT_FALSE(x.valid());
+    expect_error(x, 5);
+    EXPECT_FALSE(y.valid());
+    expect_error(y, 5);
+}
+
+TEST(ExpectedOrE, CopyInvalid)
+{
+    typedef expected<int, int> expected_t;
+    const expected_t x(error(5));
+    expected_t y(x);
 
     EXPECT_FALSE(x.valid());
     expect_error(x, 5);
@@ -127,10 +151,30 @@ TEST(Expected, MoveValid)
     EXPECT_EQ(3,y);
 }
 
+TEST(ExpectedOrE, MoveValid)
+{
+    typedef expected<int, int> expected_t;
+    expected_t x(3);
+    expected_t y(std::move(x));
+
+    EXPECT_TRUE(y.valid());
+    EXPECT_EQ(3,y);
+}
+
 TEST(Expected, MoveInvalid)
 {
     expected<int> x(error(5));
     expected<int> y(std::move(x));
+
+    EXPECT_FALSE(y.valid());
+    expect_error(y, 5);
+}
+
+TEST(ExpectedOrE, MoveInvalid)
+{
+    typedef expected<int, int> expected_t;
+    expected_t x(error(5));
+    expected_t y(std::move(x));
 
     EXPECT_FALSE(y.valid());
     expect_error(y, 5);

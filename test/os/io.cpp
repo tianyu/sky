@@ -8,18 +8,38 @@
 
 using namespace sky;
 
-TEST(IO, ConstructInput)
+class IO : public ::testing::Test
+{
+public:
+    IO()
+    {
+        int fds[2];
+        assert(0 == ::pipe(fds));
+        read_fd = fds[0];
+        write_fd = fds[1];
+    }
+
+    ~IO()
+    {
+        ::close(read_fd);
+        ::close(write_fd);
+    }
+
+public:
+    int read_fd;
+    int write_fd;
+};
+
+TEST_F(IO, ConstructInput)
 {
     input(0);
 }
 
-TEST(IO, CloseInput)
+TEST_F(IO, CloseInput)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-    ASSERT_FALSE(::close(fds[1]));
+    ASSERT_FALSE(::close(write_fd));
 
-    input in(fds[0]);
+    input in(read_fd);
 
     EXPECT_NO_THROW(in.close())
             << "Couldn't close the input.";
@@ -27,24 +47,22 @@ TEST(IO, CloseInput)
             << "Shouldn't be able to close an input more than once.";
 }
 
-TEST(IO, CloseInput_BadFile)
+TEST_F(IO, CloseInput_BadFile)
 {
     input in(-1);
     EXPECT_THROW(in.close(), std::invalid_argument);
 }
 
-TEST(IO, ConstuctOutput)
+TEST_F(IO, ConstuctOutput)
 {
     output(1);
 }
 
-TEST(IO, CloseOutput)
+TEST_F(IO, CloseOutput)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(read_fd));
 
-    output out(fds[1]);
+    output out(write_fd);
 
     EXPECT_NO_THROW(out.close())
             << "Couldn't close the output.";
@@ -52,210 +70,147 @@ TEST(IO, CloseOutput)
             << "Shouldn't be able to close an output more than once.";
 }
 
-TEST(IO, CloseOuput_BadFile)
+TEST_F(IO, CloseOuput_BadFile)
 {
     output out(-1);
     EXPECT_THROW(out.close(), std::invalid_argument);
 }
 
-TEST(IO, Write)
+TEST_F(IO, Write)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    input in(fds[1]);
+    input in(write_fd);
 
     char const*expected = "Hello";
     char actual[10] { '\0' };
 
     EXPECT_NO_THROW(in.write(expected, 6));
 
-    ASSERT_EQ(6, ::read(fds[0], actual, 10));
+    ASSERT_EQ(6, ::read(read_fd, actual, 10));
     EXPECT_STREQ(expected, actual);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, WriteArray)
+TEST_F(IO, WriteArray)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    input in(fds[1]);
+    input in(write_fd);
 
     char const expected[] = "Hello";
     char actual[10] { '\0' };
 
     EXPECT_NO_THROW(in.write(expected));
 
-    ASSERT_EQ(6, ::read(fds[0], actual, 10));
+    ASSERT_EQ(6, ::read(read_fd, actual, 10));
     EXPECT_STREQ(expected, actual);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, WriteObject)
+TEST_F(IO, WriteObject)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    input in(fds[1]);
+    input in(write_fd);
 
     double expected = 3.2;
     double actual = 0.0;
 
     EXPECT_NO_THROW(in.write(expected));
 
-    ASSERT_EQ(sizeof(double), ::read(fds[0], &actual, sizeof(double)));
+    ASSERT_EQ(sizeof(double), ::read(read_fd, &actual, sizeof(double)));
     EXPECT_FLOAT_EQ(expected, actual);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, Write_ReadFile)
+TEST_F(IO, Write_ReadFile)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    input in(fds[0]);
+    input in(read_fd);
 
     EXPECT_THROW(in.write("Hello World!", 1), std::invalid_argument);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, Write_ClosedFile)
+TEST_F(IO, Write_ClosedFile)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
+    input in(write_fd);
 
-    input in(fds[1]);
-
-    ASSERT_FALSE(::close(fds[1]));
+    ASSERT_FALSE(::close(write_fd));
     EXPECT_THROW(in.write("Hello World!", 1), std::invalid_argument);
-
-    ASSERT_FALSE(::close(fds[0]));
 }
 
-TEST(IO, Write_BadFile)
+TEST_F(IO, Write_BadFile)
 {
     input in(-1);
     EXPECT_THROW(in.write("Hello World!", 1), std::invalid_argument);
 }
 
-TEST(IO, Read)
+TEST_F(IO, Read)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    output out(fds[0]);
+    output out(read_fd);
 
     char const*expected = "Hello";
     char actual[10] { '\0' };
 
-    ASSERT_EQ(6, ::write(fds[1], expected, 6));
-    out.read(actual);
+    ASSERT_EQ(6, ::write(write_fd, expected, 6));
+    EXPECT_EQ(6, out.read(actual));
 
     EXPECT_STREQ(expected, actual);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, ReadArray)
+TEST_F(IO, ReadArray)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    output out(fds[0]);
+    output out(read_fd);
 
     char const*expected = "Hello";
     char actual[10] { '\0' };
 
-    ASSERT_EQ(6, ::write(fds[1], expected, 6));
-    out.read(actual);
+    ASSERT_EQ(6, ::write(write_fd, expected, 6));
+    EXPECT_EQ(6, out.read(actual));
 
     EXPECT_STREQ(expected, actual);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, ReadObject)
+TEST_F(IO, ReadObject)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    output out(fds[0]);
+    output out(read_fd);
 
     double expected = 3.2;
     double actual = 0.0;
 
-    ASSERT_EQ(sizeof(double), ::write(fds[1], &expected, sizeof(double)));
-    out.read(actual);
+    ASSERT_EQ(sizeof(double), ::write(write_fd, &expected, sizeof(double)));
+    EXPECT_EQ(sizeof(double), out.read(actual));
 
     EXPECT_FLOAT_EQ(expected, actual);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, Read_WriteFile)
+TEST_F(IO, Read_WriteFile)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    output out(fds[1]);
+    output out(write_fd);
 
     char buf[20] { '\0' };
     EXPECT_THROW(out.read(buf), std::invalid_argument);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, Read_ClosedFile)
+TEST_F(IO, Read_ClosedFile)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-    ASSERT_EQ(13, ::write(fds[1], "Hello World!", 13));
+    ASSERT_EQ(13, ::write(write_fd, "Hello World!", 13));
 
-    output out(fds[0]);
+    output out(read_fd);
 
     char buf[20] { '\0' };
-    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(read_fd));
     EXPECT_THROW(out.read(buf), std::invalid_argument);
-
-    ASSERT_FALSE(::close(fds[1]));
 }
 
-TEST(IO, Read_BadFile)
+TEST_F(IO, Read_BadFile)
 {
     output out(-1);
     char buf[20] { '\0' };
     EXPECT_THROW(out.read(buf), std::invalid_argument);
 }
 
-TEST(IO, WriteRead)
+TEST_F(IO, WriteRead)
 {
-    int fds[2];
-    ASSERT_FALSE(::pipe(fds));
-
-    input in(fds[1]);
-    output out(fds[0]);
+    input in(write_fd);
+    output out(read_fd);
 
     char const expected[] = "Hello World!";
     char actual[20] { '\0' };
 
-    in.write(expected);
-    out.read(actual);
+    ASSERT_EQ(13, in.write(expected));
+    ASSERT_EQ(13, out.read(actual));
 
     EXPECT_STREQ(expected, actual);
-
-    ASSERT_FALSE(::close(fds[0]));
-    ASSERT_FALSE(::close(fds[1]));
 }

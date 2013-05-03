@@ -51,7 +51,17 @@ TEST(Expected, ConstructWithReference)
     expected<int&> x(i);
     EXPECT_TRUE(x.valid());
     EXPECT_EQ(0, (int&)x);
-    EXPECT_EQ(0, (int)(const expected<int&>&)x);
+    EXPECT_EQ(0, (int&)(const expected<int&>&)x);
+}
+
+TEST(ExpectedOrE, ConstructWithReference)
+{
+    int i = 0;
+    typedef expected<int&, int> expected_t;
+    expected_t x(i);
+    EXPECT_TRUE(x.valid());
+    EXPECT_EQ(0, (int&)x);
+    EXPECT_EQ(0, (int&)(const expected_t&)x);
 }
 
 TEST(Expected, ConstructWithError)

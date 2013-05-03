@@ -180,6 +180,24 @@ TEST(ExpectedOrE, MoveInvalid)
     expect_error(y, 5);
 }
 
+TEST(ExpectedOrE, ErrorValid)
+{
+    typedef expected<int, int> expected_t;
+    expected_t x(5);
+
+    EXPECT_THROW(x.error(), std::logic_error);
+    EXPECT_THROW(((const expected_t&)x).error(), std::logic_error);
+}
+
+TEST(ExpectedOrE, ErrorInvalid)
+{
+    typedef expected<int, int> expected_t;
+    expected_t x(error(5));
+
+    EXPECT_EQ(5, x.error());
+    EXPECT_EQ(5, ((const expected_t&)x).error());
+}
+
 namespace {
 
 template<typename Cast, typename T, typename E, typename X>

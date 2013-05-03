@@ -2,6 +2,7 @@
 #define EXPECTED_HPP
 
 #include <exception>
+#include <stdexcept>
 #include <utility>
 
 namespace sky {
@@ -101,6 +102,18 @@ public:
     {
         rethrow();
         return value;
+    }
+
+    ErrorType &error()
+    {
+        if (!_valid) return err;
+        throw std::logic_error("No error exists in a valid expected<T,E>.");
+    }
+
+    ErrorType const&error() const
+    {
+        if (!_valid) return err;
+        throw std::logic_error("No error exists in a valid expected<T,E>.");
     }
 
     ~expected()

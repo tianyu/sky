@@ -19,12 +19,30 @@ TEST(Expected, ConstructWithType)
     EXPECT_EQ(0, (int)(const expected<int>&)x);
 }
 
+TEST(ExpectedOrE, ConstructWithType)
+{
+    typedef expected<int, int> expected_t;
+    expected_t x(0);
+    EXPECT_TRUE(x.valid());
+    EXPECT_EQ(0, (int)x);
+    EXPECT_EQ(0, (int)(const expected_t&)x);
+}
+
 TEST(Expected, ConstructWithPointer)
 {
     expected<int*> x(nullptr);
     EXPECT_TRUE(x.valid());
     EXPECT_EQ(nullptr, (int*)x);
     EXPECT_EQ(nullptr, (int*)(const expected<int*>&)x);
+}
+
+TEST(ExpectedOrE, ConstructWithPointer)
+{
+    typedef expected<int *, int> expected_t;
+    expected_t x(nullptr);
+    EXPECT_TRUE(x.valid());
+    EXPECT_EQ(nullptr, (int*)x);
+    EXPECT_EQ(nullptr, (int*)(const expected_t&)x);
 }
 
 TEST(Expected, ConstructWithReference)

@@ -8,7 +8,7 @@ namespace sky {
 
 class error
 {
-    template<typename T>
+    template<typename T, typename E>
     friend class expected;
 
 public:
@@ -26,8 +26,50 @@ private:
     std::exception_ptr ex;
 };
 
-template<typename T>
+template<typename T, typename E = void>
 class expected
+{
+public:
+    typedef typename std::remove_reference<T>::type ValueType;
+    typedef typename std::remove_reference<E>::type ErrorType;
+
+    expected(ValueType const& val) :
+        value(val),
+        _valid(true)
+    {}
+
+    bool valid() const
+    {
+        return _valid;
+    }
+
+    void rethrow() const
+    {
+        if (_valid) return;
+    }
+
+    operator ValueType &()
+    {
+        rethrow();
+        return value;
+    }
+
+    operator ValueType const&() const
+    {
+        rethrow();
+        return value;
+    }
+
+private:
+    union {
+        ValueType value;
+        ErrorType err;
+    };
+    bool _valid;
+};
+
+template<typename T>
+class expected<T, void>
 {
 public:
     typedef typename std::remove_reference<T>::type ValueType;

@@ -13,5 +13,6 @@ TEST_OBJECTS += $(TEST)/tuple/*.o
 TEST_OBJECTS += $(TEST)/os/*.o
 
 # Make unit tests
-LIBS = -lpthread
+LIBS += -lboost_iostreams
+LIBS += -lpthread
 : $(TEST_OBJECTS) $(OBJECTS) |> !LINK |> tests

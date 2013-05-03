@@ -6,25 +6,37 @@
 
 namespace sky {
 
+namespace _{
+
+template<typename E>
 class error
 {
-    template<typename T, typename E>
+    template<typename, typename>
     friend class expected;
 
 public:
-    error() :
-        ex(std::current_exception())
-    {}
-
-    template<typename E>
-    error(E &&e) :
-        ex(std::make_exception_ptr(
-                std::forward<E>(e)))
-    {}
+    error(E const&ex) : ex(ex) {}
+    error(E &&ex) : ex(std::move(ex)) {}
 
 private:
-    std::exception_ptr ex;
+    E ex;
 };
+
+template<> class error<void> {};
+
+} // namespace _
+
+template<typename E>
+_::error<typename std::remove_reference<E>::type>
+error(E ex)
+{
+    return _::error<typename std::remove_reference<E>::type>(std::forward<E>(ex));
+}
+
+_::error<void> error()
+{
+    return _::error<void>();
+}
 
 template<typename T, typename E = void>
 class expected
@@ -38,6 +50,16 @@ public:
         _valid(true)
     {}
 
+    expected(ValueType &&val) :
+        value(std::move(val)),
+        _valid(true)
+    {}
+
+    expected(_::error<ErrorType> &&err) :
+        err(std::move(err.ex)),
+        _valid(false)
+    {}
+
     bool valid() const
     {
         return _valid;
@@ -46,6 +68,7 @@ public:
     void rethrow() const
     {
         if (_valid) return;
+        throw err;
     }
 
     operator ValueType &()
@@ -58,6 +81,15 @@ public:
     {
         rethrow();
         return value;
+    }
+
+    ~expected()
+    {
+        if (_valid) {
+            value.~ValueType();
+        } else {
+            err.~ErrorType();
+        }
     }
 
 private:
@@ -84,8 +116,14 @@ public:
         _valid(true)
     {}
 
-    expected(error &&err) :
-        err(std::move(err.ex)),
+    template<typename E>
+    expected(_::error<E> &&err) :
+        err(std::make_exception_ptr(std::move(err.ex))),
+        _valid(false)
+    {}
+
+    expected(_::error<void> &&) :
+        err(std::current_exception()),
         _valid(false)
     {}
 

@@ -7,7 +7,10 @@ using sky::expected;
 namespace {
 
 template<typename T, typename E>
-void expect_error(expected<T> value, E error);
+void expect_error(expected<T, void> value, E error);
+
+template<typename T, typename E>
+void expect_error(expected<T, E> value, E error);
 
 }
 
@@ -71,6 +74,14 @@ TEST(Expected, ConstructWithError)
     expect_error(x, 5);
 }
 
+TEST(ExpectedOrE, ConstructWithError)
+{
+    typedef expected<int, int> expected_t;
+    expected_t x(error(5));
+    EXPECT_FALSE(x.valid());
+    expect_error(x, 5);
+}
+
 TEST(Expected, ConstructWithCurrentException)
 {
     try {
@@ -127,27 +138,34 @@ TEST(Expected, MoveInvalid)
 
 namespace {
 
-template<typename T, typename E, typename Cast = expected<T>&>
-void try_expect_error(expected<T> value, E error)
+template<typename Cast, typename T, typename E, typename X>
+void try_expect_error(expected<T, E> value, X error)
 try {
     (void)(T)(Cast)value;
     FAIL()
             << "Expected an exception of type \""
-            << typeid(E).name() << "\".";
-} catch (E &e) {
+            << typeid(X).name() << "\".";
+} catch (X &e) {
     EXPECT_EQ(error, e);
 } catch (...) {
     FAIL()
             << "Unexpected exception! "
                "Expected exception of type \""
-            << typeid(E).name() << "\".";
+            << typeid(X).name() << "\".";
 }
 
 template<typename T, typename E>
-void expect_error(expected<T> value, E error)
+void expect_error(expected<T, void> value, E error)
 {
-    try_expect_error<T,E>(value, error);
-    try_expect_error<T,E,expected<T> const&>(value, error);
+    try_expect_error<expected<T> &>(value, error);
+    try_expect_error<expected<T> const&>(value, error);
 }
 
+template<typename T, typename E>
+void expect_error(expected<T, E> value, E error)
+{
+    try_expect_error<expected<T,E> &>(value, error);
+    try_expect_error<expected<T,E> const&>(value, error);
 }
+
+} // namespace

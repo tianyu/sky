@@ -20,6 +20,12 @@ public:
         return write(&buf, N*sizeof(T));
     }
 
+    template<typename T>
+    size_t write(T const&value) const
+    {
+        return write(&value, sizeof(T));
+    }
+
     void close();
 
 private:
@@ -39,6 +45,12 @@ public:
     size_t read(T (&buf)[N]) const
     {
         return read(&buf, N*sizeof(T));
+    }
+
+    template<typename T>
+    size_t read(T &value) const
+    {
+        return read(&value, sizeof(T));
     }
 
     void close();

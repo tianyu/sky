@@ -58,6 +58,63 @@ TEST(IO, CloseOuput_BadFile)
     EXPECT_THROW(out.close(), std::invalid_argument);
 }
 
+TEST(IO, Write)
+{
+    int fds[2];
+    ASSERT_FALSE(::pipe(fds));
+
+    input in(fds[1]);
+
+    char const*expected = "Hello";
+    char actual[10] { '\0' };
+
+    EXPECT_NO_THROW(in.write(expected, 6));
+
+    ASSERT_EQ(6, ::read(fds[0], actual, 10));
+    EXPECT_STREQ(expected, actual);
+
+    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(fds[1]));
+}
+
+TEST(IO, WriteArray)
+{
+    int fds[2];
+    ASSERT_FALSE(::pipe(fds));
+
+    input in(fds[1]);
+
+    char const expected[] = "Hello";
+    char actual[10] { '\0' };
+
+    EXPECT_NO_THROW(in.write(expected));
+
+    ASSERT_EQ(6, ::read(fds[0], actual, 10));
+    EXPECT_STREQ(expected, actual);
+
+    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(fds[1]));
+}
+
+TEST(IO, WriteObject)
+{
+    int fds[2];
+    ASSERT_FALSE(::pipe(fds));
+
+    input in(fds[1]);
+
+    double expected = 3.2;
+    double actual = 0.0;
+
+    EXPECT_NO_THROW(in.write(expected));
+
+    ASSERT_EQ(sizeof(double), ::read(fds[0], &actual, sizeof(double)));
+    EXPECT_FLOAT_EQ(expected, actual);
+
+    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(fds[1]));
+}
+
 TEST(IO, Write_ReadFile)
 {
     int fds[2];
@@ -88,6 +145,63 @@ TEST(IO, Write_BadFile)
 {
     input in(-1);
     EXPECT_THROW(in.write("Hello World!", 1), std::invalid_argument);
+}
+
+TEST(IO, Read)
+{
+    int fds[2];
+    ASSERT_FALSE(::pipe(fds));
+
+    output out(fds[0]);
+
+    char const*expected = "Hello";
+    char actual[10] { '\0' };
+
+    ASSERT_EQ(6, ::write(fds[1], expected, 6));
+    out.read(actual);
+
+    EXPECT_STREQ(expected, actual);
+
+    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(fds[1]));
+}
+
+TEST(IO, ReadArray)
+{
+    int fds[2];
+    ASSERT_FALSE(::pipe(fds));
+
+    output out(fds[0]);
+
+    char const*expected = "Hello";
+    char actual[10] { '\0' };
+
+    ASSERT_EQ(6, ::write(fds[1], expected, 6));
+    out.read(actual);
+
+    EXPECT_STREQ(expected, actual);
+
+    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(fds[1]));
+}
+
+TEST(IO, ReadObject)
+{
+    int fds[2];
+    ASSERT_FALSE(::pipe(fds));
+
+    output out(fds[0]);
+
+    double expected = 3.2;
+    double actual = 0.0;
+
+    ASSERT_EQ(sizeof(double), ::write(fds[1], &expected, sizeof(double)));
+    out.read(actual);
+
+    EXPECT_FLOAT_EQ(expected, actual);
+
+    ASSERT_FALSE(::close(fds[0]));
+    ASSERT_FALSE(::close(fds[1]));
 }
 
 TEST(IO, Read_WriteFile)

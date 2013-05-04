@@ -6,7 +6,12 @@
 namespace sky {
 
 /**
+ * @defgroup os Operating System Support
+ */
+
+/**
  * @brief The input end of a file or stream.
+ * @ingroup os
  */
 class input
 {
@@ -67,6 +72,7 @@ private:
 
 /**
  * @brief The output end of a stream.
+ * @ingroup os
  */
 class output
 {
@@ -132,6 +138,11 @@ private:
     int fd;
 };
 
+/**
+ * @brief Make a pipe.
+ * @ingroup os
+ * @return A tuple containing the input and output ends of the pipe.
+ */
 std::tuple<input, output> make_pipe();
 
 } // namespace sky

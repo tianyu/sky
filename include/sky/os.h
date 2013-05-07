@@ -2,6 +2,9 @@
 #define OS_H
 
 #include <tuple>
+#include <utility>
+
+#include "sky/type_traits.hpp"
 
 namespace sky {
 
@@ -144,6 +147,59 @@ private:
  * @return A tuple containing the input and output ends of the pipe.
  */
 std::tuple<input, output> make_pipe();
+
+template<typename T>
+typename std::enable_if<
+std::is_void<decltype(
+        std::declval<T>().execute(
+            std::declval<input>(),
+            std::declval<output>(),
+            std::declval<output>())
+        )>::value,
+std::true_type>::type
+has_execute(T);
+
+std::false_type has_execute(...);
+
+template<typename T,
+         typename HasExecute = decltype(has_execute(std::declval<T>()))>
+class is_executable :
+        public std::integral_constant<bool, HasExecute::value>
+{};
+
+template<size_t N>
+class _cmd
+{
+public:
+    template<typename... Args>
+    constexpr _cmd(char const*name, Args&&... args) :
+        name(name),
+        args{std::forward<Args>(args)...}
+    {}
+
+    void execute(input, output, output) const;
+
+private:
+    char const* name;
+    char const* args[N];
+};
+
+template<typename... Args>
+constexpr _cmd<sizeof...(Args)>
+cmd(char const* name, Args&&... args)
+{
+    static_assert(sky::is_same<char const*,
+                  typename std::decay<Args>::type...>::value,
+                  "Arguments must decay to type char const*.");
+    return _cmd<sizeof...(Args)>(name, std::forward<Args>(args)...);
+}
+
+template<>
+constexpr _cmd<0>
+cmd<>(char const* name)
+{
+    return _cmd<0>(name);
+}
 
 } // namespace sky
 

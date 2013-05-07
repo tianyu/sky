@@ -7,13 +7,16 @@
 
 namespace sky {
 
+template<typename, typename>
+class expected;
+
 namespace _{
 
 template<typename E>
 class error
 {
     template<typename, typename>
-    friend class expected;
+    friend class sky::expected;
 
 public:
     error(E const&ex) : ex(ex) {}

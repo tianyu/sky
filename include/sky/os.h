@@ -178,21 +178,26 @@ class is_executable :
 
 namespace _ {
 
+void execvp(char const*name, const char * const args[]);
+
 template<size_t N>
 class cmd
 {
 public:
     template<typename... Args>
     constexpr cmd(char const*name, Args&&... args) :
-        name(name),
-        args{std::forward<Args>(args)..., nullptr}
+        args{name, std::forward<Args>(args)..., nullptr}
     {}
 
-    void execute(input, output, output) const;
+    void execute(input const&in,
+                 output const&out,
+                 output const&err) const
+    {
+        execvp(args[0], args);
+    }
 
 private:
-    char const*const name;
-    char const*const args[N + 1];
+    char const* args[N + 2];
 };
 
 } // namespace _

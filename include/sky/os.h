@@ -185,14 +185,14 @@ public:
     template<typename... Args>
     constexpr cmd(char const*name, Args&&... args) :
         name(name),
-        args{std::forward<Args>(args)...}
+        args{std::forward<Args>(args)..., nullptr}
     {}
 
     void execute(input, output, output) const;
 
 private:
-    char const* name;
-    char const* args[N];
+    char const*const name;
+    char const*const args[N + 1];
 };
 
 } // namespace _

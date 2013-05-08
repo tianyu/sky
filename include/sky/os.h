@@ -148,6 +148,8 @@ private:
  */
 std::tuple<input, output> make_pipe();
 
+namespace _ {
+
 template<typename T>
 typename std::enable_if<
 std::is_void<decltype(
@@ -161,18 +163,27 @@ has_execute(T);
 
 std::false_type has_execute(...);
 
-template<typename T,
-         typename HasExecute = decltype(has_execute(std::declval<T>()))>
-class is_executable :
+template<typename HasExecute>
+class is_executable_helper :
         public std::integral_constant<bool, HasExecute::value>
 {};
 
+} // namespace _
+
+template<typename T>
+class is_executable :
+        public _::is_executable_helper<
+            decltype(_::has_execute(std::declval<T>()))>
+{};
+
+namespace _ {
+
 template<size_t N>
-class _cmd
+class cmd
 {
 public:
     template<typename... Args>
-    constexpr _cmd(char const*name, Args&&... args) :
+    constexpr cmd(char const*name, Args&&... args) :
         name(name),
         args{std::forward<Args>(args)...}
     {}
@@ -184,21 +195,23 @@ private:
     char const* args[N];
 };
 
+} // namespace _
+
 template<typename... Args>
-constexpr _cmd<sizeof...(Args)>
+constexpr _::cmd<sizeof...(Args)>
 cmd(char const* name, Args&&... args)
 {
     static_assert(sky::is_same<char const*,
                   typename std::decay<Args>::type...>::value,
                   "Arguments must decay to type char const*.");
-    return _cmd<sizeof...(Args)>(name, std::forward<Args>(args)...);
+    return _::cmd<sizeof...(Args)>(name, std::forward<Args>(args)...);
 }
 
 template<>
-constexpr _cmd<0>
+constexpr _::cmd<0>
 cmd<>(char const* name)
 {
-    return _cmd<0>(name);
+    return _::cmd<0>(name);
 }
 
 } // namespace sky

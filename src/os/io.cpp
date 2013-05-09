@@ -7,10 +7,6 @@ input::input() :
     fd(-1)
 {}
 
-input::input(int fd) :
-    fd(fd)
-{}
-
 size_t input::write(void const*buf, size_t count) const
 {
     return write_fd(fd, buf, count);
@@ -22,10 +18,6 @@ void input::close()
 }
 
 output::output() :
-    fd(fd)
-{}
-
-output::output(int fd) :
     fd(fd)
 {}
 

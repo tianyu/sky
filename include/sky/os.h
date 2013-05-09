@@ -13,7 +13,7 @@ namespace sky {
  */
 
 /**
- * @brief The input end of a file or stream.
+ * @brief The input end of a file or stream to be written to.
  * @ingroup os
  */
 class input
@@ -29,7 +29,9 @@ public:
 
     input(input const&) = default;
 
-    explicit input(int fd);
+    explicit constexpr input(int fd) :
+        fd(fd)
+    {}
 
     /**
      * @brief Writes the bytes in a given buffer to the input.
@@ -74,7 +76,7 @@ private:
 };
 
 /**
- * @brief The output end of a stream.
+ * @brief The output end of a stream to be read from.
  * @ingroup os
  */
 class output
@@ -87,7 +89,9 @@ public:
 
     output(output const&) = default;
 
-    explicit output(int fd);
+    explicit constexpr output(int fd) :
+        fd(fd)
+    {}
 
     /**
      * @brief Reads bytes from the output into the given buffer.
@@ -142,6 +146,30 @@ private:
 };
 
 /**
+ * @brief Standard input.
+ * @ingroup os
+ *
+ * The output end of the process' standard input stream.
+ */
+constexpr const output stdin  {0};
+
+/**
+ * @brief Standard output.
+ * @ingroup os
+ *
+ * The input end of this process' standard output stream.
+ */
+constexpr const input stdout {1};
+
+/**
+ * @brief Standard error.
+ * @ingroup os
+ *
+ * The input end of this process' standard error stream.
+ */
+constexpr const input stderr {2};
+
+/**
  * @brief Make a pipe.
  * @ingroup os
  * @return A tuple containing the input and output ends of the pipe.
@@ -154,9 +182,9 @@ template<typename T>
 typename std::enable_if<
 std::is_void<decltype(
         std::declval<T>().execute(
-            std::declval<input>(),
             std::declval<output>(),
-            std::declval<output>())
+            std::declval<input>(),
+            std::declval<input>())
         )>::value,
 std::true_type>::type
 has_execute(T);
@@ -189,9 +217,9 @@ public:
         args{name, std::forward<Args>(args)..., nullptr}
     {}
 
-    void execute(input const&in,
-                 output const&out,
-                 output const&err) const
+    void execute(output const&in = stdin,
+                 input const&out = stdout,
+                 input const&err = stderr) const
     {
         execvp(args[0], args);
     }

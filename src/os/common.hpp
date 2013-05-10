@@ -121,6 +121,29 @@ size_t read_fd(int fd, void *buf, size_t count,
     }
 }
 
+void dup_fd(int newfd, int oldfd,
+            unsigned try_again = MAX_TRY_TIMES)
+{
+    if (::dup2(oldfd, newfd) != -1) return;
+
+    switch (errno) {
+    case EBADF:
+        throw std::invalid_argument("dup_fd: Bad file descriptor.");
+    case EBUSY:
+        throw make_system_error(EBUSY, "dup_fd: Race condition detected.");
+    case EINTR:
+        if (!try_again)
+            throw make_system_error(EINTR, "dup_fd: Interrupted.");
+        dup_fd(newfd, oldfd, try_again - 1);
+        return;
+    case EMFILE:
+        throw make_system_error(EMFILE,
+            "dup_fd: Too many file descriptors in the process.");
+    default:
+        throw make_system_error(errno, "dup_fd: Unknown error.");
+    }
+}
+
 } // namespace
 
 #endif // COMMON_HPP

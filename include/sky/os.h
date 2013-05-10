@@ -64,6 +64,18 @@ public:
     }
 
     /**
+     * @brief Duplicates this input to refer to
+     *        the same stream as the given input.
+     *
+     * After this operation completes successfully, this input and the given
+     * input will refer to the same stream and may be used interchangeably.
+     * Both inputs can and should be closed when they are no longer needed.
+     *
+     * @param in The input to duplicate.
+     */
+    void dup(input in) const;
+
+    /**
      * @brief Close this input.
      *
      * Once the input is closed, all other calls to write() and close()
@@ -132,6 +144,18 @@ public:
     {
         return read(&value, sizeof(T));
     }
+
+    /**
+     * @brief Duplicates this output to refer to
+     *        the same stream as the given output.
+     *
+     * After this operation completes successfully, this output and the given
+     * output will refer to the same stream and may be used interchangeably.
+     * Both outputs can and should be closed when they are no longer needed.
+     *
+     * @param out The output to duplicate.
+     */
+    void dup(output out) const;
 
     /**
      * @brief Close this output.
@@ -217,10 +241,13 @@ public:
         args{name, std::forward<Args>(args)..., nullptr}
     {}
 
-    void execute(output const&in = stdin,
-                 input const&out = stdout,
-                 input const&err = stderr) const
+    void execute(output in = stdin,
+                 input out = stdout,
+                 input err = stderr) const
     {
+        stdin.dup(in);
+        stdout.dup(out);
+        stderr.dup(err);
         execvp(args[0], args);
     }
 

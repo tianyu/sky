@@ -37,14 +37,35 @@ TEST_F(IO, ConstructInput)
 
 TEST_F(IO, CloseInput)
 {
-    ASSERT_FALSE(::close(write_fd));
+    ASSERT_FALSE(::close(read_fd));
 
-    input in(read_fd);
+    input in(write_fd);
 
     EXPECT_NO_THROW(in.close())
             << "Couldn't close the input.";
     EXPECT_ANY_THROW(in.close())
             << "Shouldn't be able to close an input more than once.";
+}
+
+TEST_F(IO, DupInput)
+{
+    input in(100);
+
+    try {
+        char const expected[] = "Hello";
+        char actual[10] { '\0' };
+
+        in.dup(input(write_fd));
+
+        ASSERT_EQ(6, in.write(expected));
+        ASSERT_EQ(6, ::read(read_fd, actual, 10));
+
+        EXPECT_STREQ(expected, actual);
+
+    } catch(...) {
+        try { in.close(); } catch (...) {}
+        throw;
+    }
 }
 
 TEST_F(IO, CloseInput_BadFile)
@@ -70,10 +91,31 @@ TEST_F(IO, CloseOutput)
             << "Shouldn't be able to close an output more than once.";
 }
 
-TEST_F(IO, CloseOuput_BadFile)
+TEST_F(IO, CloseOutput_BadFile)
 {
     output out(-1);
     EXPECT_THROW(out.close(), std::invalid_argument);
+}
+
+TEST_F(IO, DupOutput)
+{
+    output out(100);
+
+    try {
+        char const expected[] = "Hello";
+        char actual[10] { '\0' };
+
+        out.dup(output(read_fd));
+
+        ASSERT_EQ(6, ::write(write_fd, expected, 6));
+        ASSERT_EQ(6, out.read(actual));
+
+        EXPECT_STREQ(expected, actual);
+
+    } catch(...) {
+        try { out.close(); } catch (...) {}
+        throw;
+    }
 }
 
 TEST_F(IO, Write)

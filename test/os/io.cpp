@@ -68,6 +68,33 @@ TEST_F(IO, DupInput)
     }
 }
 
+TEST_F(IO, DupInput_Same)
+{
+    input in(write_fd);
+
+    try {
+        char const expected[] = "Hello";
+        char actual[10] { '\0' };
+
+        in.dup(input(write_fd));
+
+        ASSERT_EQ(6, in.write(expected));
+        ASSERT_EQ(6, ::read(read_fd, actual, 10));
+
+        EXPECT_STREQ(expected, actual);
+
+    } catch(...) {
+        try { in.close(); } catch (...) {}
+        throw;
+    }
+}
+
+TEST_F(IO, DupInput_BadFd)
+{
+    input in(100);
+    EXPECT_THROW(in.dup(input(-1)), std::invalid_argument);
+}
+
 TEST_F(IO, CloseInput_BadFile)
 {
     input in(-1);
@@ -116,6 +143,33 @@ TEST_F(IO, DupOutput)
         try { out.close(); } catch (...) {}
         throw;
     }
+}
+
+TEST_F(IO, DupOutput_Same)
+{
+    output out(read_fd);
+
+    try {
+        char const expected[] = "Hello";
+        char actual[10] { '\0' };
+
+        out.dup(output(read_fd));
+
+        ASSERT_EQ(6, ::write(write_fd, expected, 6));
+        ASSERT_EQ(6, out.read(actual));
+
+        EXPECT_STREQ(expected, actual);
+
+    } catch(...) {
+        try { out.close(); } catch (...) {}
+        throw;
+    }
+}
+
+TEST_F(IO, DupOutput_BadFd)
+{
+    output out(100);
+    EXPECT_THROW(out.dup(output(-1)), std::invalid_argument);
 }
 
 TEST_F(IO, Write)

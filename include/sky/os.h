@@ -171,30 +171,37 @@ private:
 
 /**
  * @brief Standard input.
- * @ingroup os
  *
  * The output end of the process' standard input stream.
+ * @ingroup os
  */
 constexpr const output stdin  {0};
 
 /**
  * @brief Standard output.
- * @ingroup os
  *
  * The input end of this process' standard output stream.
+ * @ingroup os
  */
 constexpr const input stdout {1};
 
 /**
  * @brief Standard error.
- * @ingroup os
  *
  * The input end of this process' standard error stream.
+ * @ingroup os
  */
 constexpr const input stderr {2};
 
 /**
  * @brief Make a pipe.
+ *
+ * #### Example
+ *
+ *     input in;
+ *     output out;
+ *     std::tie<in, out> = make_pipe();
+ *
  * @ingroup os
  * @return A tuple containing the input and output ends of the pipe.
  */
@@ -222,6 +229,21 @@ class is_executable_helper :
 
 } // namespace _
 
+/**
+ * @brief Type trait to determine if a class is an executable.
+ *
+ * A type `T` is executable if the following code is valid:
+ *
+ *     t.execute(input(), output(), output());
+ *
+ * For some object, `t`, of type `T`.
+ *
+ * If `execute` completes successfully, it will not return.
+ * Instead the current process will be replaced by the process defined in the
+ * executable.
+ *
+ * @ingroup os
+ */
 template<typename T>
 class is_executable :
         public _::is_executable_helper<
@@ -257,6 +279,26 @@ private:
 
 } // namespace _
 
+
+/**
+ * @brief Creates an executable command.
+ *
+ * If @a name given is not a path, then the file to execute is found as if the
+ * command was typed into a console.
+ *
+ * @warning All of the arguments given must decay to `char const*` or
+ * compilation will fail.
+ *
+ * #### Examples
+ *
+ *     cmd("ls", "-l");
+ *
+ * @ingroup os
+ * @param name The name of the command.
+ * @param args The arguments to be passed into the command.
+ *             The type of each argument must decay to `char const*`.
+ * @return An executable object.
+ */
 template<typename... Args>
 constexpr _::cmd<sizeof...(Args)>
 cmd(char const* name, Args&&... args)

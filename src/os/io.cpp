@@ -4,7 +4,7 @@
 namespace sky {
 
 input::input() :
-    fd(-1)
+    fd(INVALID_FD)
 {}
 
 size_t input::write(void const*buf, size_t count) const
@@ -23,7 +23,7 @@ void input::close()
 }
 
 output::output() :
-    fd(fd)
+    fd(INVALID_FD)
 {}
 
 size_t output::read(void *buf, size_t count) const

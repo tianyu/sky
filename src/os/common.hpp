@@ -8,6 +8,8 @@
 
 namespace {
 
+enum { INVALID_FD = -1 };
+
 std::system_error make_system_error(int error, char const* msg = nullptr)
 {
     return std::system_error(error, std::system_category(), msg);

@@ -30,6 +30,12 @@ public:
     int write_fd;
 };
 
+TEST_F(IO, DefaultConstructInput)
+{
+    input in;
+    EXPECT_THROW(in.close(), std::invalid_argument);
+}
+
 TEST_F(IO, ConstructInput)
 {
     input(0);
@@ -99,6 +105,12 @@ TEST_F(IO, CloseInput_BadFile)
 {
     input in(-1);
     EXPECT_THROW(in.close(), std::invalid_argument);
+}
+
+TEST_F(IO, DefaultConstructOutput)
+{
+    output out;
+    EXPECT_THROW(out.close(), std::invalid_argument);
 }
 
 TEST_F(IO, ConstuctOutput)

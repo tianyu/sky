@@ -41,4 +41,8 @@ void output::close()
     close_fd(fd);
 }
 
+constexpr const output stdin {STDIN_FILENO};
+constexpr const input stdout {STDOUT_FILENO};
+constexpr const input stderr {STDERR_FILENO};
+
 } // namespace sky;

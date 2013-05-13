@@ -175,7 +175,7 @@ private:
  * The output end of the process' standard input stream.
  * @ingroup os
  */
-constexpr const output stdin  {0};
+extern const output stdin;
 
 /**
  * @brief Standard output.
@@ -183,7 +183,7 @@ constexpr const output stdin  {0};
  * The input end of this process' standard output stream.
  * @ingroup os
  */
-constexpr const input stdout {1};
+extern const input stdout;
 
 /**
  * @brief Standard error.
@@ -191,7 +191,7 @@ constexpr const input stdout {1};
  * The input end of this process' standard error stream.
  * @ingroup os
  */
-constexpr const input stderr {2};
+extern const input stderr;
 
 /**
  * @brief Make a pipe.

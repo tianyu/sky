@@ -30,6 +30,14 @@ public:
 
     input(input const&) = default;
 
+    /**
+     * @brief Creates an input from a file descriptor.
+     *
+     * @warning This is an internal function and
+     * should not be used in production code.
+     *
+     * @param fd A valid file descriptor.
+     */
     explicit constexpr input(int fd) :
         fd(fd)
     {}
@@ -75,6 +83,17 @@ public:
      * @param in The input to duplicate.
      */
     void dup(input in) const;
+
+    /**
+     * @brief Duplicates this input.
+     *
+     * A new input is created that refers to the same stream as this input, and
+     * both may be used interchangeably.
+     * Both inputs can and should be closed when they are no longer needed.
+     *
+     * @return A new, duplicate input.
+     */
+    input dup() const;
 
     /**
      * @brief Close this input.
@@ -157,6 +176,17 @@ public:
      * @param out The output to duplicate.
      */
     void dup(output out) const;
+
+    /**
+     * @brief Duplicates this output.
+     *
+     * A new output is created that refers to the same stream as this output,
+     * and both may be used interchangeably.
+     * Both outputs can and should be closed when they are no longer needed.
+     *
+     * @return A new, duplicate output.
+     */
+    output dup() const;
 
     /**
      * @brief Close this output.

@@ -4,6 +4,7 @@
 #include "gtest/gtest.h"
 
 #include "sky/memory.hpp"
+#include "sky/scope_guard.hpp"
 #include "sky/os.h"
 
 using namespace sky;
@@ -56,49 +57,61 @@ TEST_F(IO, CloseInput)
 TEST_F(IO, DupInput)
 {
     input in(100);
+    auto close_in = scope_guard([&] { in.close(); });
 
-    try {
-        char const expected[] = "Hello";
-        char actual[10] { '\0' };
+    char const expected[] = "Hello";
+    char actual[10] { '\0' };
 
-        in.dup(input(write_fd));
+    in.dup(input(write_fd));
 
-        ASSERT_EQ(6, in.write(expected));
-        ASSERT_EQ(6, ::read(read_fd, actual, 10));
+    ASSERT_EQ(6, in.write(expected));
+    ASSERT_EQ(6, ::read(read_fd, actual, 10));
 
-        EXPECT_STREQ(expected, actual);
-
-    } catch(...) {
-        try { in.close(); } catch (...) {}
-        throw;
-    }
+    EXPECT_STREQ(expected, actual);
 }
 
 TEST_F(IO, DupInput_Same)
 {
     input in(write_fd);
+    auto close_in = scope_guard([&] { in.close(); });
 
-    try {
-        char const expected[] = "Hello";
-        char actual[10] { '\0' };
+    char const expected[] = "Hello";
+    char actual[10] { '\0' };
 
-        in.dup(input(write_fd));
+    in.dup(input(write_fd));
 
-        ASSERT_EQ(6, in.write(expected));
-        ASSERT_EQ(6, ::read(read_fd, actual, 10));
+    ASSERT_EQ(6, in.write(expected));
+    ASSERT_EQ(6, ::read(read_fd, actual, 10));
 
-        EXPECT_STREQ(expected, actual);
-
-    } catch(...) {
-        try { in.close(); } catch (...) {}
-        throw;
-    }
+    EXPECT_STREQ(expected, actual);
 }
 
 TEST_F(IO, DupInput_BadFd)
 {
     input in(100);
     EXPECT_THROW(in.dup(input(-1)), std::invalid_argument);
+}
+
+TEST_F(IO, DupThisInput)
+{
+    input in(write_fd);
+
+    char const expected[] = "Hello";
+    char actual[10] { '\0' };
+
+    input dup = in.dup();
+    auto close_dup = scope_guard([&] { dup.close(); });
+
+    ASSERT_EQ(6, dup.write(expected));
+    ASSERT_EQ(6, ::read(read_fd, actual, 10));
+
+    EXPECT_STREQ(expected, actual);
+}
+
+TEST_F(IO, DupThisInput_BadFd)
+{
+    input in(100);
+    EXPECT_THROW(in.dup(), std::invalid_argument);
 }
 
 TEST_F(IO, CloseInput_BadFile)
@@ -139,49 +152,61 @@ TEST_F(IO, CloseOutput_BadFile)
 TEST_F(IO, DupOutput)
 {
     output out(100);
+    auto close_out = scope_guard([&] { out.close(); });
 
-    try {
-        char const expected[] = "Hello";
-        char actual[10] { '\0' };
+    char const expected[] = "Hello";
+    char actual[10] { '\0' };
 
-        out.dup(output(read_fd));
+    out.dup(output(read_fd));
 
-        ASSERT_EQ(6, ::write(write_fd, expected, 6));
-        ASSERT_EQ(6, out.read(actual));
+    ASSERT_EQ(6, ::write(write_fd, expected, 6));
+    ASSERT_EQ(6, out.read(actual));
 
-        EXPECT_STREQ(expected, actual);
-
-    } catch(...) {
-        try { out.close(); } catch (...) {}
-        throw;
-    }
+    EXPECT_STREQ(expected, actual);
 }
 
 TEST_F(IO, DupOutput_Same)
 {
     output out(read_fd);
+    auto close_out = scope_guard([&] { out.close(); });
 
-    try {
-        char const expected[] = "Hello";
-        char actual[10] { '\0' };
+    char const expected[] = "Hello";
+    char actual[10] { '\0' };
 
-        out.dup(output(read_fd));
+    out.dup(output(read_fd));
 
-        ASSERT_EQ(6, ::write(write_fd, expected, 6));
-        ASSERT_EQ(6, out.read(actual));
+    ASSERT_EQ(6, ::write(write_fd, expected, 6));
+    ASSERT_EQ(6, out.read(actual));
 
-        EXPECT_STREQ(expected, actual);
-
-    } catch(...) {
-        try { out.close(); } catch (...) {}
-        throw;
-    }
+    EXPECT_STREQ(expected, actual);
 }
 
 TEST_F(IO, DupOutput_BadFd)
 {
     output out(100);
     EXPECT_THROW(out.dup(output(-1)), std::invalid_argument);
+}
+
+TEST_F(IO, DupThisOutput)
+{
+    output out(read_fd);
+
+    char const expected[] = "Hello";
+    char actual[10] { '\0' };
+
+    output dup = out.dup();
+    auto close_dup = scope_guard([&] { dup.close(); });
+
+    ASSERT_EQ(6, ::write(write_fd, expected, 6));
+    ASSERT_EQ(6, dup.read(actual));
+
+    EXPECT_STREQ(expected, actual);
+}
+
+TEST_F(IO, DupThisOutput_BadFd)
+{
+    output out(100);
+    EXPECT_THROW(out.dup(), std::invalid_argument);
 }
 
 TEST_F(IO, Write)

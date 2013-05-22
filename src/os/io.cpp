@@ -17,6 +17,11 @@ void input::dup(input in) const
     dup_fd(fd, in.fd);
 }
 
+input input::dup() const
+{
+    return input(dup_fd(fd));
+}
+
 void input::close()
 {
     close_fd(fd);
@@ -34,6 +39,11 @@ size_t output::read(void *buf, size_t count) const
 void output::dup(output out) const
 {
     dup_fd(fd, out.fd);
+}
+
+output output::dup() const
+{
+    return output(dup_fd(fd));
 }
 
 void output::close()

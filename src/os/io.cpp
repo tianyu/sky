@@ -18,6 +18,11 @@ output output::dup() const
     return output(dup_fd(fd));
 }
 
+bool output::is_standard() const
+{
+    return is_standard_fd(fd);
+}
+
 void output::close() const
 {
     close_fd(fd);
@@ -36,6 +41,11 @@ void input::dup(input out) const
 input input::dup() const
 {
     return input(dup_fd(fd));
+}
+
+bool input::is_standard() const
+{
+    return is_standard_fd(fd);
 }
 
 void input::close() const

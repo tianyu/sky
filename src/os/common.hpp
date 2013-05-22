@@ -164,6 +164,13 @@ void dup_fd(int newfd, int oldfd,
     dup_fd_error(errno);
 }
 
+bool is_standard_fd(int fd)
+{
+    return  fd == STDIN_FILENO ||
+            fd == STDOUT_FILENO ||
+            fd == STDERR_FILENO;
+}
+
 } // namespace
 
 #endif // COMMON_HPP

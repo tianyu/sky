@@ -36,6 +36,18 @@ TEST_F(IO, ConstructOutput)
     output(0);
 }
 
+TEST_F(IO, OutputIsStandard)
+{
+    EXPECT_TRUE(output(1).is_standard());
+    EXPECT_TRUE(output(2).is_standard());
+}
+
+TEST_F(IO, OutputIsNotStandard)
+{
+    EXPECT_FALSE(output(-1).is_standard());
+    EXPECT_FALSE(output(3).is_standard());
+}
+
 TEST_F(IO, CloseOutput)
 {
     ASSERT_FALSE(::close(read_fd));
@@ -117,6 +129,17 @@ TEST_F(IO, CloseOutput_BadFile)
 TEST_F(IO, ConstuctInput)
 {
     input(1);
+}
+
+TEST_F(IO, InputIsStandard)
+{
+    EXPECT_TRUE(input(0).is_standard());
+}
+
+TEST_F(IO, InputIsNotStandard)
+{
+    EXPECT_FALSE(input(-1).is_standard());
+    EXPECT_FALSE(input(3).is_standard());
 }
 
 TEST_F(IO, CloseInput)

@@ -38,6 +38,24 @@ namespace sky {
  *   *read access*.
  *
  * Collectively, we will refer to both input and output objects as I/O objects.
+ *
+ * ## Object States
+ * Once an I/O object has been constructed, its handle will never change.
+ * There are two states that an I/O object can be in, depending on the state
+ * of its handle:
+ *
+ * 1. Valid: The handle is referring to a valid stream.
+ *    Any member functions on a valid I/O object can be called.
+ * 2. Invalid: The handle is not referring to a valid stream.
+ *    This may happen if the I/O object was closed or if it never referred to a
+ *    valid stream in the first place.
+ *    Any attempt to call member functions on an invalid I/O object will cause
+ *    the function to throw `std::invalid_argument`.
+ *
+ * In general, I/O objects returned from the @ref os library will always be
+ * valid.
+ * Since the state of an I/O object cannot be queried, it is up to the user to
+ * use I/O objects correctly.
  */
 
 /**

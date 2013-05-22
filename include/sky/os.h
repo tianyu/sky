@@ -55,7 +55,26 @@ namespace sky {
  * In general, I/O objects returned from the @ref os library will always be
  * valid.
  * Since the state of an I/O object cannot be queried, it is up to the user to
- * use I/O objects correctly.
+ * stop using I/O objects after they become invalid.
+ *
+ * ## Const-ness and Thread Safety
+ * In general, member functions of I/O objects are const.
+ * This means that the handle of the I/O object is bit-wise constant, however,
+ * it does not imply that each member function is thread-safe.
+ *
+ * ## Duplicating I/O Objects
+ * An I/O object may be duplicated by calling one of its `dup` member functions.
+ * For example:
+ *
+ *     input newinput = oldinput.dup(); // Case 1
+ *     newinput.dup(oldinput); // Case 2
+ *
+ * However, **duplicating is not the same as copying**.
+ * In general, a duplicated I/O object contains a different handle to the same
+ * stream.
+ * So while it is possible to read/write from either the original or the
+ * duplicated I/O object, both objects should be closed when they are no longer
+ * needed.
  */
 
 /**

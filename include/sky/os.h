@@ -48,14 +48,13 @@ class input
 {
 public:
 
-    /**
-     * @brief Creates an invalid input object.
-     *
-     * Any calls to write() or close() will throw an exception.
-     */
-    input();
+    input() = delete;
 
     input(input const&) = default;
+    input(input &&) = default;
+
+    input &operator =(input const&) = delete;
+    input &operator =(input &&) = delete;
 
     /**
      * @brief Creates an input from a file descriptor.
@@ -134,7 +133,7 @@ public:
      * Once the input is closed, all other calls to write() and close()
      * will throw std::invalid_argument.
      */
-    void close();
+    void close() const;
 
 private:
     int fd;
@@ -147,12 +146,14 @@ private:
 class output
 {
 public:
-    /**
-     * @brief Creates an invalid output object.
-     */
-    output();
+
+    output() = delete;
 
     output(output const&) = default;
+    output(output &&) = default;
+
+    output &operator =(output const&) = delete;
+    output &operator =(output &&) = delete;
 
     explicit constexpr output(int fd) :
         fd(fd)
@@ -233,7 +234,7 @@ public:
      * Once the output is closed, all other calls to read() and close() will
      * throw std::invalid_argument.
      */
-    void close();
+    void close() const;
 
 private:
     int fd;
@@ -243,7 +244,7 @@ private:
  * @brief Standard input.
  *
  * The output end of the process' standard input stream.
- * @ingroup os
+ * @ingroup io
  */
 extern const output stdin;
 
@@ -251,7 +252,7 @@ extern const output stdin;
  * @brief Standard output.
  *
  * The input end of this process' standard output stream.
- * @ingroup os
+ * @ingroup io
  */
 extern const input stdout;
 
@@ -259,7 +260,7 @@ extern const input stdout;
  * @brief Standard error.
  *
  * The input end of this process' standard error stream.
- * @ingroup os
+ * @ingroup io
  */
 extern const input stderr;
 

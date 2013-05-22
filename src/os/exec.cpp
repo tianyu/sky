@@ -4,8 +4,13 @@
 
 namespace sky {
 
-void _::execvp(char const*name, char const*const args[])
+void _::execvp(output in, input out, input err,
+               char const*name, char const*const args[])
 {
+    stdin.dup(in);
+    stdout.dup(out);
+    stderr.dup(err);
+
     ::execvp(name, const_cast<char *const*>(args));
 
     // execvp should not return. If it does, it sets errno.

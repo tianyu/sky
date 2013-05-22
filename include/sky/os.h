@@ -14,8 +14,35 @@ namespace sky {
  */
 
 /**
- * @brief The input end of a file or stream to be written to.
+ * @defgroup io Input/Output
  * @ingroup os
+ *
+ * @warning Currently, only posix-compliant systems are supported by this
+ * library.
+ * In particular, *Windows is not supported*.
+ *
+ * The operating system provides handles to streams that can be used to access
+ * files, sockets, pipes, etc.
+ * These are called "file descriptors" on posix systems and "HANDLE's" on
+ * Windows.
+ * Each operating system provides a set of system calls that can be used to
+ * manipulate and interact with these handles.
+ *
+ * The goal of this module is to provide a system-agnostic interface to
+ * system-specific handles.
+ * In particular:
+ *
+ * - @ref input objects provide an interface to handles that have
+ *   *write access*.
+ * - @ref output object provide an interface to handles that have
+ *   *read access*.
+ *
+ * Collectively, we will refer to both input and output objects as I/O objects.
+ */
+
+/**
+ * @brief The input end of a file or stream to be written to.
+ * @ingroup io
  */
 class input
 {
@@ -96,6 +123,12 @@ public:
     input dup() const;
 
     /**
+     * @brief Determines if this input is a standard input.
+     * @return true iff this input is a standard input.
+     */
+    bool is_standard() const;
+
+    /**
      * @brief Close this input.
      *
      * Once the input is closed, all other calls to write() and close()
@@ -109,7 +142,7 @@ private:
 
 /**
  * @brief The output end of a stream to be read from.
- * @ingroup os
+ * @ingroup io
  */
 class output
 {
@@ -187,6 +220,12 @@ public:
      * @return A new, duplicate output.
      */
     output dup() const;
+
+    /**
+     * @brief Determines if this output is a standard output.
+     * @return true iff this output is a standard output.
+     */
+    bool is_standard() const;
 
     /**
      * @brief Close this output.
@@ -283,7 +322,8 @@ class is_executable :
 
 namespace _ {
 
-void execvp(char const*name, const char * const args[]);
+void execvp(output in, input out, input err,
+            char const*name, const char *const args[]);
 
 template<size_t N>
 class cmd
@@ -298,10 +338,7 @@ public:
                  input out = stdout,
                  input err = stderr) const
     {
-        stdin.dup(in);
-        stdout.dup(out);
-        stderr.dup(err);
-        execvp(args[0], args);
+        execvp(in, out, err, args[0], args);
     }
 
 private:

@@ -7,7 +7,7 @@ std::tuple<input, output> make_pipe()
 {
     int fds[2];
     if (::pipe(fds) == 0) {
-        return std::make_tuple(input(fds[1]), output(fds[0]));
+        return std::make_tuple(input(fds[0]), output(fds[1]));
     }
 
     switch (errno) {

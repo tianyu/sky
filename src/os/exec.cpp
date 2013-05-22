@@ -4,7 +4,7 @@
 
 namespace sky {
 
-void _::execvp(output in, input out, input err,
+void _::execvp(input in, output out, output err,
                char const*name, char const*const args[])
 {
     stdin.dup(in);

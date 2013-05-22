@@ -41,106 +41,7 @@ namespace sky {
  */
 
 /**
- * @brief The input end of a file or stream to be written to.
- * @ingroup io
- */
-class input
-{
-public:
-
-    input() = delete;
-
-    input(input const&) = default;
-    input(input &&) = default;
-
-    input &operator =(input const&) = delete;
-    input &operator =(input &&) = delete;
-
-    /**
-     * @brief Creates an input from a file descriptor.
-     *
-     * @warning This is an internal function and
-     * should not be used in production code.
-     *
-     * @param fd A valid file descriptor.
-     */
-    explicit constexpr input(int fd) :
-        fd(fd)
-    {}
-
-    /**
-     * @brief Writes the bytes in a given buffer to the input.
-     * @param buf A pointer to the start of the buffer.
-     * @param count The size of the buffer in number of bytes.
-     * @return The number of bytes written to the input.
-     */
-    size_t write(void const*buf, size_t count) const;
-
-    /**
-     * @brief Writes the bytes in a given array to the input.
-     * @param buf A reference to an array to write to the buffer.
-     * @return The number of bytes written to the input.
-     */
-    template<typename T, size_t N>
-    size_t write(T const(&buf)[N]) const
-    {
-        return write(&buf, N*sizeof(T));
-    }
-
-    /**
-     * @brief Writes the bytes of a given object to the input.
-     * @param value The value to write.
-     * @return The number of bytes written to the input.
-     */
-    template<typename T>
-    size_t write(T const&value) const
-    {
-        return write(&value, sizeof(T));
-    }
-
-    /**
-     * @brief Duplicates this input to refer to
-     *        the same stream as the given input.
-     *
-     * After this operation completes successfully, this input and the given
-     * input will refer to the same stream and may be used interchangeably.
-     * Both inputs can and should be closed when they are no longer needed.
-     *
-     * @param in The input to duplicate.
-     */
-    void dup(input in) const;
-
-    /**
-     * @brief Duplicates this input.
-     *
-     * A new input is created that refers to the same stream as this input, and
-     * both may be used interchangeably.
-     * Both inputs can and should be closed when they are no longer needed.
-     *
-     * @return A new, duplicate input.
-     */
-    input dup() const;
-
-    /**
-     * @brief Determines if this input is a standard input.
-     * @return true iff this input is a standard input.
-     */
-    bool is_standard() const;
-
-    /**
-     * @brief Close this input.
-     *
-     * Once the input is closed, all other calls to write() and close()
-     * will throw std::invalid_argument.
-     */
-    void close() const;
-
-private:
-    int fd;
-};
-
-/**
- * @brief The output end of a stream to be read from.
+ * @brief The output end of a file or stream to be written to.
  * @ingroup io
  */
 class output
@@ -155,48 +56,46 @@ public:
     output &operator =(output const&) = delete;
     output &operator =(output &&) = delete;
 
+    /**
+     * @brief Creates an output from a file descriptor.
+     *
+     * @warning This is an internal function and
+     * should not be used in production code.
+     *
+     * @param fd A valid file descriptor.
+     */
     explicit constexpr output(int fd) :
         fd(fd)
     {}
 
     /**
-     * @brief Reads bytes from the output into the given buffer.
+     * @brief Writes the bytes in a given buffer to the output.
      * @param buf A pointer to the start of the buffer.
      * @param count The size of the buffer in number of bytes.
-     * @return The number of bytes read.
+     * @return The number of bytes written to the output.
      */
-    size_t read(void *buf, size_t count) const;
+    size_t write(void const*buf, size_t count) const;
 
     /**
-     * @brief Read bytes from the output into the given array.
-     *
-     * It is up to the user to ensure that the number of bytes and the type of
-     * data available to be read aligns with elements of the array.
-     * It is highly recommended that only POD types are used for this function.
-     *
-     * @param buf The array to store the read bytes.
-     * @return The number of bytes read.
+     * @brief Writes the bytes in a given array to the output.
+     * @param buf A reference to an array to write to the buffer.
+     * @return The number of bytes written to the output.
      */
     template<typename T, size_t N>
-    size_t read(T (&buf)[N]) const
+    size_t write(T const(&buf)[N]) const
     {
-        return read(&buf, N*sizeof(T));
+        return write(&buf, N*sizeof(T));
     }
 
     /**
-     * @brief Read bytes from the output into a given value.
-     *
-     * It is up to the suer to ensure that the number of bytes and the type of
-     * data available to be read can be interpreted as an object of type T.
-     * It is highly recommended that only POD types are used for this function.
-     *
-     * @param value The value to store the read bytes.
-     * @return The number of bytes read.
+     * @brief Writes the bytes of a given object to the output.
+     * @param value The value to write.
+     * @return The number of bytes written to the output.
      */
     template<typename T>
-    size_t read(T &value) const
+    size_t write(T const&value) const
     {
-        return read(&value, sizeof(T));
+        return write(&value, sizeof(T));
     }
 
     /**
@@ -207,9 +106,9 @@ public:
      * output will refer to the same stream and may be used interchangeably.
      * Both outputs can and should be closed when they are no longer needed.
      *
-     * @param out The output to duplicate.
+     * @param in The output to duplicate.
      */
-    void dup(output out) const;
+    void dup(output in) const;
 
     /**
      * @brief Duplicates this output.
@@ -231,7 +130,108 @@ public:
     /**
      * @brief Close this output.
      *
-     * Once the output is closed, all other calls to read() and close() will
+     * Once the output is closed, all other calls to write() and close()
+     * will throw std::invalid_argument.
+     */
+    void close() const;
+
+private:
+    int fd;
+};
+
+/**
+ * @brief The input end of a stream to be read from.
+ * @ingroup io
+ */
+class input
+{
+public:
+
+    input() = delete;
+
+    input(input const&) = default;
+    input(input &&) = default;
+
+    input &operator =(input const&) = delete;
+    input &operator =(input &&) = delete;
+
+    explicit constexpr input(int fd) :
+        fd(fd)
+    {}
+
+    /**
+     * @brief Reads bytes from the input into the given buffer.
+     * @param buf A pointer to the start of the buffer.
+     * @param count The size of the buffer in number of bytes.
+     * @return The number of bytes read.
+     */
+    size_t read(void *buf, size_t count) const;
+
+    /**
+     * @brief Read bytes from the input into the given array.
+     *
+     * It is up to the user to ensure that the number of bytes and the type of
+     * data available to be read aligns with elements of the array.
+     * It is highly recommended that only POD types are used for this function.
+     *
+     * @param buf The array to store the read bytes.
+     * @return The number of bytes read.
+     */
+    template<typename T, size_t N>
+    size_t read(T (&buf)[N]) const
+    {
+        return read(&buf, N*sizeof(T));
+    }
+
+    /**
+     * @brief Read bytes from the input into a given value.
+     *
+     * It is up to the suer to ensure that the number of bytes and the type of
+     * data available to be read can be interpreted as an object of type T.
+     * It is highly recommended that only POD types are used for this function.
+     *
+     * @param value The value to store the read bytes.
+     * @return The number of bytes read.
+     */
+    template<typename T>
+    size_t read(T &value) const
+    {
+        return read(&value, sizeof(T));
+    }
+
+    /**
+     * @brief Duplicates this input to refer to
+     *        the same stream as the given input.
+     *
+     * After this operation completes successfully, this input and the given
+     * input will refer to the same stream and may be used interchangeably.
+     * Both inputs can and should be closed when they are no longer needed.
+     *
+     * @param out The input to duplicate.
+     */
+    void dup(input out) const;
+
+    /**
+     * @brief Duplicates this input.
+     *
+     * A new input is created that refers to the same stream as this input,
+     * and both may be used interchangeably.
+     * Both inputs can and should be closed when they are no longer needed.
+     *
+     * @return A new, duplicate input.
+     */
+    input dup() const;
+
+    /**
+     * @brief Determines if this input is a standard input.
+     * @return true iff this input is a standard input.
+     */
+    bool is_standard() const;
+
+    /**
+     * @brief Close this input.
+     *
+     * Once the input is closed, all other calls to read() and close() will
      * throw std::invalid_argument.
      */
     void close() const;
@@ -243,26 +243,26 @@ private:
 /**
  * @brief Standard input.
  *
- * The output end of the process' standard input stream.
+ * The process' standard input stream.
  * @ingroup io
  */
-extern const output stdin;
+extern const input stdin;
 
 /**
  * @brief Standard output.
  *
- * The input end of this process' standard output stream.
+ * The process' standard output stream.
  * @ingroup io
  */
-extern const input stdout;
+extern const output stdout;
 
 /**
  * @brief Standard error.
  *
- * The input end of this process' standard error stream.
+ * The process' standard error stream.
  * @ingroup io
  */
-extern const input stderr;
+extern const output stderr;
 
 /**
  * @brief Make a pipe.
@@ -284,9 +284,9 @@ template<typename T>
 typename std::enable_if<
 std::is_void<decltype(
         std::declval<T>().execute(
-            std::declval<output>(),
             std::declval<input>(),
-            std::declval<input>())
+            std::declval<output>(),
+            std::declval<output>())
         )>::value,
 std::true_type>::type
 has_execute(T);
@@ -323,7 +323,7 @@ class is_executable :
 
 namespace _ {
 
-void execvp(output in, input out, input err,
+void execvp(input in, output out, output err,
             char const*name, const char *const args[]);
 
 template<size_t N>
@@ -335,9 +335,9 @@ public:
         args{name, std::forward<Args>(args)..., nullptr}
     {}
 
-    void execute(output in = stdin,
-                 input out = stdout,
-                 input err = stderr) const
+    void execute(input in = stdin,
+                 output out = stdout,
+                 output err = stderr) const
     {
         execvp(in, out, err, args[0], args);
     }

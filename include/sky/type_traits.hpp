@@ -92,6 +92,12 @@ STD_BINARY_PREDICATE(is_same);
 
 } // namespace predicate
 
+template<typename... Ts>
+struct exists {};
+
+template<typename... Ts>
+struct forall {};
+
 template<typename Predicate>
 struct relate
 {

@@ -328,12 +328,18 @@ std::is_void<decltype(
 std::true_type>::type
 has_execute(T);
 
-std::false_type has_execute(...);
+template<typename T>
+typename std::enable_if<
+std::is_void<decltype(
+        std::declval<T>().fork(
+            std::declval<input>(),
+            std::declval<output>(),
+            std::declval<output>())
+        )>::value,
+std::true_type>::type
+has_fork(T);
 
-template<typename HasExecute>
-class is_executable_helper :
-        public std::integral_constant<bool, HasExecute::value>
-{};
+std::false_type has_fork(...);
 
 } // namespace _
 
@@ -342,7 +348,8 @@ class is_executable_helper :
  *
  * A type `T` is executable if the following code is valid:
  *
- *     t.execute(input(), output(), output());
+ *     t.execute(stdin, stdout, stderr);
+ *     t.fork(stdin, stdout, stderr);
  *
  * For some object, `t`, of type `T`.
  *
@@ -354,13 +361,17 @@ class is_executable_helper :
  */
 template<typename T>
 class is_executable :
-        public _::is_executable_helper<
-            decltype(_::has_execute(std::declval<T>()))>
+        public sky::all_same<std::true_type,
+            decltype(_::has_execute(std::declval<T>())),
+            decltype(_::has_fork(std::declval<T>()))>
 {};
 
 namespace _ {
 
 void execvp(input in, output out, output err,
+            char const*name, const char *const args[]);
+
+void forkvp(input in, output out, output err,
             char const*name, const char *const args[]);
 
 template<size_t N>
@@ -377,6 +388,13 @@ public:
                  output err = stderr) const
     {
         execvp(in, out, err, args[0], args);
+    }
+
+    void fork(input in = stdin,
+              output out = stdout,
+              output err = stderr) const
+    {
+        forkvp(in, out, err, args[0], args);
     }
 
 private:
@@ -409,7 +427,7 @@ template<typename... Args>
 constexpr _::cmd<sizeof...(Args)>
 cmd(char const* name, Args&&... args)
 {
-    static_assert(sky::is_same<char const*,
+    static_assert(sky::all_same<char const*,
                   typename std::decay<Args>::type...>::value,
                   "Arguments must decay to type char const*.");
     return _::cmd<sizeof...(Args)>(name, std::forward<Args>(args)...);

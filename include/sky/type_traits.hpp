@@ -63,7 +63,6 @@ struct predicate_and<Predicate, T> : public
  * @ingroup type_trait
  */
 template<typename Predicate, typename T, typename... Us>
-template<typename Predicate, typename T, typename... Us>
 struct predicate_or;
 
 template<typename Predicate, typename T, typename First, typename... Rest>
@@ -77,6 +76,32 @@ template<typename Predicate, typename T>
 struct predicate_or<Predicate, T> : public
     std::false_type
 {};
+
+namespace predicate {
+
+#define STD_BINARY_PREDICATE(name) \
+struct name \
+{ \
+    template<typename T, typename U> \
+    using op = std::name<T,U>; \
+}
+
+STD_BINARY_PREDICATE(is_same);
+
+#undef STD_BINARY_PREDICATE
+
+} // namespace predicate
+
+template<typename Predicate>
+struct relate
+{
+    template<typename T, typename U>
+    struct op : public Predicate::template op<T,U>
+    {};
+
+
+
+};
 
 } // namespace sky
 

@@ -160,3 +160,24 @@ TEST(Relate, ForAll_None_ForAll_None)
             template op<forall<>, forall<>>::value;
     EXPECT_TRUE(value);
 }
+
+TEST(Relate, ForAll_None_Exists_None)
+{
+    bool value = relate<same>::
+            template op<forall<>, exists<>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, Exists_None_ForAll_None)
+{
+    bool value = relate<same>::
+            template op<exists<>, forall<>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, Exists_None_Exists_None)
+{
+    bool value = relate<same>::
+            template op<exists<>, exists<>>::value;
+    EXPECT_FALSE(value);
+}

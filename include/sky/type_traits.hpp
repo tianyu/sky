@@ -88,6 +88,22 @@ struct name \
 
 STD_BINARY_PREDICATE(is_same);
 
+STD_BINARY_PREDICATE(is_base_of);
+
+struct is_derived_from
+{
+    template<typename T, typename U>
+    using op = std::is_base_of<U,T>;
+};
+
+STD_BINARY_PREDICATE(is_convertible);
+
+struct is_convertible_from
+{
+    template<typename T, typename U>
+    using op = std::is_convertible<U,T>;
+};
+
 #undef STD_BINARY_PREDICATE
 
 } // namespace predicate
@@ -158,6 +174,18 @@ public:
     {};
 
 };
+
+#define BINARY_RELATION(name) \
+template<typename T, typename U> \
+using name = relate<predicate::name>::template op<T,U>
+
+BINARY_RELATION(is_same);
+BINARY_RELATION(is_base_of);
+BINARY_RELATION(is_derived_from);
+BINARY_RELATION(is_convertible);
+BINARY_RELATION(is_convertible_from);
+
+#undef BINARY_RELATION
 
 } // namespace sky
 

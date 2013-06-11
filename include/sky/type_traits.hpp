@@ -153,7 +153,7 @@ public:
     template<typename T, typename... Ts, typename U>
     struct op<exists<T, Ts...>, U> : public
         std::integral_constant<bool,
-            Predicate::template op<T,U>::value ||
+            op_base<T,U>::value ||
             op<exists<Ts...>, U>::value>
     {};
 

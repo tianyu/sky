@@ -274,6 +274,84 @@ TEST(Relate, ForAll_None_Exists_Us)
     EXPECT_TRUE(value);
 }
 
+TEST(Relate, ForAll_T_Exists_None)
+{
+    bool value = relate<same>::
+            template op<forall<int>, exists<>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_T_Exists_U_True)
+{
+    bool value = relate<same>::
+            template op<forall<int>, exists<int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_T_Exists_Us_True)
+{
+    bool value = relate<same>::
+            template op<forall<int>, exists<double, int, double>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_T_Exists_U_False)
+{
+    bool value = relate<same>::
+            template op<forall<int>, exists<double>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_T_Exists_Us_False)
+{
+    bool value = relate<same>::
+            template op<forall<int>, exists<double, long, double>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_Ts_Exists_None)
+{
+    bool value = relate<same>::
+            template op<forall<int, int>, exists<>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_Ts_Exists_U_True)
+{
+    bool value = relate<same>::
+            template op<forall<int, int>, exists<int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_Ts_Exists_Us_True)
+{
+    bool value = relate<same>::
+            template op<forall<int, double>, exists<long, double, int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_Ts_Exists_U_False)
+{
+    bool value = relate<same>::
+            template op<forall<int, int>, exists<double>>::value;
+    EXPECT_FALSE(value);
+
+    value = relate<same>::
+            template op<forall<int, long>, exists<int>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_Ts_Exists_Us_False)
+{
+    bool value = relate<same>::
+            template op<forall<int, double>, exists<long, long, long>>::value;
+    EXPECT_FALSE(value);
+
+    value = relate<same>::
+            template op<forall<int, double>, exists<long, double, double>>::value;
+    EXPECT_FALSE(value);
+}
+
 TEST(Relate, Exists_None_ForAll_None)
 {
     bool value = relate<same>::

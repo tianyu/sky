@@ -142,7 +142,7 @@ public:
     template<typename T, typename... Ts, typename U>
     struct op<forall<T, Ts...>, U> : public
         std::integral_constant<bool,
-            Predicate::template op<T,U>::value &&
+            op_base<T,U>::value &&
             op<forall<Ts...>, U>::value>
     {};
 

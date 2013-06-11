@@ -161,10 +161,116 @@ TEST(Relate, ForAll_None_ForAll_None)
     EXPECT_TRUE(value);
 }
 
+TEST(Relate, ForAll_None_ForAll_U)
+{
+    bool value = relate<same>::
+            template op<forall<>, forall<int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_None_ForAll_Us)
+{
+    bool value = relate<same>::
+            template op<forall<>, forall<int, int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_T_ForAll_None)
+{
+    bool value = relate<same>::
+            template op<forall<int>, forall<>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_T_ForAll_U_True)
+{
+    bool value = relate<same>::
+            template op<forall<int>, forall<int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_T_ForAll_Us_True)
+{
+    bool value = relate<same>::
+            template op<forall<int>, forall<int, int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_T_ForAll_U_False)
+{
+    bool value = relate<same>::
+            template op<forall<int>, forall<double>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_T_ForAll_Us_False)
+{
+    bool value = relate<same>::
+            template op<forall<int>, forall<int, double, int>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_Ts_ForAll_None)
+{
+    bool value = relate<same>::
+            template op<forall<int, double>, forall<>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_Ts_ForAll_U_True)
+{
+    bool value = relate<same>::
+            template op<forall<int, int>, forall<int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_Ts_ForAll_Us_True)
+{
+    bool value = relate<same>::
+            template op<forall<int, int>, forall<int, int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_Ts_ForAll_U_False)
+{
+    bool value = relate<same>::
+            template op<forall<int, int>, forall<double>>::value;
+    EXPECT_FALSE(value);
+
+    value = relate<same>::
+            template op<forall<int, double>, forall<int>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, ForAll_Ts_ForAll_Us_False)
+{
+    bool value = relate<same>::
+            template op<forall<int, int>, forall<int, double, int>>::value;
+    EXPECT_FALSE(value);
+
+    value = relate<same>::
+            template op<forall<int, double>, forall<int, int, int>>::value;
+    EXPECT_FALSE(value);
+}
+
 TEST(Relate, ForAll_None_Exists_None)
 {
     bool value = relate<same>::
             template op<forall<>, exists<>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_None_Exists_U)
+{
+    bool value = relate<same>::
+            template op<forall<>, exists<int>>::value;
+    EXPECT_TRUE(value);
+}
+
+TEST(Relate, ForAll_None_Exists_Us)
+{
+    bool value = relate<same>::
+            template op<forall<>, exists<int, int>>::value;
     EXPECT_TRUE(value);
 }
 
@@ -175,9 +281,37 @@ TEST(Relate, Exists_None_ForAll_None)
     EXPECT_FALSE(value);
 }
 
+TEST(Relate, Exists_None_ForAll_U)
+{
+    bool value = relate<same>::
+            template op<exists<>, forall<int>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, Exists_None_ForAll_Us)
+{
+    bool value = relate<same>::
+            template op<exists<>, forall<int, int>>::value;
+    EXPECT_FALSE(value);
+}
+
 TEST(Relate, Exists_None_Exists_None)
 {
     bool value = relate<same>::
             template op<exists<>, exists<>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, Exists_None_Exists_U)
+{
+    bool value = relate<same>::
+            template op<exists<>, exists<int>>::value;
+    EXPECT_FALSE(value);
+}
+
+TEST(Relate, Exists_None_Exists_Us)
+{
+    bool value = relate<same>::
+            template op<exists<>, exists<int, int>>::value;
     EXPECT_FALSE(value);
 }

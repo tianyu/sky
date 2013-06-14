@@ -8,6 +8,55 @@
  */
 
 namespace sky {
+
+template<typename... Ts>
+struct exists {};
+
+template<typename... Ts>
+struct forall {};
+
+template<typename Predicate, typename T>
+struct curry
+{
+    template<typename... Ts>
+    struct op : public Predicate::template op<T, Ts...>
+    {};
+};
+
+template<typename Predicate, typename... Args>
+struct relate;
+
+template<typename Predicate>
+struct relate<Predicate> : public Predicate::template op<>
+{};
+
+template<typename Predicate, typename Arg, typename... Args>
+struct relate<Predicate, Arg, Args...> : public
+    relate<curry<Predicate, Arg>, Args...>
+{};
+
+template<typename Predicate, typename... Args>
+struct relate<Predicate, forall<>, Args...> : public std::true_type
+{};
+
+template<typename Predicate, typename T, typename... Ts, typename... Args>
+struct relate<Predicate, forall<T, Ts...>, Args...> : public
+    std::integral_constant<bool,
+        relate<Predicate, T, Args...>::value &&
+        relate<Predicate, forall<Ts...>, Args...>::value>
+{};
+
+template<typename Predicate, typename... Args>
+struct relate<Predicate, exists<>, Args...> : std::false_type
+{};
+
+template<typename Predicate, typename T, typename... Ts, typename... Args>
+struct relate<Predicate, exists<T, Ts...>, Args...> : public
+    std::integral_constant<bool,
+        relate<Predicate, T, Args...>::value ||
+        relate<Predicate, exists<Ts...>, Args...>::value>
+{};
+
 namespace predicate {
 
 #define STD_UNARY_PREDICATE(name) \
@@ -82,7 +131,6 @@ STD_BINARY_PREDICATE(is_base_of);
 STD_BINARY_REVERSE_PREDICATE(is_derived_from, is_base_of);
 STD_BINARY_PREDICATE(is_convertible);
 STD_BINARY_REVERSE_PREDICATE(is_convertible_from, is_convertible);
-
 STD_BINARY_PREDICATE(is_assignable);
 STD_BINARY_REVERSE_PREDICATE(is_assignable_from, is_assignable);
 
@@ -90,54 +138,6 @@ STD_BINARY_REVERSE_PREDICATE(is_assignable_from, is_assignable);
 #undef STD_BINARY_REVERSE_PREDICATE
 
 } // namespace predicate
-
-template<typename... Ts>
-struct exists {};
-
-template<typename... Ts>
-struct forall {};
-
-template<typename Predicate, typename T>
-struct curry
-{
-    template<typename... Ts>
-    struct op : public Predicate::template op<T, Ts...>
-    {};
-};
-
-template<typename Predicate, typename... Args>
-struct relate;
-
-template<typename Predicate>
-struct relate<Predicate> : public Predicate::template op<>
-{};
-
-template<typename Predicate, typename Arg, typename... Args>
-struct relate<Predicate, Arg, Args...> : public
-    relate<curry<Predicate, Arg>, Args...>
-{};
-
-template<typename Predicate, typename... Args>
-struct relate<Predicate, forall<>, Args...> : public std::true_type
-{};
-
-template<typename Predicate, typename T, typename... Ts, typename... Args>
-struct relate<Predicate, forall<T, Ts...>, Args...> : public
-    std::integral_constant<bool,
-        relate<Predicate, T, Args...>::value &&
-        relate<Predicate, forall<Ts...>, Args...>::value>
-{};
-
-template<typename Predicate, typename... Args>
-struct relate<Predicate, exists<>, Args...> : std::false_type
-{};
-
-template<typename Predicate, typename T, typename... Ts, typename... Args>
-struct relate<Predicate, exists<T, Ts...>, Args...> : public
-    std::integral_constant<bool,
-        relate<Predicate, T, Args...>::value ||
-        relate<Predicate, exists<Ts...>, Args...>::value>
-{};
 
 #define BINARY_RELATION(name) \
 template<typename T, typename U> \

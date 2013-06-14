@@ -18,7 +18,7 @@ struct untruth
     using op = std::false_type;
 };
 
-struct is_void
+struct isvoid
 {
     template<typename T>
     using op = std::is_void<T>;
@@ -46,73 +46,73 @@ TEST(Relate0, False)
 
 TEST(Relate1, Default_True)
 {
-    bool value = relate<is_void, void>::value;
+    bool value = relate<isvoid, void>::value;
     EXPECT_TRUE(value);
 }
 
 TEST(Relate1, Default_False)
 {
-    bool value = relate<is_void, int>::value;
+    bool value = relate<isvoid, int>::value;
     EXPECT_FALSE(value);
 }
 
 TEST(Relate1, Forall_None)
 {
-    bool value = relate<is_void, forall<>>::value;
+    bool value = relate<isvoid, forall<>>::value;
     EXPECT_TRUE(value);
 }
 
 TEST(Relate1, Forall_T_True)
 {
-    bool value = relate<is_void, forall<void>>::value;
+    bool value = relate<isvoid, forall<void>>::value;
     EXPECT_TRUE(value);
 }
 
 TEST(Relate1, Forall_Ts_True)
 {
-    bool value = relate<is_void, forall<void, void>>::value;
+    bool value = relate<isvoid, forall<void, void>>::value;
     EXPECT_TRUE(value);
 }
 
 TEST(Relate1, Forall_T_False)
 {
-    bool value = relate<is_void, forall<int>>::value;
+    bool value = relate<isvoid, forall<int>>::value;
     EXPECT_FALSE(value);
 }
 
 TEST(Relate1, Forall_Ts_False)
 {
-    bool value = relate<is_void, forall<void, int>>::value;
+    bool value = relate<isvoid, forall<void, int>>::value;
     EXPECT_FALSE(value);
 }
 
 TEST(Relate1, Exists_None)
 {
-    bool value = relate<is_void, exists<>>::value;
+    bool value = relate<isvoid, exists<>>::value;
     EXPECT_FALSE(value);
 }
 
 TEST(Relate1, Exists_T_True)
 {
-    bool value = relate<is_void, exists<void>>::value;
+    bool value = relate<isvoid, exists<void>>::value;
     EXPECT_TRUE(value);
 }
 
 TEST(Relate1, Exists_Ts_True)
 {
-    bool value = relate<is_void, exists<int, void>>::value;
+    bool value = relate<isvoid, exists<int, void>>::value;
     EXPECT_TRUE(value);
 }
 
 TEST(Relate1, Exists_T_False)
 {
-    bool value = relate<is_void, exists<int>>::value;
+    bool value = relate<isvoid, exists<int>>::value;
     EXPECT_FALSE(value);
 }
 
 TEST(Relate1, Exists_Ts_False)
 {
-    bool value = relate<is_void, exists<int, int>>::value;
+    bool value = relate<isvoid, exists<int, int>>::value;
     EXPECT_FALSE(value);
 }
 

@@ -139,6 +139,56 @@ STD_BINARY_REVERSE_PREDICATE(is_assignable_from, is_assignable);
 
 } // namespace predicate
 
+#define UNARY_RELATION(name) \
+template<typename T> \
+using name = relate<predicate::name, T>
+
+UNARY_RELATION(is_void);
+UNARY_RELATION(is_integral);
+UNARY_RELATION(is_floating_point);
+UNARY_RELATION(is_array);
+UNARY_RELATION(is_enum);
+UNARY_RELATION(is_union);
+UNARY_RELATION(is_class);
+UNARY_RELATION(is_function);
+UNARY_RELATION(is_pointer);
+UNARY_RELATION(is_lvalue_reference);
+UNARY_RELATION(is_rvalue_reference);
+UNARY_RELATION(is_member_object_pointer);
+UNARY_RELATION(is_member_function_pointer);
+
+UNARY_RELATION(is_fundamental);
+UNARY_RELATION(is_arithmetic);
+UNARY_RELATION(is_scalar);
+UNARY_RELATION(is_object);
+UNARY_RELATION(is_compound);
+UNARY_RELATION(is_reference);
+UNARY_RELATION(is_member_pointer);
+
+UNARY_RELATION(is_const);
+UNARY_RELATION(is_volatile);
+UNARY_RELATION(is_trivial);
+// UNARY_RELATION(is_trivially_copyable);
+UNARY_RELATION(is_standard_layout);
+UNARY_RELATION(is_pod);
+UNARY_RELATION(is_literal_type);
+UNARY_RELATION(is_empty);
+UNARY_RELATION(is_polymorphic);
+UNARY_RELATION(is_abstract);
+UNARY_RELATION(is_signed);
+UNARY_RELATION(is_unsigned);
+
+UNARY_RELATION(is_constructible);
+UNARY_RELATION(is_default_constructible);
+UNARY_RELATION(is_copy_constructible);
+UNARY_RELATION(is_move_constructible);
+UNARY_RELATION(is_copy_assignable);
+UNARY_RELATION(is_move_assignable);
+UNARY_RELATION(has_virtual_destructor);
+UNARY_RELATION(is_destructible);
+
+#undef UNARY_RELATION
+
 #define BINARY_RELATION(name) \
 template<typename T, typename U> \
 using name = relate<predicate::name, T,U>
@@ -148,6 +198,8 @@ BINARY_RELATION(is_base_of);
 BINARY_RELATION(is_derived_from);
 BINARY_RELATION(is_convertible);
 BINARY_RELATION(is_convertible_from);
+BINARY_RELATION(is_assignable);
+BINARY_RELATION(is_assignable_from);
 
 #undef BINARY_RELATION
 

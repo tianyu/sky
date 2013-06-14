@@ -54,103 +54,42 @@ struct curry
 };
 
 template<typename Predicate, typename... Args>
-struct _relate;
+struct relate;
 
 template<typename Predicate>
-struct _relate<Predicate> : public Predicate::template op<>
+struct relate<Predicate> : public Predicate::template op<>
 {};
 
 template<typename Predicate, typename Arg, typename... Args>
-struct _relate<Predicate, Arg, Args...> : public
-    _relate<curry<Predicate, Arg>, Args...>
+struct relate<Predicate, Arg, Args...> : public
+    relate<curry<Predicate, Arg>, Args...>
 {};
 
 template<typename Predicate, typename... Args>
-struct _relate<Predicate, forall<>, Args...> : public std::true_type
+struct relate<Predicate, forall<>, Args...> : public std::true_type
 {};
 
 template<typename Predicate, typename T, typename... Ts, typename... Args>
-struct _relate<Predicate, forall<T, Ts...>, Args...> : public
+struct relate<Predicate, forall<T, Ts...>, Args...> : public
     std::integral_constant<bool,
-        _relate<Predicate, T, Args...>::value &&
-        _relate<Predicate, forall<Ts...>, Args...>::value>
+        relate<Predicate, T, Args...>::value &&
+        relate<Predicate, forall<Ts...>, Args...>::value>
 {};
 
 template<typename Predicate, typename... Args>
-struct _relate<Predicate, exists<>, Args...> : std::false_type
+struct relate<Predicate, exists<>, Args...> : std::false_type
 {};
 
 template<typename Predicate, typename T, typename... Ts, typename... Args>
-struct _relate<Predicate, exists<T, Ts...>, Args...> : public
+struct relate<Predicate, exists<T, Ts...>, Args...> : public
     std::integral_constant<bool,
-        _relate<Predicate, T, Args...>::value ||
-        _relate<Predicate, exists<Ts...>, Args...>::value>
+        relate<Predicate, T, Args...>::value ||
+        relate<Predicate, exists<Ts...>, Args...>::value>
 {};
-
-template<typename Predicate>
-struct relate
-{
-private:
-
-    template<typename T, typename U>
-    struct op_base : public Predicate::template op<T,U>
-    {};
-
-    template<typename T>
-    struct op_base<T, forall<>> : public std::true_type
-    {};
-
-    template<typename T, typename U, typename... Us>
-    struct op_base<T, forall<U, Us...>> : public
-        std::integral_constant<bool,
-            Predicate::template op<T,U>::value &&
-            op_base<T, forall<Us...>>::value>
-    {};
-
-    template<typename T>
-    struct op_base<T, exists<>> : public std::false_type
-    {};
-
-    template<typename T, typename U, typename... Us>
-    struct op_base<T, exists<U, Us...>> : public
-        std::integral_constant<bool,
-            Predicate::template op<T,U>::value ||
-            op_base<T, exists<Us...>>::value>
-    {};
-
-public:
-
-    template<typename T, typename U>
-    struct op : public op_base<T, U>
-    {};
-
-    template<typename U>
-    struct op<forall<>, U> : public std::true_type
-    {};
-
-    template<typename T, typename... Ts, typename U>
-    struct op<forall<T, Ts...>, U> : public
-        std::integral_constant<bool,
-            op_base<T,U>::value &&
-            op<forall<Ts...>, U>::value>
-    {};
-
-    template<typename U>
-    struct op<exists<>, U> : public std::false_type
-    {};
-
-    template<typename T, typename... Ts, typename U>
-    struct op<exists<T, Ts...>, U> : public
-        std::integral_constant<bool,
-            op_base<T,U>::value ||
-            op<exists<Ts...>, U>::value>
-    {};
-
-};
 
 #define BINARY_RELATION(name) \
 template<typename T, typename U> \
-using name = relate<predicate::name>::template op<T,U>
+using name = relate<predicate::name, T,U>
 
 BINARY_RELATION(is_same);
 BINARY_RELATION(is_base_of);

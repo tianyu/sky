@@ -17,6 +17,50 @@ struct name \
     using op = std::name<T>; \
 }
 
+STD_UNARY_PREDICATE(is_void);
+STD_UNARY_PREDICATE(is_integral);
+STD_UNARY_PREDICATE(is_floating_point);
+STD_UNARY_PREDICATE(is_array);
+STD_UNARY_PREDICATE(is_enum);
+STD_UNARY_PREDICATE(is_union);
+STD_UNARY_PREDICATE(is_class);
+STD_UNARY_PREDICATE(is_function);
+STD_UNARY_PREDICATE(is_pointer);
+STD_UNARY_PREDICATE(is_lvalue_reference);
+STD_UNARY_PREDICATE(is_rvalue_reference);
+STD_UNARY_PREDICATE(is_member_object_pointer);
+STD_UNARY_PREDICATE(is_member_function_pointer);
+
+STD_UNARY_PREDICATE(is_fundamental);
+STD_UNARY_PREDICATE(is_arithmetic);
+STD_UNARY_PREDICATE(is_scalar);
+STD_UNARY_PREDICATE(is_object);
+STD_UNARY_PREDICATE(is_compound);
+STD_UNARY_PREDICATE(is_reference);
+STD_UNARY_PREDICATE(is_member_pointer);
+
+STD_UNARY_PREDICATE(is_const);
+STD_UNARY_PREDICATE(is_volatile);
+STD_UNARY_PREDICATE(is_trivial);
+// STD_UNARY_PREDICATE(is_trivially_copyable);
+STD_UNARY_PREDICATE(is_standard_layout);
+STD_UNARY_PREDICATE(is_pod);
+STD_UNARY_PREDICATE(is_literal_type);
+STD_UNARY_PREDICATE(is_empty);
+STD_UNARY_PREDICATE(is_polymorphic);
+STD_UNARY_PREDICATE(is_abstract);
+STD_UNARY_PREDICATE(is_signed);
+STD_UNARY_PREDICATE(is_unsigned);
+
+STD_UNARY_PREDICATE(is_constructible);
+STD_UNARY_PREDICATE(is_default_constructible);
+STD_UNARY_PREDICATE(is_copy_constructible);
+STD_UNARY_PREDICATE(is_move_constructible);
+STD_UNARY_PREDICATE(is_copy_assignable);
+STD_UNARY_PREDICATE(is_move_assignable);
+STD_UNARY_PREDICATE(has_virtual_destructor);
+STD_UNARY_PREDICATE(is_destructible);
+
 #undef STD_UNARY_PREDICATE
 
 #define STD_BINARY_PREDICATE(name) \
@@ -26,25 +70,24 @@ struct name \
     using op = std::name<T,U>; \
 }
 
+#define STD_BINARY_REVERSE_PREDICATE(name, pred) \
+struct name \
+{ \
+    template<typename T, typename U> \
+    using op = std::pred<U,T>; \
+}
+
 STD_BINARY_PREDICATE(is_same);
-
 STD_BINARY_PREDICATE(is_base_of);
-
-struct is_derived_from
-{
-    template<typename T, typename U>
-    using op = std::is_base_of<U,T>;
-};
-
+STD_BINARY_REVERSE_PREDICATE(is_derived_from, is_base_of);
 STD_BINARY_PREDICATE(is_convertible);
+STD_BINARY_REVERSE_PREDICATE(is_convertible_from, is_convertible);
 
-struct is_convertible_from
-{
-    template<typename T, typename U>
-    using op = std::is_convertible<U,T>;
-};
+STD_BINARY_PREDICATE(is_assignable);
+STD_BINARY_REVERSE_PREDICATE(is_assignable_from, is_assignable);
 
 #undef STD_BINARY_PREDICATE
+#undef STD_BINARY_REVERSE_PREDICATE
 
 } // namespace predicate
 

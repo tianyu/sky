@@ -10,6 +10,15 @@
 namespace sky {
 namespace predicate {
 
+#define STD_UNARY_PREDICATE(name) \
+struct name \
+{ \
+    template<typename T> \
+    using op = std::name<T>; \
+}
+
+#undef STD_UNARY_PREDICATE
+
 #define STD_BINARY_PREDICATE(name) \
 struct name \
 { \

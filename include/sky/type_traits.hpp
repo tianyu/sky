@@ -61,7 +61,8 @@ struct _relate<Predicate> : public Predicate::template op<>
 {};
 
 template<typename Predicate, typename Arg, typename... Args>
-struct _relate<Predicate, Arg, Args...> : public _relate<curry<Predicate, Arg>, Args...>
+struct _relate<Predicate, Arg, Args...> : public
+    _relate<curry<Predicate, Arg>, Args...>
 {};
 
 template<typename Predicate, typename... Args>
@@ -70,7 +71,7 @@ struct _relate<Predicate, forall<>, Args...> : public std::true_type
 
 template<typename Predicate, typename T, typename... Ts, typename... Args>
 struct _relate<Predicate, forall<T, Ts...>, Args...> : public
-        std::integral_constant<bool,
+    std::integral_constant<bool,
         _relate<Predicate, T, Args...>::value &&
         _relate<Predicate, forall<Ts...>, Args...>::value>
 {};
@@ -81,7 +82,7 @@ struct _relate<Predicate, exists<>, Args...> : std::false_type
 
 template<typename Predicate, typename T, typename... Ts, typename... Args>
 struct _relate<Predicate, exists<T, Ts...>, Args...> : public
-        std::integral_constant<bool,
+    std::integral_constant<bool,
         _relate<Predicate, T, Args...>::value ||
         _relate<Predicate, exists<Ts...>, Args...>::value>
 {};

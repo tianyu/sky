@@ -15,6 +15,8 @@ struct exists {};
 template<typename... Ts>
 struct forall {};
 
+namespace _ {
+
 template<typename Predicate, typename T>
 struct curry
 {
@@ -22,6 +24,8 @@ struct curry
     struct op : public Predicate::template op<T, Ts...>
     {};
 };
+
+} // namespace _
 
 template<typename Predicate, typename... Args>
 struct relate;
@@ -32,7 +36,7 @@ struct relate<Predicate> : public Predicate::template op<>
 
 template<typename Predicate, typename Arg, typename... Args>
 struct relate<Predicate, Arg, Args...> : public
-    relate<curry<Predicate, Arg>, Args...>
+    relate<_::curry<Predicate, Arg>, Args...>
 {};
 
 template<typename Predicate, typename... Args>

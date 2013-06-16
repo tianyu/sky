@@ -51,7 +51,7 @@ struct relate<Predicate, forall<T, Ts...>, Args...> : public
 {};
 
 template<typename Predicate, typename... Args>
-struct relate<Predicate, exists<>, Args...> : std::false_type
+struct relate<Predicate, exists<>, Args...> : public std::false_type
 {};
 
 template<typename Predicate, typename T, typename... Ts, typename... Args>

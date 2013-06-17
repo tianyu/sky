@@ -361,9 +361,9 @@ std::false_type has_fork(...);
  */
 template<typename T>
 class is_executable :
-        public sky::all_same<std::true_type,
+        public sky::is_same<std::true_type, sky::forall<
             decltype(_::has_execute(std::declval<T>())),
-            decltype(_::has_fork(std::declval<T>()))>
+            decltype(_::has_fork(std::declval<T>()))>>
 {};
 
 namespace _ {
@@ -427,8 +427,8 @@ template<typename... Args>
 constexpr _::cmd<sizeof...(Args)>
 cmd(char const* name, Args&&... args)
 {
-    static_assert(sky::all_same<char const*,
-                  typename std::decay<Args>::type...>::value,
+    static_assert(sky::is_same<char const*, sky::forall<
+                  typename std::decay<Args>::type...>>::value,
                   "Arguments must decay to type char const*.");
     return _::cmd<sizeof...(Args)>(name, std::forward<Args>(args)...);
 }

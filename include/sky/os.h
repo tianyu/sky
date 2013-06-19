@@ -341,6 +341,15 @@ has_fork(T);
 
 std::false_type has_fork(...);
 
+struct predicate_executable
+{
+    template<typename T>
+    using op = sky::is_same<std::true_type,
+                sky::forall<
+                    decltype(has_execute(std::declval<T>())),
+                    decltype(has_fork   (std::declval<T>()))>>;
+};
+
 } // namespace _
 
 /**
@@ -360,11 +369,7 @@ std::false_type has_fork(...);
  * @ingroup os
  */
 template<typename T>
-class is_executable :
-        public sky::is_same<std::true_type, sky::forall<
-            decltype(_::has_execute(std::declval<T>())),
-            decltype(_::has_fork(std::declval<T>()))>>
-{};
+using is_executable = sky::relate<_::predicate_executable, T>;
 
 namespace _ {
 
@@ -438,6 +443,61 @@ constexpr _::cmd<0>
 cmd<>(char const* name)
 {
     return _::cmd<0>(name);
+}
+
+template<typename Src, typename Dest>
+class pipe_exec
+{
+public:
+
+    template<typename T, typename U>
+    constexpr pipe_exec(T&& src, U&& dest) :
+        src(std::forward<T>(src)),
+        dest(std::forward<U>(dest))
+    {}
+
+    void execute(input in = stdin,
+                 output out = stdout,
+                 output err = stderr)
+    {
+        auto pipe = make_pipe();
+
+        src.fork(in, std::get<1>(pipe), err);
+        std::get<1>(pipe).close();
+        dest.execute(std::get<0>(pipe), out, err);
+    }
+
+    void fork(input in = stdin,
+                 output out = stdout,
+                 output err = stderr)
+    {
+        auto pipe = make_pipe();
+        auto &pin = std::get<0>(pipe);
+        auto &pout = std::get<1>(pipe);
+
+        src.fork(in, pout, err);
+        pout.close();
+        dest.fork(pin, out, err);
+        pin.close();
+    }
+
+private:
+    Src src;
+    Dest dest;
+};
+
+template<typename Src, typename Dest>
+constexpr
+typename std::enable_if<
+    is_executable<forall<Src, Dest>>::value,
+    pipe_exec<Src, Dest>
+>::type
+operator |(Src&& src, Dest&& dest)
+{
+    return pipe_exec<Src, Dest>(
+                std::forward<Src>(src),
+                std::forward<Dest>(dest)
+            );
 }
 
 } // namespace sky

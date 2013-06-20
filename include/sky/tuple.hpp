@@ -9,6 +9,8 @@
 
 namespace sky {
 
+namespace _ {
+
 template<typename T, typename... Us>
 struct unique_index_of;
 
@@ -33,22 +35,24 @@ struct unique_index_of<T, U, Us...> :
         1 + unique_index_of<T, Us...>::value>
 {};
 
+} // namespace _
+
 template<typename T, typename... Us>
 T &get(std::tuple<Us...> &t)
 {
-    return std::get<unique_index_of<T, Us...>::value>(t);
+    return std::get<_::unique_index_of<T, Us...>::value>(t);
 }
 
 template<typename T, typename... Us>
 T &&get(std::tuple<Us...> &&t)
 {
-    return std::get<unique_index_of<T, Us...>::value>(std::move(t));
+    return std::get<_::unique_index_of<T, Us...>::value>(std::move(t));
 }
 
 template<typename T, typename... Us>
 T const&get(std::tuple<Us...> const&t)
 {
-    return std::get<unique_index_of<T, Us...>::value>(t);
+    return std::get<_::unique_index_of<T, Us...>::value>(t);
 }
 
 /**

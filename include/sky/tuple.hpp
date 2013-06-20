@@ -23,7 +23,7 @@ struct unique_index_of<T>
 
 template<typename T, typename... Us>
 struct unique_index_of<T, T, Us...> :
-    public std::integral_constant<int, 0>
+    public std::integral_constant<std::size_t, 0>
 {
     static_assert(!sky::is_same<T, sky::exists<Us...>>::value,
                     "Type is not unique.");
@@ -31,7 +31,7 @@ struct unique_index_of<T, T, Us...> :
 
 template<typename T, typename U, typename... Us>
 struct unique_index_of<T, U, Us...> :
-    public std::integral_constant<int,
+    public std::integral_constant<std::size_t,
         1 + unique_index_of<T, Us...>::value>
 {};
 

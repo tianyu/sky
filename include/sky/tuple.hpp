@@ -3,11 +3,53 @@
 
 #include <cstddef>
 #include <tuple>
-#include <type_traits>
 #include <utility>
 
+#include "type_traits.hpp"
 
 namespace sky {
+
+template<typename T, typename... Us>
+struct unique_index_of;
+
+template<typename T>
+struct unique_index_of<T>
+{
+    static_assert(!std::is_same<T, T>::value, // Condition always fails.
+                    "Type does not exist.");
+};
+
+template<typename T, typename... Us>
+struct unique_index_of<T, T, Us...> :
+    public std::integral_constant<int, 0>
+{
+    static_assert(!sky::is_same<T, sky::exists<Us...>>::value,
+                    "Type is not unique.");
+};
+
+template<typename T, typename U, typename... Us>
+struct unique_index_of<T, U, Us...> :
+    public std::integral_constant<int,
+        1 + unique_index_of<T, Us...>::value>
+{};
+
+template<typename T, typename... Us>
+T &get(std::tuple<Us...> &t)
+{
+    return std::get<unique_index_of<T, Us...>::value>(t);
+}
+
+template<typename T, typename... Us>
+T &&get(std::tuple<Us...> &&t)
+{
+    return std::get<unique_index_of<T, Us...>::value>(std::move(t));
+}
+
+template<typename T, typename... Us>
+T const&get(std::tuple<Us...> const&t)
+{
+    return std::get<unique_index_of<T, Us...>::value>(t);
+}
 
 /**
  * @defgroup param_tuples Parameter Tuples

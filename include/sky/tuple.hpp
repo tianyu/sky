@@ -37,18 +37,36 @@ struct unique_index_of<T, U, Us...> :
 
 } // namespace _
 
+/**
+ * Gets the object of type T from within the tuple.
+ *
+ * If there is no object of type T, or if there are multiple objects of type T,
+ * then this function fails to compile.
+ */
 template<typename T, typename... Us>
 T &get(std::tuple<Us...> &t)
 {
     return std::get<_::unique_index_of<T, Us...>::value>(t);
 }
 
+/**
+ * Gets the object of type T from within the tuple.
+ *
+ * If there is no object of type T, or if there are multiple objects of type T,
+ * then this function fails to compile.
+ */
 template<typename T, typename... Us>
 T &&get(std::tuple<Us...> &&t)
 {
     return std::get<_::unique_index_of<T, Us...>::value>(std::move(t));
 }
 
+/**
+ * Gets the object of type T from within the tuple.
+ *
+ * If there is no object of type T, or if there are multiple objects of type T,
+ * then this function fails to compile.
+ */
 template<typename T, typename... Us>
 T const&get(std::tuple<Us...> const&t)
 {

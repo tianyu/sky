@@ -3,11 +3,75 @@
 
 #include <cstddef>
 #include <tuple>
-#include <type_traits>
 #include <utility>
 
+#include "type_traits.hpp"
 
 namespace sky {
+
+namespace _ {
+
+template<typename T, typename... Us>
+struct unique_index_of;
+
+template<typename T>
+struct unique_index_of<T>
+{
+    static_assert(!std::is_same<T, T>::value, // Condition always fails.
+                    "Type does not exist.");
+};
+
+template<typename T, typename... Us>
+struct unique_index_of<T, T, Us...> :
+    public std::integral_constant<std::size_t, 0>
+{
+    static_assert(!sky::is_same<T, sky::exists<Us...>>::value,
+                    "Type is not unique.");
+};
+
+template<typename T, typename U, typename... Us>
+struct unique_index_of<T, U, Us...> :
+    public std::integral_constant<std::size_t,
+        1 + unique_index_of<T, Us...>::value>
+{};
+
+} // namespace _
+
+/**
+ * Gets the object of type T from within the tuple.
+ *
+ * If there is no object of type T, or if there are multiple objects of type T,
+ * then this function fails to compile.
+ */
+template<typename T, typename... Us>
+T &get(std::tuple<Us...> &t)
+{
+    return std::get<_::unique_index_of<T, Us...>::value>(t);
+}
+
+/**
+ * Gets the object of type T from within the tuple.
+ *
+ * If there is no object of type T, or if there are multiple objects of type T,
+ * then this function fails to compile.
+ */
+template<typename T, typename... Us>
+T &&get(std::tuple<Us...> &&t)
+{
+    return std::get<_::unique_index_of<T, Us...>::value>(std::move(t));
+}
+
+/**
+ * Gets the object of type T from within the tuple.
+ *
+ * If there is no object of type T, or if there are multiple objects of type T,
+ * then this function fails to compile.
+ */
+template<typename T, typename... Us>
+T const&get(std::tuple<Us...> const&t)
+{
+    return std::get<_::unique_index_of<T, Us...>::value>(t);
+}
 
 /**
  * @defgroup param_tuples Parameter Tuples

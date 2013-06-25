@@ -2,10 +2,10 @@
 #define OS_H
 
 #include <cstddef>
-#include <tuple>
 #include <utility>
 
 #include "sky/type_traits.hpp"
+#include "sky/tuple.hpp"
 
 namespace sky {
 
@@ -461,10 +461,12 @@ public:
                  output err = stderr)
     {
         auto pipe = make_pipe();
+        auto &pin = sky::get<input>(pipe);
+        auto &pout = sky::get<output>(pipe);
 
-        src.fork(in, std::get<1>(pipe), err);
-        std::get<1>(pipe).close();
-        dest.execute(std::get<0>(pipe), out, err);
+        src.fork(in, pout, err);
+        pout.close();
+        dest.execute(pin, out, err);
     }
 
     void fork(input in = stdin,
@@ -472,8 +474,8 @@ public:
                  output err = stderr)
     {
         auto pipe = make_pipe();
-        auto &pin = std::get<0>(pipe);
-        auto &pout = std::get<1>(pipe);
+        auto &pin = sky::get<input>(pipe);
+        auto &pout = sky::get<output>(pipe);
 
         src.fork(in, pout, err);
         pout.close();

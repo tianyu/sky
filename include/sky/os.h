@@ -488,6 +488,27 @@ private:
     Dest dest;
 };
 
+/**
+ * Pipe the stdout of one executable command into the stdin of another
+ * exectable command.
+ *
+ * #### Examples
+ *
+ *     auto foo2bar = foo | bar;
+ *     foo2bar.execute(in, out, err);
+ *
+ * `foo2bar` is actually another executable.
+ * `in`, which was passed as the standard input of `foo2bar` will be the
+ * standard input of `foo`, while `out`, which was passed as the standard output
+ * of `foo2bar` will be the standard output of `bar`.
+ * Both `foo` and `bar` will write to the same standard error stream, `err`.
+ *
+ * @ingroup os
+ * @param src The source executable.
+ * @param dest The exectuable whose standard input will receive the data written
+ *             in the standard output of the source executable.
+ * @return A new executable representing the source piped into the destination.
+ */
 template<typename Src, typename Dest>
 constexpr
 typename std::enable_if<

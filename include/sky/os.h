@@ -438,6 +438,8 @@ cmd(char const* name, Args&&... args)
     return _::cmd<sizeof...(Args)>(name, std::forward<Args>(args)...);
 }
 
+namespace _ {
+
 template<>
 constexpr _::cmd<0>
 cmd<>(char const* name)
@@ -488,6 +490,8 @@ private:
     Dest dest;
 };
 
+} // namespace _
+
 /**
  * Pipe the stdout of one executable command into the stdin of another
  * exectable command.
@@ -498,10 +502,11 @@ private:
  *     foo2bar.execute(in, out, err);
  *
  * `foo2bar` is actually another executable.
- * `in`, which was passed as the standard input of `foo2bar` will be the
- * standard input of `foo`, while `out`, which was passed as the standard output
- * of `foo2bar` will be the standard output of `bar`.
- * Both `foo` and `bar` will write to the same standard error stream, `err`.
+ * When `foo2bar` is executed in the second line:
+ *
+ * - `foo` will read its standard input from `in`.
+ * - `bar` will write its standard output to `out`.
+ * - Both `foo` and `bar` will write their standard error to `err`.
  *
  * @ingroup os
  * @param src The source executable.
@@ -513,7 +518,7 @@ template<typename Src, typename Dest>
 constexpr
 typename std::enable_if<
     is_executable<forall<Src, Dest>>::value,
-    pipe_exec<Src, Dest>
+    _::pipe_exec<Src, Dest>
 >::type
 operator |(Src&& src, Dest&& dest)
 {

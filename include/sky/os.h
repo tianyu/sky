@@ -306,11 +306,13 @@ extern const output stderr;
  *
  * #### Example
  *
- *     input in;
- *     output out;
- *     std::tie<in, out> = make_pipe();
+ *     #include "sky/tuple.hpp"
+ *     :::
+ *     auto pipe = make_pipe();
+ *     auto &in = sky::get<input>(pipe);
+ *     auto &out = sky::get<output>(pipe);
  *
- * @ingroup os
+ * @ingroup io
  * @return A tuple containing the input and output ends of the pipe.
  */
 std::tuple<input, output> make_pipe();

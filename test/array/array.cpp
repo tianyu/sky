@@ -4,145 +4,174 @@
 
 #include "sky/array.hpp"
 
-TEST(Array, Same_Value_Type)
+namespace {
+
+template<typename T, std::size_t... Ns>
+struct Param
 {
-    using expected_t = std::array<int,0>;
-    using actual_t = sky::array<int,0>;
+    using value_type = T;
+    using array_type = sky::array<T, Ns...>;
+};
+
+template<typename P>
+struct Array_MemTypes : public ::testing::Test
+{};
+
+} // namespace
+
+using MemTypes_Types = ::testing::Types<
+    Param<int, 1>
+>;
+
+TYPED_TEST_CASE(Array_MemTypes, MemTypes_Types);
+
+TYPED_TEST(Array_MemTypes, Same_Value_Type)
+{
+    using expected_t = std::array<typename TypeParam::value_type,1>;
+    using array_t = typename TypeParam::array_type;
 
     const auto same_value_type = std::is_same<
-            expected_t::value_type,
-            actual_t::value_type
+            typename expected_t::value_type,
+            typename array_t::value_type
         >::value;
     EXPECT_TRUE(same_value_type);
 }
 
-TEST(Array, Same_Size_Type)
+TYPED_TEST(Array_MemTypes, Same_Size_Type)
 {
-    using expected_t = std::array<int,0>;
-    using actual_t = sky::array<int,0>;
+    using expected_t = std::array<typename TypeParam::value_type,1>;
+    using array_t = typename TypeParam::array_type;
 
     const auto same_size_type = std::is_same<
-            expected_t::size_type,
-            actual_t::size_type
+            typename expected_t::size_type,
+            typename array_t::size_type
         >::value;
     EXPECT_TRUE(same_size_type);
 }
 
-TEST(Array, Same_Difference_Type)
+TYPED_TEST(Array_MemTypes, Same_Difference_Type)
 {
-    using expected_t = std::array<int,0>;
-    using actual_t = sky::array<int,0>;
+    using expected_t = std::array<typename TypeParam::value_type,1>;
+    using array_t = typename TypeParam::array_type;
 
     const auto same_difference_type = std::is_same<
-            expected_t::difference_type,
-            actual_t::difference_type
+            typename expected_t::difference_type,
+            typename array_t::difference_type
         >::value;
     EXPECT_TRUE(same_difference_type);
 }
 
-TEST(Array, Same_Reference)
+TYPED_TEST(Array_MemTypes, Same_Reference)
 {
-    using expected_t = std::array<int,0>;
-    using actual_t = sky::array<int,0>;
+    using expected_t = std::array<typename TypeParam::value_type,1>;
+    using array_t = typename TypeParam::array_type;
 
     const auto same_reference = std::is_same<
-            expected_t::reference,
-            actual_t::reference
+            typename expected_t::reference,
+            typename array_t::reference
         >::value;
     EXPECT_TRUE(same_reference);
 }
 
-TEST(Array, Same_Const_Reference)
+TYPED_TEST(Array_MemTypes, Same_Const_Reference)
 {
-    using expected_t = std::array<int,0>;
-    using actual_t = sky::array<int,0>;
+    using expected_t = std::array<typename TypeParam::value_type,1>;
+    using array_t = typename TypeParam::array_type;
 
     const auto same_const_reference = std::is_same<
-            expected_t::const_reference,
-            actual_t::const_reference
+            typename expected_t::const_reference,
+            typename array_t::const_reference
         >::value;
     EXPECT_TRUE(same_const_reference);
 }
 
-TEST(Array, Same_Pointer)
+TYPED_TEST(Array_MemTypes, Same_Pointer)
 {
-    using expected_t = std::array<int,0>;
-    using actual_t = sky::array<int,0>;
+    using expected_t = std::array<typename TypeParam::value_type,1>;
+    using array_t = typename TypeParam::array_type;
 
     const auto same_pointer = std::is_same<
-            expected_t::pointer,
-            actual_t::pointer
+            typename expected_t::pointer,
+            typename array_t::pointer
         >::value;
     EXPECT_TRUE(same_pointer);
 }
 
-TEST(Array, Same_Const_Pointer)
+TYPED_TEST(Array_MemTypes, Same_Const_Pointer)
 {
-    using expected_t = std::array<int,0>;
-    using actual_t = sky::array<int,0>;
+    using expected_t = std::array<typename TypeParam::value_type,1>;
+    using array_t = typename TypeParam::array_type;
 
     const auto same_const_pointer = std::is_same<
-            expected_t::const_pointer,
-            actual_t::const_pointer
+            typename expected_t::const_pointer,
+            typename array_t::const_pointer
         >::value;
     EXPECT_TRUE(same_const_pointer);
 }
 
-TEST(Array, RandomAccess_Iterator)
+TYPED_TEST(Array_MemTypes, RandomAccess_Iterator)
 {
-    using array_t = sky::array<int, 0>;
+    using array_t = typename TypeParam::array_type;
 
     const auto random_access_iterator = std::is_same<
             std::random_access_iterator_tag,
-            std::iterator_traits<array_t::iterator>::iterator_category
+            typename std::iterator_traits<
+                typename array_t::iterator
+            >::iterator_category
         >::value;
     EXPECT_TRUE(random_access_iterator);
 }
 
-TEST(Array, RandomAccess_Const_Iterator)
+TYPED_TEST(Array_MemTypes, RandomAccess_Const_Iterator)
 {
-    using array_t = sky::array<int, 0>;
+    using array_t = typename TypeParam::array_type;
 
     const auto random_access_iterator = std::is_same<
             std::random_access_iterator_tag,
-            std::iterator_traits<array_t::const_iterator>::iterator_category
+            typename std::iterator_traits<
+                typename array_t::const_iterator
+            >::iterator_category
         >::value;
     EXPECT_TRUE(random_access_iterator);
 
     const auto is_const_iterator = std::is_const<
-            std::remove_reference<
-                decltype(*std::declval<array_t::const_iterator>())
+            typename std::remove_reference<
+                decltype(*std::declval<
+                    typename array_t::const_iterator>())
             >::type
         >::value;
     EXPECT_TRUE(is_const_iterator);
 }
 
-TEST(Array, RandomAccess_Reverse_Iterator)
+TYPED_TEST(Array_MemTypes, RandomAccess_Reverse_Iterator)
 {
-    using array_t = sky::array<int, 0>;
+    using array_t = typename TypeParam::array_type;
 
     const auto random_access_reverse_iterator = std::is_same<
             std::random_access_iterator_tag,
-            std::iterator_traits<array_t::reverse_iterator>::iterator_category
+            typename std::iterator_traits<
+                typename array_t::reverse_iterator
+            >::iterator_category
         >::value;
     EXPECT_TRUE(random_access_reverse_iterator);
 }
 
-TEST(Array, RandomAccess_Const_Reverse_Iterator)
+TYPED_TEST(Array_MemTypes, RandomAccess_Const_Reverse_Iterator)
 {
-    using array_t = sky::array<int, 0>;
+    using array_t = typename TypeParam::array_type;
 
     const auto random_access_reverse_iterator = std::is_same<
             std::random_access_iterator_tag,
-            std::iterator_traits<
-                array_t::const_reverse_iterator
+            typename std::iterator_traits<
+                typename array_t::const_reverse_iterator
             >::iterator_category
         >::value;
     EXPECT_TRUE(random_access_reverse_iterator);
 
     const auto is_const_reverse_iterator = std::is_const<
-            std::remove_reference<
-                decltype(*std::declval<array_t::const_reverse_iterator>())
+            typename std::remove_reference<
+                decltype(*std::declval<
+                    typename array_t::const_reverse_iterator>())
             >::type
         >::value;
     EXPECT_TRUE(is_const_reverse_iterator);

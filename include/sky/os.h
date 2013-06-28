@@ -442,13 +442,6 @@ cmd(char const* name, Args&&... args)
 
 namespace _ {
 
-template<>
-constexpr _::cmd<0>
-cmd<>(char const* name)
-{
-    return _::cmd<0>(name);
-}
-
 template<typename Src, typename Dest>
 class pipe_exec
 {
@@ -524,7 +517,7 @@ typename std::enable_if<
 >::type
 operator |(Src&& src, Dest&& dest)
 {
-    return pipe_exec<Src, Dest>(
+    return _::pipe_exec<Src, Dest>(
                 std::forward<Src>(src),
                 std::forward<Dest>(dest)
             );

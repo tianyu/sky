@@ -35,6 +35,11 @@ struct array<T> : public std::array<T, 0>
 {
 };
 
+template<typename T, std::size_t N1, std::size_t... Ns>
+struct array<T, N1, Ns...> : public std::array< sky::array<T, Ns...>, N1>
+{
+};
+
 } // namespace sky
 
 #endif // ARRAY_HPP

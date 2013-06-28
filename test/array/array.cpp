@@ -21,7 +21,8 @@ struct Array_MemTypes : public ::testing::Test
 
 using MemTypes_Types = ::testing::Types<
     Param<int>,
-    Param<int, 1>
+    Param<int, 1>,
+    Param<int, 2, 2>
 >;
 
 TYPED_TEST_CASE(Array_MemTypes, MemTypes_Types);

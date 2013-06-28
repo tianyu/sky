@@ -13,6 +13,7 @@ TEST_OBJECTS += $(TEST)/tuple/*.o
 TEST_OBJECTS += $(TEST)/os/*.o
 TEST_OBJECTS += $(TEST)/type_traits/*.o
 TEST_OBJECTS += $(TEST)/type_list/*.o
+TEST_OBJECTS += $(TEST)/array/*.o
 
 # Make unit tests
 LIBS += -lboost_iostreams

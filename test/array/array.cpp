@@ -136,7 +136,9 @@ TEST(Array, RandomAccess_Const_Reverse_Iterator)
 
     const auto random_access_reverse_iterator = std::is_same<
             std::random_access_iterator_tag,
-            std::iterator_traits<array_t::const_reverse_iterator>::iterator_category
+            std::iterator_traits<
+                array_t::const_reverse_iterator
+            >::iterator_category
         >::value;
     EXPECT_TRUE(random_access_reverse_iterator);
 

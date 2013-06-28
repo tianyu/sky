@@ -4,12 +4,10 @@
 
 #include "sky/array.hpp"
 
-using sky::array;
-
 TEST(Array, Same_Value_Type)
 {
     using expected_t = std::array<int,0>;
-    using actual_t = array<int,0>;
+    using actual_t = sky::array<int,0>;
 
     const auto same_value_type = std::is_same<
             expected_t::value_type,
@@ -21,7 +19,7 @@ TEST(Array, Same_Value_Type)
 TEST(Array, Same_Size_Type)
 {
     using expected_t = std::array<int,0>;
-    using actual_t = array<int,0>;
+    using actual_t = sky::array<int,0>;
 
     const auto same_size_type = std::is_same<
             expected_t::size_type,
@@ -33,7 +31,7 @@ TEST(Array, Same_Size_Type)
 TEST(Array, Same_Difference_Type)
 {
     using expected_t = std::array<int,0>;
-    using actual_t = array<int,0>;
+    using actual_t = sky::array<int,0>;
 
     const auto same_difference_type = std::is_same<
             expected_t::difference_type,
@@ -45,7 +43,7 @@ TEST(Array, Same_Difference_Type)
 TEST(Array, Same_Reference)
 {
     using expected_t = std::array<int,0>;
-    using actual_t = array<int,0>;
+    using actual_t = sky::array<int,0>;
 
     const auto same_reference = std::is_same<
             expected_t::reference,
@@ -57,7 +55,7 @@ TEST(Array, Same_Reference)
 TEST(Array, Same_Const_Reference)
 {
     using expected_t = std::array<int,0>;
-    using actual_t = array<int,0>;
+    using actual_t = sky::array<int,0>;
 
     const auto same_const_reference = std::is_same<
             expected_t::const_reference,
@@ -69,7 +67,7 @@ TEST(Array, Same_Const_Reference)
 TEST(Array, Same_Pointer)
 {
     using expected_t = std::array<int,0>;
-    using actual_t = array<int,0>;
+    using actual_t = sky::array<int,0>;
 
     const auto same_pointer = std::is_same<
             expected_t::pointer,
@@ -81,7 +79,7 @@ TEST(Array, Same_Pointer)
 TEST(Array, Same_Const_Pointer)
 {
     using expected_t = std::array<int,0>;
-    using actual_t = array<int,0>;
+    using actual_t = sky::array<int,0>;
 
     const auto same_const_pointer = std::is_same<
             expected_t::const_pointer,
@@ -92,7 +90,7 @@ TEST(Array, Same_Const_Pointer)
 
 TEST(Array, RandomAccess_Iterator)
 {
-    using array_t = array<int, 0>;
+    using array_t = sky::array<int, 0>;
 
     const auto random_access_iterator = std::is_same<
             std::random_access_iterator_tag,
@@ -103,7 +101,7 @@ TEST(Array, RandomAccess_Iterator)
 
 TEST(Array, RandomAccess_Const_Iterator)
 {
-    using array_t = array<int, 0>;
+    using array_t = sky::array<int, 0>;
 
     const auto random_access_iterator = std::is_same<
             std::random_access_iterator_tag,
@@ -121,7 +119,7 @@ TEST(Array, RandomAccess_Const_Iterator)
 
 TEST(Array, RandomAccess_Reverse_Iterator)
 {
-    using array_t = array<int, 0>;
+    using array_t = sky::array<int, 0>;
 
     const auto random_access_reverse_iterator = std::is_same<
             std::random_access_iterator_tag,
@@ -132,7 +130,7 @@ TEST(Array, RandomAccess_Reverse_Iterator)
 
 TEST(Array, RandomAccess_Const_Reverse_Iterator)
 {
-    using array_t = array<int, 0>;
+    using array_t = sky::array<int, 0>;
 
     const auto random_access_reverse_iterator = std::is_same<
             std::random_access_iterator_tag,

@@ -20,6 +20,7 @@ struct Array_MemTypes : public ::testing::Test
 } // namespace
 
 using MemTypes_Types = ::testing::Types<
+    Param<int>,
     Param<int, 1>
 >;
 

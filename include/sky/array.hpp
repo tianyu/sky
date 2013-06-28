@@ -22,6 +22,8 @@ namespace sky {
  * `array` is an aggregate (it has no user-defined constructors and no private
  * or protected members), which allows it to use aggregate-initialization.
  */
+template<typename T, std::size_t N>
+using array = std::array<T, N>;
 
 } // namespace sky
 

@@ -15,8 +15,8 @@ namespace sky {
  * The struct provides the benefits of a standard container, such as knowing its
  * own size, supporting assignment, random access iterators, etc.
  *
- * In the special case where some dimension `Ni == 0`,
- * `array.begin() == array.end()`, which is some unique value.
+ * In the special case where some dimension `Ni == 0`, or if there are 0
+ * dimensions, `array.begin() == array.end()`, which is some unique value.
  * The effect of calling `front()` or `back()` on such an array is undefined.
  *
  * `array` is an aggregate (it has no user-defined constructors and no private

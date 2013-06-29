@@ -36,8 +36,20 @@ struct array<T> : public std::array<T, 0>
 };
 
 template<typename T, std::size_t N1, std::size_t... Ns>
-struct array<T, N1, Ns...> : public std::array< sky::array<T, Ns...>, N1>
+struct array<T, N1, Ns...>
 {
+    using row_type = array<T, Ns...>;
+    using value_type = typename row_type::value_type;
+    using size_type = typename row_type::size_type;
+    using difference_type = typename row_type::difference_type;
+    using reference = typename row_type::reference;
+    using const_reference = typename row_type::const_reference;
+    using pointer = typename row_type::pointer;
+    using const_pointer = typename row_type::const_pointer;
+    using iterator = typename row_type::iterator;
+    using const_iterator = typename row_type::const_iterator;
+    using reverse_iterator = typename row_type::reverse_iterator;
+    using const_reverse_iterator = typename row_type::const_reverse_iterator;
 };
 
 } // namespace sky

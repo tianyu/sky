@@ -180,3 +180,41 @@ TYPED_TEST(Array_MemTypes, RandomAccess_Const_Reverse_Iterator)
     EXPECT_TRUE(is_const_reverse_iterator);
 }
 
+TEST(Array, Construct_Dim0_Default)
+{
+    (void)sky::array<int>{};
+}
+
+TEST(Array, Construct_Dim1_Default)
+{
+    (void)sky::array<int, 2>{};
+}
+
+TEST(Array, Construct_Dim1_Aggregate)
+{
+    (void)sky::array<int, 2>{{1, 2}};
+}
+
+TEST(Array, Construct_Dim2_Aggregate)
+{
+    (void)sky::array<int, 2, 2>{{
+        {{2, 4}},
+        {{6, 8}}
+    }};
+}
+
+TEST(Array, Construct_Dim3_Aggregate)
+{
+    (void)sky::array<int, 2, 3, 2>{{
+        {{
+            {{1, 2}},
+            {{3, 4}},
+            {{5, 6}}
+        }},{{
+            {{7, 8}},
+            {{9, 10}},
+            {{11, 12}}
+        }}
+    }};
+}
+

@@ -2,8 +2,6 @@
 #define ARRAY_HPP
 
 #include <array>
-#include <utility>
-#include <initializer_list>
 
 namespace sky {
 

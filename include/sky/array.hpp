@@ -32,16 +32,37 @@ struct array
       This class only contains definitions and documentation.
     */
 
+    /// The value type.
     using value_type = T;
+
+    /// The pointer type.
     using pointer = value_type*;
+
+    /// The pointer to constant type.
     using const_pointer = value_type const*;
+
+    /// The reference type.
     using reference = value_type&;
+
+    /// The reference to constant type.
     using const_reference = value_type const&;
+
+    /// The iterator type.
     using iterator = pointer;
+
+    /// The iterator to constant type.
     using const_iterator = const_pointer;
+
+    /// The reverse iterator type.
     using reverse_iterator = std::reverse_iterator<iterator>;
+
+    /// The reverse iterator to constant type.
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+    /// The size type.
     using size_type = std::size_t;
+
+    /// The difference type.
     using difference_type = std::ptrdiff_t;
 };
 

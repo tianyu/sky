@@ -1,7 +1,7 @@
 #ifndef ARRAY_HPP
 #define ARRAY_HPP
 
-#include <array>
+#include <cstddef>
 
 namespace sky {
 
@@ -28,24 +28,23 @@ struct array;
 template<typename T, std::size_t N>
 struct array<T, N>
 {
-    using array_type = std::array<T, N>;
-    using value_type = typename array_type::value_type;
-    using size_type = typename array_type::size_type;
-    using difference_type = typename array_type::difference_type;
-    using reference = typename array_type::reference;
-    using const_reference = typename array_type::const_reference;
-    using pointer = typename array_type::pointer;
-    using const_pointer = typename array_type::const_pointer;
-    using iterator = typename array_type::iterator;
-    using const_iterator = typename array_type::const_iterator;
-    using reverse_iterator = typename array_type::reverse_iterator;
-    using const_reverse_iterator = typename array_type::const_reverse_iterator;
+    using value_type = T;
+    using pointer = value_type*;
+    using const_pointer = value_type const*;
+    using reference = value_type&;
+    using const_reference = value_type const&;
+    using iterator = pointer;
+    using const_iterator = const_pointer;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
 
-    T _elems[N];
+    value_type _elems[N];
 };
 
 template<typename T>
-struct array<T> : public std::array<T, 0>
+struct array<T> : public sky::array<T, 0>
 {
 };
 

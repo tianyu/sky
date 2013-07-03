@@ -26,7 +26,24 @@ namespace sky {
  * or protected members), which allows it to use aggregate-initialization.
  */
 template<typename T, std::size_t... Ns>
-struct array;
+struct array
+{
+    /*
+      This class only contains definitions and documentation.
+    */
+
+    using value_type = T;
+    using pointer = value_type*;
+    using const_pointer = value_type const*;
+    using reference = value_type&;
+    using const_reference = value_type const&;
+    using iterator = pointer;
+    using const_iterator = const_pointer;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+};
 
 /*
   The 0-dimensional base case, which contains exactly one element.

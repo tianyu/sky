@@ -2,6 +2,7 @@
 #define ARRAY_HPP
 
 #include <cstddef>
+#include <iterator>
 
 namespace sky {
 

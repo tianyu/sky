@@ -28,6 +28,12 @@ namespace sky {
 template<typename T, std::size_t... Ns>
 struct array;
 
+/*
+  The 0-dimensional base case, which contains exactly one element.
+
+  All the member types are defined here.
+  Higher dimensional arrays get their member type definitions from here.
+*/
 template<typename T>
 struct array<T>
 {
@@ -46,6 +52,26 @@ struct array<T>
     value_type _elem;
 };
 
+/*
+  The 1-dimensional special case.
+
+  Currently, this exists because otherwise, users would be forced to place { }
+  around each element of an array, like:
+
+  sky::array<int, 3>{{ {1}, {2}, {3} }}; // Ugly
+
+  Instead of:
+
+  sky::array<int, 3>{{ 1, 2, 3 }}; // Prettier
+
+  Not adding the braces would still allow the code to compile (on some compilers
+  and only for certain types), but it causes the compiler to issue a warning.
+
+  Hopefully, when aggregate syntax is simplified in C++14, this specialization
+  will no longer have to exist, allowing us to write:
+
+  sky::array<int, 2, 3>{ {1, 2, 3}, {4, 5, 6} }; // Awesome!
+*/
 template<typename T, std::size_t N>
 struct array<T, N>
 {
@@ -65,6 +91,13 @@ struct array<T, N>
     value_type _elems[N];
 };
 
+/*
+  The general m-dimensional case.
+
+  An m-dimensional array with array sizes N1, N2, ..., Nm is implemented as an
+  array of N1 rows, where each row is a (m-1)-dimensional array with sizes
+  N2, N3, ..., Nm.
+*/
 template<typename T, std::size_t N1, std::size_t... Ns>
 struct array<T, N1, Ns...>
 {

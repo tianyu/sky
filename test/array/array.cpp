@@ -1,14 +1,17 @@
 #include <array>
 #include <iterator>
+#include <type_traits>
 
 #include "gtest/gtest.h"
 
 #include "sky/array.hpp"
 
+// Member Type tests //
+
 namespace {
 
 template<typename T, std::size_t... Ns>
-struct Param
+struct MemType_Param
 {
     using value_type = T;
     using array_type = sky::array<T, Ns...>;
@@ -21,10 +24,10 @@ struct Array_MemTypes : public ::testing::Test
 } // namespace
 
 using MemTypes_Types = ::testing::Types<
-    Param<int>,
-    Param<int, 1>,
-    Param<int, 2, 2>,
-    Param<int, 3, 3, 3>
+    MemType_Param<int>,
+    MemType_Param<int, 1>,
+    MemType_Param<int, 2, 2>,
+    MemType_Param<int, 3, 3, 3>
 >;
 
 TYPED_TEST_CASE(Array_MemTypes, MemTypes_Types);
@@ -181,6 +184,8 @@ TYPED_TEST(Array_MemTypes, RandomAccess_Const_Reverse_Iterator)
     EXPECT_TRUE(is_const_reverse_iterator);
 }
 
+// Constructor Tests //
+
 TEST(Array, Construct_Dim0_Default)
 {
     (void)sky::array<int>{};
@@ -188,7 +193,7 @@ TEST(Array, Construct_Dim0_Default)
 
 TEST(Array, Construct_Dim0_Aggregate)
 {
-    (void)sky::array<int>{{1}};
+    (void)sky::array<int>{1};
 }
 
 TEST(Array, Construct_Dim1_Default)
@@ -232,5 +237,90 @@ TEST(Array, Construct_Dim3_Aggregate)
             {{11, 12}}
         }}
     }};
+}
+
+// Member Tests //
+
+namespace  {
+
+template<std::size_t... Ns> sky::array<int, Ns...> _make_array();
+
+template<> sky::array<int> _make_array<>()
+{
+    return sky::array<int> { 1 };
+}
+
+template<> sky::array<int, 2> _make_array<>()
+{
+    return sky::array<int, 2> {{1, 2}};
+}
+
+template<> sky::array<int, 2, 2> _make_array<>()
+{
+    return sky::array<int, 2, 2> {{
+        {{ 1, 2 }},
+        {{ 3, 4 }}
+    }};
+}
+
+template<std::size_t... Ns> struct Member_Param
+{
+    static sky::array<int, Ns...> make_array() { return _make_array<Ns...>(); }
+};
+
+template<typename P>
+struct Array_Member : public ::testing::Test
+{};
+
+template<typename T>
+T const& to_const(T const&t) noexcept
+{
+    return t;
+}
+
+template<typename T>
+constexpr bool is_const(T &) { return false; }
+
+template<typename T>
+constexpr bool is_const(T const&) { return true; }
+
+} // namespace
+
+using Member_Types = ::testing::Types<
+    Member_Param<>,
+    Member_Param<2>,
+    Member_Param<2, 2>
+>;
+
+TYPED_TEST_CASE(Array_Member, Member_Types);
+
+TYPED_TEST(Array_Member, Data_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.data()));
+}
+
+TYPED_TEST(Array_Member, Data_Const_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(to_const(array).data()));
+}
+
+TYPED_TEST(Array_Member, Data)
+{
+    auto array = TypeParam::make_array();
+    auto data = array.data();
+
+    EXPECT_FALSE(is_const(*data));
+    EXPECT_EQ(1, data[0]);
+}
+
+TYPED_TEST(Array_Member, Data_Const)
+{
+    auto array = TypeParam::make_array();
+    auto data = to_const(array).data();
+
+    EXPECT_TRUE(is_const(*data));
+    EXPECT_EQ(1, data[0]);
 }
 

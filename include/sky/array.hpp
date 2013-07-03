@@ -88,6 +88,17 @@ struct array<T>
     using difference_type = std::ptrdiff_t;
 
     value_type _elem;
+
+    pointer data() noexcept
+    {
+        return pointer(&_elem);
+    }
+
+    const_pointer data() const noexcept
+    {
+        return const_pointer(&_elem);
+    }
+
 };
 
 /*
@@ -127,6 +138,17 @@ struct array<T, N>
     using const_reverse_iterator = typename row_type::const_reverse_iterator;
 
     value_type _elems[N];
+
+    pointer data() noexcept
+    {
+        return pointer(&_elems[0]);
+    }
+
+    const_pointer data() const noexcept
+    {
+        return pointer(&_elems[0]);
+    }
+
 };
 
 /*
@@ -153,6 +175,16 @@ struct array<T, N1, Ns...>
     using const_reverse_iterator = typename row_type::const_reverse_iterator;
 
     row_type _rows[N1];
+
+    pointer data() noexcept
+    {
+        return _rows[0].data();
+    }
+
+    const_pointer data() const noexcept
+    {
+        return _rows[0].data();
+    }
 
 };
 

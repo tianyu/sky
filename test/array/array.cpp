@@ -4,6 +4,8 @@
 
 #include "gtest/gtest.h"
 
+#include "sky/type_list.hpp"
+
 #include "sky/array.hpp"
 
 // Member Type tests //
@@ -243,29 +245,26 @@ TEST(Array, Construct_Dim3_Aggregate)
 
 namespace  {
 
-template<std::size_t... Ns> sky::array<int, Ns...> _make_array();
-
-template<> sky::array<int> _make_array<>()
-{
-    return sky::array<int> { 1 };
-}
-
-template<> sky::array<int, 2> _make_array<>()
-{
-    return sky::array<int, 2> {{1, 2}};
-}
-
-template<> sky::array<int, 2, 2> _make_array<>()
-{
-    return sky::array<int, 2, 2> {{
-        {{ 1, 2 }},
-        {{ 3, 4 }}
-    }};
-}
-
 template<std::size_t... Ns> struct Member_Param
 {
-    static sky::array<int, Ns...> make_array() { return _make_array<Ns...>(); }
+private:
+    template<std::size_t... Vals>
+    static std::array<int, sizeof...(Vals)> &&
+    make_array_helper(sky::index_list<Vals...>)
+    {
+        return std::array<int, sizeof...(Vals)>{{ Vals... }};
+    }
+
+public:
+    static sky::array<int, Ns...> make_array()
+    {
+        enum { product = sky::product<sky::index_list<Ns...>>::value };
+        using values_t = typename sky::index_range<1, product + 1>::type;
+        // This reinterpret cast should work since both sky::array and
+        // std::array should have the same layout.
+        return reinterpret_cast<sky::array<int, Ns...>&&>(
+                    make_array_helper(values_t()));
+    }
 };
 
 template<typename P>
@@ -304,6 +303,13 @@ TYPED_TEST(Array_Member, Data_Const_IsNoExcept)
 {
     auto array = TypeParam::make_array();
     EXPECT_TRUE(noexcept(to_const(array).data()));
+}
+
+TEST(Array, Data_Empty)
+{
+    auto array = sky::array<int, 1, 0, 1>{};
+
+    EXPECT_NE(nullptr, array.data());
 }
 
 TYPED_TEST(Array_Member, Data)

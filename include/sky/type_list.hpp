@@ -5,6 +5,9 @@
 
 namespace sky {
 
+/**
+ * A templated list of values of type T.
+ */
 template<typename T, T... Ts>
 struct type_list
 {};

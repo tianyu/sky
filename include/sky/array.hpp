@@ -64,6 +64,16 @@ struct array
 
     /// The difference type.
     using difference_type = std::ptrdiff_t;
+
+    /**
+     * Direct access to the underlying array.
+     *
+     * The pointer is such that the range `[data(); data() + size()]` is always
+     * a valid range, even if the container is empty.
+     */
+    pointer data();
+    const_pointer data() const; ///< @copydoc data()
+
 };
 
 /*

@@ -15,6 +15,13 @@ struct type_list
 template<std::size_t... Is>
 using index_list = type_list<std::size_t, Is...>;
 
+/**
+ * Contains an @ref index_list with parameters `Begin, Begin+1, ..., End-1`.
+ *
+ * #### Example
+ *
+ *     typename index_range<0, 5>::type; // Same as index_list<0, 1, 2, 3, 4>
+ */
 template<std::size_t Begin, std::size_t End>
 struct index_range
 {

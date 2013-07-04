@@ -12,10 +12,10 @@ struct type_list
 /**
  * @brief A template list of indexes.
  */
-template<size_t... Is>
-using index_list = type_list<size_t, Is...>;
+template<std::size_t... Is>
+using index_list = type_list<std::size_t, Is...>;
 
-template<size_t Begin, size_t End>
+template<std::size_t Begin, std::size_t End>
 struct index_range
 {
     static_assert(Begin <= End,
@@ -23,13 +23,13 @@ struct index_range
 
 private:
 
-    template<size_t First, size_t... Rest>
+    template<std::size_t First, std::size_t... Rest>
     struct helper
     {
         using type = typename helper<First-1, First, Rest...>::type;
     };
 
-    template<size_t... Rest>
+    template<std::size_t... Rest>
     struct helper<Begin, Rest...>
     {
         using type = index_list<Begin, Rest...>;
@@ -39,7 +39,7 @@ public:
     using type = typename helper<End-1>::type;
 };
 
-template<size_t N>
+template<std::size_t N>
 struct index_range<N,N>
 {
     using type = index_list<>;

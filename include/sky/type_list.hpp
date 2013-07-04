@@ -55,6 +55,18 @@ struct index_range<N,N>
     using type = index_list<>;
 };
 
+template<typename T, T... Ts>
+struct product;
+
+template<typename T>
+struct product<type_list<T>> : public std::integral_constant<T, T(1)>
+{};
+
+template<typename T, T T1, T... Ts>
+struct product<type_list<T, T1, Ts...>> :
+    public std::integral_constant<T, T1 * product<type_list<T, Ts...>>::value>
+{};
+
 } // namespace sky
 
 #endif // TYPE_LIST_HPP

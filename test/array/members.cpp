@@ -172,3 +172,12 @@ TYPED_TEST(Array_Member, Begin_End_Distance)
 
     EXPECT_EQ(expected, distance);
 }
+
+TYPED_TEST(Array_Member, Begin_End_Const_Distance)
+{
+    const auto array = TypeParam::make_array();
+    auto expected = TypeParam::size;
+    auto distance = std::distance(array.begin(), array.end());
+
+    EXPECT_EQ(expected, distance);
+}

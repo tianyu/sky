@@ -115,9 +115,10 @@ TYPED_TEST(Array_Member, Begin)
     auto array = TypeParam::make_array();
     auto begin = array.begin();
 
+    EXPECT_FALSE(is_const(*begin));
+
     if (TypeParam::is_empty) return;
 
-    EXPECT_FALSE(is_const(*begin));
     EXPECT_EQ(1, *begin);
 }
 
@@ -126,9 +127,10 @@ TYPED_TEST(Array_Member, Begin_Const)
     const auto array = TypeParam::make_array();
     auto begin = array.begin();
 
+    EXPECT_TRUE(is_const(*begin));
+
     if (TypeParam::is_empty) return;
 
-    EXPECT_TRUE(is_const(*begin));
     EXPECT_EQ(1, *begin);
 }
 
@@ -149,8 +151,6 @@ TYPED_TEST(Array_Member, End)
     auto array = TypeParam::make_array();
     auto end = array.end();
 
-    if (TypeParam::is_empty) return;
-
     EXPECT_FALSE(is_const(*end));
 }
 
@@ -158,8 +158,6 @@ TYPED_TEST(Array_Member, End_Const)
 {
     const auto array = TypeParam::make_array();
     auto end = array.end();
-
-    if (TypeParam::is_empty) return;
 
     EXPECT_TRUE(is_const(*end));
 }

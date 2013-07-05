@@ -1,9 +1,9 @@
 #include <array>
 #include <iterator>
-#include <type_traits>
 
 #include "gtest/gtest.h"
 
+#include "sky/type_traits.hpp"
 #include "sky/type_list.hpp"
 
 #include "sky/array.hpp"
@@ -21,26 +21,25 @@ private:
     }
 
 public:
+
+    static const std::size_t size = sky::product<sky::index_list<Ns...>>::value;
+
+    static const bool is_empty = (size == 0);
+
     static sky::array<int, Ns...> make_array()
     {
-        enum { product = sky::product<sky::index_list<Ns...>>::value };
-        using values_t = typename sky::index_range<1, product + 1>::type;
+        using values_t = typename sky::index_range<1, size + 1>::type;
         // This reinterpret cast should work since both sky::array and
         // std::array should have the same layout.
         return reinterpret_cast<sky::array<int, Ns...>&&>(
                     make_array_helper(values_t()));
     }
+
 };
 
 template<typename P>
 struct Array_Member : public ::testing::Test
 {};
-
-template<typename T>
-T const& to_const(T const&t) noexcept
-{
-    return t;
-}
 
 template<typename T>
 constexpr bool is_const(T &) { return false; }
@@ -53,7 +52,8 @@ constexpr bool is_const(T const&) { return true; }
 using Types = ::testing::Types<
     Param<>,
     Param<2>,
-    Param<2, 2>
+    Param<2, 2>,
+    Param<2, 0>
 >;
 
 TYPED_TEST_CASE(Array_Member, Types);
@@ -66,15 +66,8 @@ TYPED_TEST(Array_Member, Data_IsNoExcept)
 
 TYPED_TEST(Array_Member, Data_Const_IsNoExcept)
 {
-    auto array = TypeParam::make_array();
-    EXPECT_TRUE(noexcept(to_const(array).data()));
-}
-
-TEST(Array_Member, Data_Empty)
-{
-    auto array = sky::array<int, 1, 0, 1>{};
-
-    EXPECT_NE(nullptr, array.data());
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.data()));
 }
 
 TYPED_TEST(Array_Member, Data)
@@ -82,16 +75,100 @@ TYPED_TEST(Array_Member, Data)
     auto array = TypeParam::make_array();
     auto data = array.data();
 
+    if (TypeParam::is_empty) {
+        EXPECT_NE(nullptr, data);
+        return;
+    }
+
     EXPECT_FALSE(is_const(*data));
     EXPECT_EQ(1, data[0]);
 }
 
 TYPED_TEST(Array_Member, Data_Const)
 {
-    auto array = TypeParam::make_array();
-    auto data = to_const(array).data();
+    const auto array = TypeParam::make_array();
+    auto data = array.data();
+
+    if (TypeParam::is_empty) {
+        EXPECT_NE(nullptr, data);
+        return;
+    }
 
     EXPECT_TRUE(is_const(*data));
     EXPECT_EQ(1, data[0]);
 }
 
+TYPED_TEST(Array_Member, Begin_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.begin()));
+}
+
+TYPED_TEST(Array_Member, Begin_Const_IsNoExcept)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.begin()));
+}
+
+TYPED_TEST(Array_Member, Begin)
+{
+    auto array = TypeParam::make_array();
+    auto begin = array.begin();
+
+    if (TypeParam::is_empty) return;
+
+    EXPECT_FALSE(is_const(*begin));
+    EXPECT_EQ(1, *begin);
+}
+
+TYPED_TEST(Array_Member, Begin_Const)
+{
+    const auto array = TypeParam::make_array();
+    auto begin = array.begin();
+
+    if (TypeParam::is_empty) return;
+
+    EXPECT_TRUE(is_const(*begin));
+    EXPECT_EQ(1, *begin);
+}
+
+TYPED_TEST(Array_Member, End_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.end()));
+}
+
+TYPED_TEST(Array_Member, End_Const_IsNoExcept)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.end()));
+}
+
+TYPED_TEST(Array_Member, End)
+{
+    auto array = TypeParam::make_array();
+    auto end = array.end();
+
+    if (TypeParam::is_empty) return;
+
+    EXPECT_FALSE(is_const(*end));
+}
+
+TYPED_TEST(Array_Member, End_Const)
+{
+    const auto array = TypeParam::make_array();
+    auto end = array.end();
+
+    if (TypeParam::is_empty) return;
+
+    EXPECT_TRUE(is_const(*end));
+}
+
+TYPED_TEST(Array_Member, Begin_End_Distance)
+{
+    auto array = TypeParam::make_array();
+    auto expected = TypeParam::size;
+    auto distance = std::distance(array.begin(), array.end());
+
+    EXPECT_EQ(expected, distance);
+}

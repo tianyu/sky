@@ -14,13 +14,14 @@ struct type_list
 {};
 
 /**
- * @brief A template list of indexes.
+ * @typedef type_list<std::size_t, Is...> index_list;
+ * A template list of indexes.
  */
 template<std::size_t... Is>
 using index_list = type_list<std::size_t, Is...>;
 
 /**
- * Contains an @ref index_list with parameters `Begin, Begin+1, ..., End-1`.
+ * Contains an index_list with parameters `Begin, Begin+1, ..., End-1`.
  *
  * #### Example
  *

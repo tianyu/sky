@@ -70,6 +70,8 @@ struct array
      *
      * The pointer is such that the range `[data(); data() + size()]` is always
      * a valid range, even if the container is empty.
+     *
+     * @return A pointer to the underlying array.
      */
     pointer data() noexcept;
     const_pointer data() const noexcept; ///< @copydoc data()

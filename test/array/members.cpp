@@ -1,9 +1,9 @@
 #include <array>
 #include <iterator>
+#include <type_traits>
 
 #include "gtest/gtest.h"
 
-#include "sky/type_traits.hpp"
 #include "sky/type_list.hpp"
 
 #include "sky/array.hpp"

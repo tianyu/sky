@@ -120,34 +120,22 @@ struct array<T>
     value_type _elem;
 
     pointer data() noexcept
-    {
-        return pointer(&_elem);
-    }
+    { return pointer(&_elem); }
 
     const_pointer data() const noexcept
-    {
-        return const_pointer(&_elem);
-    }
+    { return const_pointer(&_elem); }
 
     iterator begin() noexcept
-    {
-        return iterator(data());
-    }
+    { return iterator(data()); }
 
     const_iterator begin() const noexcept
-    {
-        return const_iterator(data());
-    }
+    { return const_iterator(data()); }
 
     iterator end() noexcept
-    {
-        return iterator(data() + 1);
-    }
+    { return iterator(data() + 1); }
 
     const_iterator end() const noexcept
-    {
-        return const_iterator(data() + 1);
-    }
+    { return const_iterator(data() + 1); }
 
 };
 
@@ -190,34 +178,22 @@ struct array<T, N>
     value_type _elems[N];
 
     pointer data() noexcept
-    {
-        return pointer(&_elems[0]);
-    }
+    { return pointer(&_elems[0]); }
 
     const_pointer data() const noexcept
-    {
-        return pointer(&_elems[0]);
-    }
+    { return pointer(&_elems[0]); }
 
     iterator begin() noexcept
-    {
-        return iterator(data());
-    }
+    { return iterator(data()); }
 
     const_iterator begin() const noexcept
-    {
-        return const_iterator(data());
-    }
+    { return const_iterator(data()); }
 
     iterator end() noexcept
-    {
-        return iterator(data() + N);
-    }
+    { return iterator(data() + N); }
 
     const_iterator end() const noexcept
-    {
-        return const_iterator(data() + N);
-    }
+    { return const_iterator(data() + N); }
 
 };
 
@@ -247,34 +223,22 @@ struct array<T, N1, Ns...>
     row_type _rows[N1];
 
     pointer data() noexcept
-    {
-        return _rows[0].data();
-    }
+    { return _rows[0].data(); }
 
     const_pointer data() const noexcept
-    {
-        return _rows[0].data();
-    }
+    { return _rows[0].data(); }
 
     iterator begin() noexcept
-    {
-        return _rows[0].begin();
-    }
+    { return _rows[0].begin(); }
 
     const_iterator begin() const noexcept
-    {
-        return _rows[0].begin();
-    }
+    { return _rows[0].begin(); }
 
     iterator end() noexcept
-    {
-        return _rows[N1-1].end();
-    }
+    { return _rows[N1-1].end(); }
 
     const_iterator end() const noexcept
-    {
-        return _rows[N1-1].end();
-    }
+    { return _rows[N1-1].end(); }
 
 };
 

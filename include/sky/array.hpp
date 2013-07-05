@@ -80,7 +80,8 @@ struct array
      * @return An iterator to the first element.
      */
     iterator begin() noexcept;
-    const_iterator begin() const noexcept; ///< @copydec begin()
+    const_iterator begin() const noexcept; ///< @copydoc begin()
+    const_iterator cbegin() const noexcept; ///< @copydoc begin()
 
     /**
      * Returns an iterator to the element following the last element of the
@@ -93,6 +94,7 @@ struct array
      */
     iterator end() noexcept;
     const_iterator end() const noexcept; ///< @copydoc end()
+    const_iterator cend() const noexcept; ///< @copydoc end()
 
 };
 
@@ -131,10 +133,16 @@ struct array<T>
     const_iterator begin() const noexcept
     { return const_iterator(data()); }
 
+    const_iterator cbegin() const noexcept
+    { return const_iterator(data()); }
+
     iterator end() noexcept
     { return iterator(data() + 1); }
 
     const_iterator end() const noexcept
+    { return const_iterator(data() + 1); }
+
+    const_iterator cend() const noexcept
     { return const_iterator(data() + 1); }
 
 };
@@ -189,10 +197,16 @@ struct array<T, N>
     const_iterator begin() const noexcept
     { return const_iterator(data()); }
 
+    const_iterator cbegin() const noexcept
+    { return const_iterator(data()); }
+
     iterator end() noexcept
     { return iterator(data() + N); }
 
     const_iterator end() const noexcept
+    { return const_iterator(data() + N); }
+
+    const_iterator cend() const noexcept
     { return const_iterator(data() + N); }
 
 };
@@ -234,10 +248,16 @@ struct array<T, N1, Ns...>
     const_iterator begin() const noexcept
     { return _rows[0].begin(); }
 
+    const_iterator cbegin() const noexcept
+    { return _rows[0].begin(); }
+
     iterator end() noexcept
     { return _rows[N1-1].end(); }
 
     const_iterator end() const noexcept
+    { return _rows[N1-1].end(); }
+
+    const_iterator cend() const noexcept
     { return _rows[N1-1].end(); }
 
 };

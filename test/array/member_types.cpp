@@ -7,7 +7,7 @@
 namespace {
 
 template<typename T, std::size_t... Ns>
-struct MemType_Param
+struct Param
 {
     using value_type = T;
     using array_type = sky::array<T, Ns...>;
@@ -17,14 +17,14 @@ template<typename P>
 struct Array_MemTypes : public ::testing::Test
 {};
 
-using MemTypes_Types = ::testing::Types<
-    MemType_Param<int>,
-    MemType_Param<int, 1>,
-    MemType_Param<int, 2, 2>,
-    MemType_Param<int, 3, 3, 3>
+using Types = ::testing::Types<
+    Param<int>,
+    Param<int, 1>,
+    Param<int, 2, 2>,
+    Param<int, 3, 3, 3>
 >;
 
-TYPED_TEST_CASE(Array_MemTypes, MemTypes_Types);
+TYPED_TEST_CASE(Array_MemTypes, Types);
 
 TYPED_TEST(Array_MemTypes, Same_Value_Type)
 {

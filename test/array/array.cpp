@@ -10,7 +10,7 @@
 
 namespace  {
 
-template<std::size_t... Ns> struct Member_Param
+template<std::size_t... Ns> struct Param
 {
 private:
     template<std::size_t... Vals>
@@ -50,13 +50,13 @@ constexpr bool is_const(T const&) { return true; }
 
 } // namespace
 
-using Member_Types = ::testing::Types<
-    Member_Param<>,
-    Member_Param<2>,
-    Member_Param<2, 2>
+using Types = ::testing::Types<
+    Param<>,
+    Param<2>,
+    Param<2, 2>
 >;
 
-TYPED_TEST_CASE(Array_Member, Member_Types);
+TYPED_TEST_CASE(Array_Member, Types);
 
 TYPED_TEST(Array_Member, Data_IsNoExcept)
 {

@@ -53,6 +53,7 @@ using Types = ::testing::Types<
     Param<>,
     Param<2>,
     Param<2, 2>,
+    Param<0>,
     Param<2, 0>
 >;
 

@@ -1,6 +1,7 @@
 #include <array>
 #include <iterator>
 #include <type_traits>
+#include <utility>
 
 #include "gtest/gtest.h"
 
@@ -14,7 +15,7 @@ template<std::size_t... Ns> struct Param
 {
 private:
     template<std::size_t... Vals>
-    static std::array<int, sizeof...(Vals)> &&
+    static std::array<int, sizeof...(Vals)>
     make_array_helper(sky::index_list<Vals...>)
     {
         return std::array<int, sizeof...(Vals)>{{ Vals... }};
@@ -36,7 +37,7 @@ public:
         // This reinterpret cast should work since both sky::array and
         // std::array should have the same layout.
         return reinterpret_cast<sky::array<int, Ns...>&&>(
-                    make_array_helper(values_t()));
+                    std::move(make_array_helper(values_t())));
     }
 
 };

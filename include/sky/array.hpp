@@ -98,6 +98,32 @@ struct array
     const_iterator end() const noexcept; ///< @copydoc end()
     const_iterator cend() const noexcept; ///< @copydoc end()
 
+    /**
+     * Returns a reverse iterator to the first element of the reversed array.
+     *
+     * It corresponds to the last element of the non-reversed array.
+     *
+     * @return An iterator to the first element.
+     */
+    reverse_iterator rbegin() noexcept;
+    const_reverse_iterator rbegin() const noexcept; ///< @copydoc rbegin()
+    const_reverse_iterator crbegin() const noexcept; ///< @copydoc rbegin()
+
+    /**
+     * Returns a reverse iterator to the element following the last element of
+     * the reversed array.
+     *
+     * It corresponds to the element preceding the first element of the
+     * non-reversed array.
+     * This last element acts as a placeholder; attempting to access it results
+     * in undefined behavior.
+     *
+     * @return An iterator to the element following the last element.
+     */
+    reverse_iterator rend() noexcept;
+    const_reverse_iterator rend() const noexcept; ///< @copydoc rend()
+    const_reverse_iterator crend() const noexcept; ///< @copydoc rend()
+
 };
 
 /*
@@ -146,6 +172,24 @@ struct array<T>
 
     const_iterator cend() const noexcept
     { return const_iterator(data() + 1); }
+
+    reverse_iterator rbegin() noexcept
+    { return reverse_iterator(begin()); }
+
+    const_reverse_iterator rbegin() const noexcept
+    { return const_reverse_iterator(begin()); }
+
+    const_reverse_iterator crbegin() const noexcept
+    { return const_reverse_iterator(cbegin()); }
+
+    reverse_iterator rend() noexcept
+    { return reverse_iterator(end()); }
+
+    const_reverse_iterator rend() const noexcept
+    { return const_reverse_iterator(end()); }
+
+    const_reverse_iterator crend() const noexcept
+    { return const_reverse_iterator(cend()); }
 
 };
 
@@ -211,6 +255,25 @@ struct array<T, N>
     const_iterator cend() const noexcept
     { return const_iterator(data() + N); }
 
+    reverse_iterator rbegin() noexcept
+    { return reverse_iterator(begin()); }
+
+    const_reverse_iterator rbegin() const noexcept
+    { return const_reverse_iterator(begin()); }
+
+    const_reverse_iterator crbegin() const noexcept
+    { return const_reverse_iterator(cbegin()); }
+
+    reverse_iterator rend() noexcept
+    { return reverse_iterator(end()); }
+
+    const_reverse_iterator rend() const noexcept
+    { return const_reverse_iterator(end()); }
+
+    const_reverse_iterator crend() const noexcept
+    { return const_reverse_iterator(cend()); }
+
+
 };
 
 /*
@@ -261,6 +324,24 @@ struct array<T, N1, Ns...>
 
     const_iterator cend() const noexcept
     { return _rows[N1-1].end(); }
+
+    reverse_iterator rbegin() noexcept
+    { return _rows[0].rbegin(); }
+
+    const_reverse_iterator rbegin() const noexcept
+    { return _rows[0].rbegin(); }
+
+    const_reverse_iterator crbegin() const noexcept
+    { return _rows[0].rbegin(); }
+
+    reverse_iterator rend() noexcept
+    { return _rows[N1-1].rend(); }
+
+    const_reverse_iterator rend() const noexcept
+    { return _rows[N1-1].rend(); }
+
+    const_reverse_iterator crend() const noexcept
+    { return _rows[N1-1].rend(); }
 
 };
 

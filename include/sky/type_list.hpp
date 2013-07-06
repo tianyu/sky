@@ -14,7 +14,6 @@ struct type_list
 {};
 
 /**
- * @typedef type_list<std::size_t, Is...> index_list;
  * A template list of indexes.
  */
 template<std::size_t... Is>

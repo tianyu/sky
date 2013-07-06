@@ -2,49 +2,91 @@
 
 #include "gtest/gtest.h"
 
+#include "sky/type_list.hpp"
+
 #include "sky/array.hpp"
+
+namespace  {
+
+template<std::size_t... Ns>
+void expect_default_constructed(sky::array<int, Ns...> const&array)
+{
+    enum { size = sky::product<sky::index_list<Ns...>>::value };
+    auto data = reinterpret_cast<int const*>(&array);
+    for (int i = 1; i <= size; ++i) {
+        EXPECT_EQ(0, *data);
+        data++;
+    }
+}
+
+template<std::size_t... Ns>
+void expect_sequence_constructed(sky::array<int, Ns...> const&array)
+{
+    enum { size = sky::product<sky::index_list<Ns...>>::value };
+    auto data = reinterpret_cast<int const*>(&array);
+    for (int expected = 1; expected <= size; ++expected) {
+        EXPECT_EQ(expected, *data);
+        data++;
+    }
+}
+
+} // namespace
 
 TEST(Array_Construct, Dim0_Default)
 {
-    (void)sky::array<int>{};
+    auto array = sky::array<int>{};
+
+    expect_default_constructed(array);
 }
 
 TEST(Array_Construct, Dim0_Aggregate)
 {
-    (void)sky::array<int>{1};
+    auto array = sky::array<int>{1};
+
+    expect_sequence_constructed(array);
 }
 
 TEST(Array_Construct, Dim1_Default)
 {
-    (void)sky::array<int, 2>{};
+    auto array = sky::array<int, 2>{};
+
+    expect_default_constructed(array);
 }
 
 TEST(Array_Construct, Dim1_Aggregate)
 {
-    (void)sky::array<int, 2>{{1, 2}};
+    auto array = sky::array<int, 2>{{1, 2}};
+
+    expect_sequence_constructed(array);
 }
 
 TEST(Array_Construct, Dim2_Default)
 {
-    (void)sky::array<int, 2, 2>{};
+    auto array = sky::array<int, 2, 2>{};
+
+    expect_default_constructed(array);
 }
 
 TEST(Array_Construct, Dim2_Aggregate)
 {
-    (void)sky::array<int, 2, 2>{{
-        {{2, 4}},
-        {{6, 8}}
+    auto array = sky::array<int, 2, 2>{{
+        {{1, 2}},
+        {{3, 4}}
     }};
+
+    expect_sequence_constructed(array);
 }
 
 TEST(Array_Construct, Dim3_Default)
 {
-    (void)sky::array<int, 2, 3, 2>{};
+    auto array = sky::array<int, 2, 3, 2>{};
+
+    expect_default_constructed(array);
 }
 
 TEST(Array_Construct, Dim3_Aggregate)
 {
-    (void)sky::array<int, 2, 3, 2>{{
+    auto array = sky::array<int, 2, 3, 2>{{
         {{
             {{1, 2}},
             {{3, 4}},
@@ -55,4 +97,6 @@ TEST(Array_Construct, Dim3_Aggregate)
             {{11, 12}}
         }}
     }};
+
+    expect_sequence_constructed(array);
 }

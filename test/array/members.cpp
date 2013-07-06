@@ -111,7 +111,7 @@ TYPED_TEST(Array_Member, Begin_Const_IsNoExcept)
     EXPECT_TRUE(noexcept(array.begin()));
 }
 
-TYPED_TEST(Array_Member, Cbegin_IsNoExcept)
+TYPED_TEST(Array_Member, CBegin_IsNoExcept)
 {
     auto array = TypeParam::make_array();
     EXPECT_TRUE(noexcept(array.cbegin()));
@@ -141,7 +141,7 @@ TYPED_TEST(Array_Member, Begin_Const)
     EXPECT_EQ(1, *begin);
 }
 
-TYPED_TEST(Array_Member, Cbegin)
+TYPED_TEST(Array_Member, CBegin)
 {
     auto array = TypeParam::make_array();
     auto cbegin = array.cbegin();
@@ -165,7 +165,7 @@ TYPED_TEST(Array_Member, End_Const_IsNoExcept)
     EXPECT_TRUE(noexcept(array.end()));
 }
 
-TYPED_TEST(Array_Member, Cend_IsNoExcept)
+TYPED_TEST(Array_Member, CEnd_IsNoExcept)
 {
     auto array = TypeParam::make_array();
     EXPECT_TRUE(noexcept(array.cend()));
@@ -187,7 +187,7 @@ TYPED_TEST(Array_Member, End_Const)
     EXPECT_TRUE(is_const(*end));
 }
 
-TYPED_TEST(Array_Member, Cend)
+TYPED_TEST(Array_Member, CEnd)
 {
     auto array = TypeParam::make_array();
     auto cend = array.cend();
@@ -209,6 +209,15 @@ TYPED_TEST(Array_Member, Begin_End_Const_Distance)
     const auto array = TypeParam::make_array();
     auto expected = TypeParam::size;
     auto distance = std::distance(array.begin(), array.end());
+
+    EXPECT_EQ(expected, distance);
+}
+
+TYPED_TEST(Array_Member, CBegin_CEnd_Const_Distance)
+{
+    const auto array = TypeParam::make_array();
+    auto expected = TypeParam::size;
+    auto distance = std::distance(array.cbegin(), array.cend());
 
     EXPECT_EQ(expected, distance);
 }

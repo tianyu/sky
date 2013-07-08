@@ -124,6 +124,15 @@ struct array
     const_reverse_iterator rend() const noexcept; ///< @copydoc rend()
     const_reverse_iterator crend() const noexcept; ///< @copydoc rend()
 
+    /**
+     * Returns the number of elements in this array.
+     *
+     * I.e. `std::distance(begin(),end());`
+     *
+     * @return The number of elements in this array.
+     */
+    constexpr size_type size() const noexcept;
+
 };
 
 /*
@@ -190,6 +199,9 @@ struct array<T>
 
     const_reverse_iterator crend() const noexcept
     { return const_reverse_iterator(begin()); }
+
+    constexpr size_type size() const noexcept
+    { return size_type(1); }
 
 };
 
@@ -273,6 +285,9 @@ struct array<T, N>
     const_reverse_iterator crend() const noexcept
     { return const_reverse_iterator(begin()); }
 
+    constexpr size_type size() const noexcept
+    { return size_type(N); }
+
 };
 
 /*
@@ -341,6 +356,9 @@ struct array<T, N1, Ns...>
 
     const_reverse_iterator crend() const noexcept
     { return const_reverse_iterator(begin()); }
+
+    constexpr size_type size() const noexcept
+    { return N1 * _rows[0].size(); }
 
 };
 

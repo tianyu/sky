@@ -23,6 +23,8 @@ private:
 
 public:
 
+    using array_t = sky::array<int, Ns...>;
+
     static const std::size_t size = sky::product<sky::index_list<Ns...>>::value;
 
     static const bool is_empty = (size == 0);
@@ -31,12 +33,32 @@ public:
 
     static const int back = size;
 
-    static sky::array<int, Ns...> make_array()
+    static int const* begin_of(array_t const&array)
+    {
+        return reinterpret_cast<int const*>(&array);
+    }
+
+    static int const* end_of(array_t const&array)
+    {
+        return begin_of(array) + size;
+    }
+
+    static int const* rbegin_of(array_t const&array)
+    {
+        return end_of(array) - 1;
+    }
+
+    static int const* rend_of(array_t const&array)
+    {
+        return begin_of(array) - 1;
+    }
+
+    static array_t make_array()
     {
         using values_t = typename sky::index_range<1, size + 1>::type;
         // This reinterpret cast should work since both sky::array and
         // std::array should have the same layout.
-        return reinterpret_cast<sky::array<int, Ns...>&&>(
+        return reinterpret_cast<array_t&&>(
                     std::move(make_array_helper(values_t())));
     }
 
@@ -79,7 +101,7 @@ TYPED_TEST(Array_Member, Data_Const_IsNoExcept)
 TYPED_TEST(Array_Member, Data)
 {
     auto array = TypeParam::make_array();
-    auto expected = TypeParam::front;
+    auto expected = TypeParam::begin_of(array);
     auto data = array.data();
 
     if (TypeParam::is_empty) {
@@ -88,13 +110,13 @@ TYPED_TEST(Array_Member, Data)
     }
 
     EXPECT_FALSE(is_const(*data));
-    EXPECT_EQ(expected, data[0]);
+    EXPECT_EQ(expected, data);
 }
 
 TYPED_TEST(Array_Member, Data_Const)
 {
     const auto array = TypeParam::make_array();
-    auto expected = TypeParam::front;
+    auto expected = TypeParam::begin_of(array);
     auto data = array.data();
 
     if (TypeParam::is_empty) {
@@ -103,7 +125,7 @@ TYPED_TEST(Array_Member, Data_Const)
     }
 
     EXPECT_TRUE(is_const(*data));
-    EXPECT_EQ(expected, data[0]);
+    EXPECT_EQ(expected, data);
 }
 
 TYPED_TEST(Array_Member, Begin_IsNoExcept)
@@ -127,40 +149,31 @@ TYPED_TEST(Array_Member, CBegin_IsNoExcept)
 TYPED_TEST(Array_Member, Begin)
 {
     auto array = TypeParam::make_array();
-    auto expected = TypeParam::front;
+    auto expected = TypeParam::begin_of(array);
     auto begin = array.begin();
 
     EXPECT_FALSE(is_const(*begin));
-
-    if (TypeParam::is_empty) return;
-
-    EXPECT_EQ(expected, *begin);
+    EXPECT_EQ(expected, begin);
 }
 
 TYPED_TEST(Array_Member, Begin_Const)
 {
     const auto array = TypeParam::make_array();
-    auto expected = TypeParam::front;
+    auto expected = TypeParam::begin_of(array);
     auto begin = array.begin();
 
     EXPECT_TRUE(is_const(*begin));
-
-    if (TypeParam::is_empty) return;
-
-    EXPECT_EQ(expected, *begin);
+    EXPECT_EQ(expected, begin);
 }
 
 TYPED_TEST(Array_Member, CBegin)
 {
     auto array = TypeParam::make_array();
-    auto expected = TypeParam::front;
+    auto expected = TypeParam::begin_of(array);
     auto cbegin = array.cbegin();
 
     EXPECT_TRUE(is_const(*cbegin));
-
-    if (TypeParam::is_empty) return;
-
-    EXPECT_EQ(expected, *cbegin);
+    EXPECT_EQ(expected, cbegin);
 }
 
 TYPED_TEST(Array_Member, End_IsNoExcept)
@@ -184,25 +197,31 @@ TYPED_TEST(Array_Member, CEnd_IsNoExcept)
 TYPED_TEST(Array_Member, End)
 {
     auto array = TypeParam::make_array();
+    auto expected = TypeParam::end_of(array);
     auto end = array.end();
 
     EXPECT_FALSE(is_const(*end));
+    EXPECT_EQ(expected, end);
 }
 
 TYPED_TEST(Array_Member, End_Const)
 {
     const auto array = TypeParam::make_array();
+    auto expected = TypeParam::end_of(array);
     auto end = array.end();
 
     EXPECT_TRUE(is_const(*end));
+    EXPECT_EQ(expected, end);
 }
 
 TYPED_TEST(Array_Member, CEnd)
 {
     auto array = TypeParam::make_array();
+    auto expected = TypeParam::end_of(array);
     auto cend = array.cend();
 
     EXPECT_TRUE(is_const(*cend));
+    EXPECT_EQ(expected, cend);
 }
 
 TYPED_TEST(Array_Member, Begin_End_Distance)
@@ -253,40 +272,31 @@ TYPED_TEST(Array_Member, CRBegin_IsNoExcept)
 TYPED_TEST(Array_Member, RBegin)
 {
     auto array = TypeParam::make_array();
-    auto expected = TypeParam::back;
+    auto expected = TypeParam::rbegin_of(array);
     auto rbegin = array.rbegin();
 
     EXPECT_FALSE(is_const(*rbegin));
-
-    if (TypeParam::is_empty) return;
-
-    EXPECT_EQ(expected, *rbegin);
+    EXPECT_EQ(expected, rbegin.base());
 }
 
 TYPED_TEST(Array_Member, RBegin_Const)
 {
     const auto array = TypeParam::make_array();
-    auto expected = TypeParam::back;
+    auto expected = TypeParam::rbegin_of(array);
     auto rbegin = array.rbegin();
 
     EXPECT_TRUE(is_const(*rbegin));
-
-    if (TypeParam::is_empty) return;
-
-    EXPECT_EQ(expected, *rbegin);
+    EXPECT_EQ(expected, rbegin.base());
 }
 
 TYPED_TEST(Array_Member, CRBegin)
 {
     auto array = TypeParam::make_array();
-    auto expected = TypeParam::back;
+    auto expected = TypeParam::rbegin_of(array);
     auto crbegin = array.crbegin();
 
     EXPECT_TRUE(is_const(*crbegin));
-
-    if (TypeParam::is_empty) return;
-
-    EXPECT_EQ(expected, *crbegin);
+    EXPECT_EQ(expected, crbegin.base());
 }
 
 TYPED_TEST(Array_Member, REnd_IsNoExcept)
@@ -310,25 +320,31 @@ TYPED_TEST(Array_Member, CREnd_IsNoExcept)
 TYPED_TEST(Array_Member, REnd)
 {
     auto array = TypeParam::make_array();
+    auto expected = TypeParam::rend_of(array);
     auto rend = array.rend();
 
     EXPECT_FALSE(is_const(*rend));
+    EXPECT_EQ(expected, rend.base());
 }
 
 TYPED_TEST(Array_Member, REnd_Const)
 {
     const auto array = TypeParam::make_array();
+    auto expected = TypeParam::rend_of(array);
     auto rend = array.rend();
 
     EXPECT_TRUE(is_const(*rend));
+    EXPECT_EQ(expected, rend.base());
 }
 
 TYPED_TEST(Array_Member, CREnd)
 {
     auto array = TypeParam::make_array();
+    auto expected = TypeParam::rend_of(array);
     auto crend = array.crend();
 
     EXPECT_TRUE(is_const(*crend));
+    EXPECT_EQ(expected, crend.base());
 }
 
 TYPED_TEST(Array_Member, RBegin_REnd_Distance)

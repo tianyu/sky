@@ -145,6 +145,15 @@ struct array
      */
     constexpr size_type max_size() const noexcept;
 
+    /**
+     * Checks whether the array has no elements.
+     *
+     * I.e. whether `begin() == end()`.
+     *
+     * @return `true` if and only if the array contains no elements.
+     */
+    constexpr bool empty() const noexcept;
+
 };
 
 /*
@@ -217,6 +226,9 @@ struct array<T>
 
     constexpr size_type max_size() const noexcept
     { return size(); }
+
+    constexpr bool empty() const noexcept
+    { return size() == 0; }
 
 };
 
@@ -306,6 +318,9 @@ struct array<T, N>
     constexpr size_type max_size() const noexcept
     { return size(); }
 
+    constexpr bool empty() const noexcept
+    { return size() == 0; }
+
 };
 
 /*
@@ -380,6 +395,9 @@ struct array<T, N1, Ns...>
 
     constexpr size_type max_size() const noexcept
     { return size(); }
+
+    constexpr bool empty() const noexcept
+    { return size() == 0; }
 
 };
 

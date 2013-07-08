@@ -46,3 +46,17 @@ TYPED_TEST(Array_Capacity, Max_Size)
     EXPECT_EQ(expected, max_size);
 }
 
+TYPED_TEST(Array_Capacity, Empty_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.empty()));
+}
+
+TYPED_TEST(Array_Capacity, Empty)
+{
+    const auto array = TypeParam::make_array();
+    auto expected = TypeParam::empty;
+    auto empty = array.empty();
+
+    EXPECT_EQ(expected, empty);
+}

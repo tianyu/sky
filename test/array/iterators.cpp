@@ -34,11 +34,7 @@ TYPED_TEST(Array_Iterator, Data)
     auto expected = TypeParam::begin_of(array);
     auto data = array.data();
 
-    if (TypeParam::is_empty) {
-        EXPECT_NE(nullptr, data);
-        return;
-    }
-
+    EXPECT_NE(nullptr, data);
     EXPECT_FALSE(is_const(*data));
     EXPECT_EQ(expected, data);
 }
@@ -49,11 +45,7 @@ TYPED_TEST(Array_Iterator, Data_Const)
     auto expected = TypeParam::begin_of(array);
     auto data = array.data();
 
-    if (TypeParam::is_empty) {
-        EXPECT_NE(nullptr, data);
-        return;
-    }
-
+    EXPECT_NE(nullptr, data);
     EXPECT_TRUE(is_const(*data));
     EXPECT_EQ(expected, data);
 }

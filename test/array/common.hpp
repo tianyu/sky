@@ -26,7 +26,7 @@ public:
 
     static const std::size_t size = sky::product<sky::index_list<Ns...>>::value;
 
-    static const bool is_empty = (size == 0);
+    static const bool empty = (size == 0);
 
     static const int front = 1;
 

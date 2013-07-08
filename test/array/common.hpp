@@ -21,7 +21,8 @@ private:
 
 public:
 
-    using array_t = sky::array<int, Ns...>;
+    using value_type = int;
+    using array_type = sky::array<int, Ns...>;
 
     static const std::size_t size = sky::product<sky::index_list<Ns...>>::value;
 
@@ -31,32 +32,32 @@ public:
 
     static const int back = size;
 
-    static int const* begin_of(array_t const&array)
+    static int const* begin_of(array_type const&array)
     {
         return reinterpret_cast<int const*>(&array);
     }
 
-    static int const* end_of(array_t const&array)
+    static int const* end_of(array_type const&array)
     {
         return begin_of(array) + size;
     }
 
-    static int const* rbegin_of(array_t const&array)
+    static int const* rbegin_of(array_type const&array)
     {
         return end_of(array) - 1;
     }
 
-    static int const* rend_of(array_t const&array)
+    static int const* rend_of(array_type const&array)
     {
         return begin_of(array) - 1;
     }
 
-    static array_t make_array()
+    static array_type make_array()
     {
         using values_t = typename sky::index_range<1, size + 1>::type;
         // This reinterpret cast should work since both sky::array and
         // std::array should have the same layout.
-        return reinterpret_cast<array_t&&>(
+        return reinterpret_cast<array_type&&>(
                     std::move(make_array_helper(values_t())));
     }
 

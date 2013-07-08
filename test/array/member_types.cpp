@@ -2,26 +2,19 @@
 
 #include "gtest/gtest.h"
 
-#include "sky/array.hpp"
+#include "common.hpp"
 
 namespace {
-
-template<typename T, std::size_t... Ns>
-struct Param
-{
-    using value_type = T;
-    using array_type = sky::array<T, Ns...>;
-};
 
 template<typename P>
 struct Array_MemTypes : public ::testing::Test
 {};
 
 using Types = ::testing::Types<
-    Param<int>,
-    Param<int, 1>,
-    Param<int, 2, 2>,
-    Param<int, 3, 3, 3>
+    Param<>,
+    Param<1>,
+    Param<2, 2>,
+    Param<3, 3, 3>
 >;
 
 TYPED_TEST_CASE(Array_MemTypes, Types);

@@ -133,6 +133,18 @@ struct array
      */
     constexpr size_type size() const noexcept;
 
+    /**
+     * Returns the maximum number of elements the container is able to hold due
+     * to library or implementation limitations.
+     *
+     * This reflects the theoretical limit of the array.
+     * At runtime, the array may be limited to a value smaller than `max_size()`
+     * by the amount of memory available.
+     *
+     * @return The maximum number of elements.
+     */
+    constexpr size_type max_size() const noexcept;
+
 };
 
 /*
@@ -202,6 +214,9 @@ struct array<T>
 
     constexpr size_type size() const noexcept
     { return size_type(1); }
+
+    constexpr size_type max_size() const noexcept
+    { return size(); }
 
 };
 
@@ -288,6 +303,9 @@ struct array<T, N>
     constexpr size_type size() const noexcept
     { return size_type(N); }
 
+    constexpr size_type max_size() const noexcept
+    { return size(); }
+
 };
 
 /*
@@ -359,6 +377,9 @@ struct array<T, N1, Ns...>
 
     constexpr size_type size() const noexcept
     { return N1 * _rows[0].size(); }
+
+    constexpr size_type max_size() const noexcept
+    { return size(); }
 
 };
 

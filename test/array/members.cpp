@@ -276,7 +276,7 @@ TYPED_TEST(Array_Member, RBegin)
     auto rbegin = array.rbegin();
 
     EXPECT_FALSE(is_const(*rbegin));
-    EXPECT_EQ(expected, rbegin.base());
+    EXPECT_EQ(expected, &*rbegin);
 }
 
 TYPED_TEST(Array_Member, RBegin_Const)
@@ -286,7 +286,7 @@ TYPED_TEST(Array_Member, RBegin_Const)
     auto rbegin = array.rbegin();
 
     EXPECT_TRUE(is_const(*rbegin));
-    EXPECT_EQ(expected, rbegin.base());
+    EXPECT_EQ(expected, &*rbegin);
 }
 
 TYPED_TEST(Array_Member, CRBegin)
@@ -296,7 +296,7 @@ TYPED_TEST(Array_Member, CRBegin)
     auto crbegin = array.crbegin();
 
     EXPECT_TRUE(is_const(*crbegin));
-    EXPECT_EQ(expected, crbegin.base());
+    EXPECT_EQ(expected, &*crbegin);
 }
 
 TYPED_TEST(Array_Member, REnd_IsNoExcept)
@@ -324,7 +324,7 @@ TYPED_TEST(Array_Member, REnd)
     auto rend = array.rend();
 
     EXPECT_FALSE(is_const(*rend));
-    EXPECT_EQ(expected, rend.base());
+    EXPECT_EQ(expected, &*rend);
 }
 
 TYPED_TEST(Array_Member, REnd_Const)
@@ -334,7 +334,7 @@ TYPED_TEST(Array_Member, REnd_Const)
     auto rend = array.rend();
 
     EXPECT_TRUE(is_const(*rend));
-    EXPECT_EQ(expected, rend.base());
+    EXPECT_EQ(expected, &*rend);
 }
 
 TYPED_TEST(Array_Member, CREnd)
@@ -344,13 +344,13 @@ TYPED_TEST(Array_Member, CREnd)
     auto crend = array.crend();
 
     EXPECT_TRUE(is_const(*crend));
-    EXPECT_EQ(expected, crend.base());
+    EXPECT_EQ(expected, &*crend);
 }
 
 TYPED_TEST(Array_Member, RBegin_REnd_Distance)
 {
     auto array = TypeParam::make_array();
-    auto expected = -TypeParam::size;
+    auto expected = TypeParam::size;
     auto distance = std::distance(array.rbegin(), array.rend());
 
     EXPECT_EQ(expected, distance);
@@ -359,7 +359,7 @@ TYPED_TEST(Array_Member, RBegin_REnd_Distance)
 TYPED_TEST(Array_Member, RBegin_REnd_Const_Distance)
 {
     const auto array = TypeParam::make_array();
-    auto expected = -TypeParam::size;
+    auto expected = TypeParam::size;
     auto distance = std::distance(array.rbegin(), array.rend());
 
     EXPECT_EQ(expected, distance);
@@ -368,7 +368,7 @@ TYPED_TEST(Array_Member, RBegin_REnd_Const_Distance)
 TYPED_TEST(Array_Member, CRBegin_CREnd_Const_Distance)
 {
     const auto array = TypeParam::make_array();
-    auto expected = -TypeParam::size;
+    auto expected = TypeParam::size;
     auto distance = std::distance(array.crbegin(), array.crend());
 
     EXPECT_EQ(expected, distance);

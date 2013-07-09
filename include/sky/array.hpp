@@ -389,6 +389,11 @@ struct array<T, N>
     const_reference operator[](size_type n) const noexcept
     { return _elems[n]; }
 
+    array<T, N> &at()
+    {
+        return *this;
+    }
+
     reference at(size_type n)
     {
         if (n >= N) throw std::out_of_range("array::at");

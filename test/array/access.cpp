@@ -29,7 +29,7 @@ TYPED_TEST(Array_Access, Operator)
     auto array = TypeParam::make_array();
     EXPECT_SAME(typename TypeParam::row_type, decltype(array[0]));
 
-    if (TypeParam::empty) return;
+    if (TypeParam::empty) return; // Don't try to access a 0-element array.
     int expected = 1;
     for (std::size_t i = 0; i < TypeParam::num_rows; ++i) {
         auto row = array[i];

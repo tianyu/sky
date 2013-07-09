@@ -9,22 +9,59 @@
 
 namespace  {
 
+namespace helper {
+
+template<std::size_t... Vals>
+static std::array<int, sizeof...(Vals)>
+make_array(sky::index_list<Vals...>)
+{
+    return std::array<int, sizeof...(Vals)>{{ Vals... }};
+}
+
+template<std::size_t... Dims>
+struct rows;
+
+template<>
+struct rows<>
+{
+    using type = int&;
+    using const_type = int const&;
+    enum { num = 1 };
+    enum { size = 1 };
+};
+
+template<std::size_t First>
+struct rows<First>
+{
+    using type = int&;
+    using const_type = int const&;
+    enum { num = First };
+    enum { size = 1 };
+};
+
+template<std::size_t First, std::size_t... Rest>
+struct rows<First, Rest...>
+{
+    using type = sky::array<int, Rest...> &;
+    using const_type = sky::array<int, Rest...> const&;
+    enum { num = First };
+    enum { size = sky::product<sky::index_list<Rest...>>::value };
+};
+
+} // namespace helper
+
 template<std::size_t... Ns> struct Param
 {
-private:
-    template<std::size_t... Vals>
-    static std::array<int, sizeof...(Vals)>
-    make_array_helper(sky::index_list<Vals...>)
-    {
-        return std::array<int, sizeof...(Vals)>{{ Vals... }};
-    }
-
-public:
-
     using value_type = int;
     using array_type = sky::array<int, Ns...>;
 
+    using row_type = typename helper::rows<Ns...>::type;
+    using const_row_type = typename helper::rows<Ns...>::const_type;
+
     static const std::size_t size = sky::product<sky::index_list<Ns...>>::value;
+
+    static const std::size_t num_rows = helper::rows<Ns...>::num;
+    static const std::size_t row_size = helper::rows<Ns...>::size;
 
     static const bool empty = (size == 0);
 
@@ -58,7 +95,7 @@ public:
         // This reinterpret cast should work since both sky::array and
         // std::array should have the same layout.
         return reinterpret_cast<array_type&&>(
-                    std::move(make_array_helper(values_t())));
+                    std::move(helper::make_array(values_t())));
     }
 
 };

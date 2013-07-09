@@ -154,6 +154,27 @@ struct array
      */
     constexpr bool empty() const noexcept;
 
+    /**
+     * Gets the `n`th element of the array.
+     *
+     * No bounds checking is performed.
+     *
+     * In general, the n'th element of an m-dimensional array,
+     * `array<T, N1, N2, ..., Nm>`, is the n'th (m-1)-dimensional array of type
+     * `array<T, N2, ..., Nm>`.
+     * So note that in this case, the type of the return value is not
+     * `reference`.
+     *
+     * The n'th element of a 1-dimensional array is simply the n'th element.
+     *
+     * Since a 0-dimensional array only contains one element, `array[0]` gets
+     * that element and `array[i]` for any `i != 0` results in undefined
+     * behaviour.
+     *
+     * @return reference to the requested element.
+     */
+    reference operator[](size_type n) noexcept;
+
 };
 
 /*
@@ -229,6 +250,9 @@ struct array<T>
 
     constexpr bool empty() const noexcept
     { return size() == 0; }
+
+    reference operator[](size_type n) noexcept
+    { return _elem; }
 
 };
 
@@ -321,6 +345,9 @@ struct array<T, N>
     constexpr bool empty() const noexcept
     { return size() == 0; }
 
+    reference operator[](size_type n) noexcept
+    { return _elems[n]; }
+
 };
 
 /*
@@ -398,6 +425,9 @@ struct array<T, N1, Ns...>
 
     constexpr bool empty() const noexcept
     { return size() == 0; }
+
+    row_type &operator[](size_type n) noexcept
+    { return _rows[n]; }
 
 };
 

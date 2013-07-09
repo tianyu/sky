@@ -174,6 +174,8 @@ struct array
      * @return reference to the requested element.
      */
     reference operator[](size_type n) noexcept;
+    const_reference operator[](size_type n)
+        const noexcept; ///< @copydoc operator[]()
 
 };
 
@@ -252,6 +254,9 @@ struct array<T>
     { return size() == 0; }
 
     reference operator[](size_type n) noexcept
+    { return _elem; }
+
+    const_reference operator[](size_type n) const noexcept
     { return _elem; }
 
 };
@@ -348,6 +353,9 @@ struct array<T, N>
     reference operator[](size_type n) noexcept
     { return _elems[n]; }
 
+    const_reference operator[](size_type n) const noexcept
+    { return _elems[n]; }
+
 };
 
 /*
@@ -427,6 +435,9 @@ struct array<T, N1, Ns...>
     { return size() == 0; }
 
     row_type &operator[](size_type n) noexcept
+    { return _rows[n]; }
+
+    row_type const&operator[](size_type n) const noexcept
     { return _rows[n]; }
 
 };

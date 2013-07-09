@@ -3,6 +3,8 @@
 
 #include <cstddef>
 #include <iterator>
+#include <exception>
+#include "sky/type_traits.hpp"
 
 namespace sky {
 
@@ -155,7 +157,7 @@ struct array
     constexpr bool empty() const noexcept;
 
     /**
-     * Gets the `n`th element of the array.
+     * Gets the n'th element of the array.
      *
      * No bounds checking is performed.
      *
@@ -171,11 +173,36 @@ struct array
      * that element and `array[i]` for any `i != 0` results in undefined
      * behaviour.
      *
-     * @return reference to the requested element.
+     * @return Reference to the requested element.
      */
     reference operator[](size_type n) noexcept;
     const_reference operator[](size_type n)
         const noexcept; ///< @copydoc operator[]()
+
+    /**
+     * Gets an element of the array.
+     *
+     * Bounds checking is performed.
+     *
+     * Writing `array.at(i1, i2, ..., im);` is equivalent to
+     * `array[i1][i2]...[im];` but with bounds checking.
+     * In particular:
+     *
+     * - Each index must be of type `size_type`.
+     * - There may be at most `m` indicies, where `m` is the number of
+     *   dimensions.
+     *
+     * Calling `array.at()` with no indexes returns a reference to the array
+     * itself.
+     *
+     * @throws std::out_of_range If one of the indicies are out of bounds.
+     * @return Reference to the requested element.
+     * @see operator[]()
+     */
+    template<typename... Is>
+    reference at(Is&&... is);
+    template<typename... Is>
+    constexpr const_reference at(Is&&... is) const; ///< @copydoc at()
 
 };
 
@@ -258,6 +285,12 @@ struct array<T>
 
     const_reference operator[](size_type n) const noexcept
     { return _elem; }
+
+    reference at(size_type n)
+    {
+        if (n > 0) throw std::out_of_range("array::at");
+        return _elem;
+    }
 
 };
 
@@ -356,6 +389,12 @@ struct array<T, N>
     const_reference operator[](size_type n) const noexcept
     { return _elems[n]; }
 
+    reference at(size_type n)
+    {
+        if (n >= N) throw std::out_of_range("array::at");
+        return _elems[n];
+    }
+
 };
 
 /*
@@ -439,6 +478,14 @@ struct array<T, N1, Ns...>
 
     row_type const&operator[](size_type n) const noexcept
     { return _rows[n]; }
+
+    template<typename... Is>
+    auto at(size_type i, Is&&... is)
+        -> decltype(_rows[i].at(is...))
+    {
+        if (i >= N1) throw std::out_of_range("array::at");
+        return _rows[i].at(std::forward<Is>(is)...);
+    }
 
 };
 

@@ -292,6 +292,12 @@ struct array<T>
         return _elem;
     }
 
+    const_reference at(size_type n) const
+    {
+        if (n > 0) throw std::out_of_range("array::at");
+        return _elem;
+    }
+
 };
 
 /*
@@ -390,11 +396,18 @@ struct array<T, N>
     { return _elems[n]; }
 
     array<T, N> &at()
-    {
-        return *this;
-    }
+    { return *this; }
+
+    array<T, N> const&at() const
+    { return *this; }
 
     reference at(size_type n)
+    {
+        if (n >= N) throw std::out_of_range("array::at");
+        return _elems[n];
+    }
+
+    const_reference at(size_type n) const
     {
         if (n >= N) throw std::out_of_range("array::at");
         return _elems[n];
@@ -486,6 +499,14 @@ struct array<T, N1, Ns...>
 
     template<typename... Is>
     auto at(size_type i, Is&&... is)
+        -> decltype(_rows[i].at(is...))
+    {
+        if (i >= N1) throw std::out_of_range("array::at");
+        return _rows[i].at(std::forward<Is>(is)...);
+    }
+
+    template<typename... Is>
+    auto at(size_type i, Is&&... is) const
         -> decltype(_rows[i].at(is...))
     {
         if (i >= N1) throw std::out_of_range("array::at");

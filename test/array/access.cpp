@@ -60,3 +60,16 @@ TYPED_TEST(Array_Access, At)
         expected += TypeParam::row_size;
     }
 }
+
+TYPED_TEST(Array_Access, At_Const)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_SAME(typename TypeParam::const_row_type, decltype(array.at(0)));
+
+    int expected = 1;
+    for (std::size_t i = 0; i < TypeParam::num_rows; ++i) {
+        auto row = array.at(i);
+        EXPECT_EQ(expected, front_of(row));
+        expected += TypeParam::row_size;
+    }
+}

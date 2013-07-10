@@ -106,7 +106,7 @@ TYPED_TEST(Array_Access, At_NoIndex_Const)
     EXPECT_EQ(&array, &array.at());
 }
 
-TYPED_TEST(Array_Access, At)
+TYPED_TEST(Array_Access, At_OneIndex)
 {
     auto array = TypeParam::make_array();
     EXPECT_SAME(typename TypeParam::row_type, decltype(array.at(0)));
@@ -119,7 +119,7 @@ TYPED_TEST(Array_Access, At)
     }
 }
 
-TYPED_TEST(Array_Access, At_Const)
+TYPED_TEST(Array_Access, At_OneIndex_Const)
 {
     const auto array = TypeParam::make_array();
     EXPECT_SAME(typename TypeParam::const_row_type, decltype(array.at(0)));

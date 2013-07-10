@@ -166,11 +166,13 @@ struct array
      * So note that in this case, the type of the return value is not
      * `reference`.
      *
-     * The n'th element of a 1-dimensional array is simply the n'th element.
+     * In the base case, 0-dimensional arrays do not implement this operator.
+     * Instead they are implicitly convertible to the type they contain.
+     * This is to make the grammar for accessing elements consistent:
      *
-     * Since a 0-dimensional array only contains one element, `array[0]` gets
-     * that element and `array[i]` for any `i != 0` results in undefined
-     * behaviour.
+     *     array2[i1][i2]; // Gets an element of a 2-dimensional array.
+     *     array1[i1];     // Gets an element of a 1-dimensional array.
+     *     array0;         // Gets the element of a 0-dimensional array.
      *
      * @return Reference to the requested element.
      */
@@ -193,6 +195,8 @@ struct array
      *
      * Calling `array.at()` with no indexes returns a reference to the array
      * itself.
+     * Note that if the array is 0-dimensional, then `array.at()` will simply
+     * return the value it contains.
      *
      * @throws std::out_of_range If one of the indicies are out of bounds.
      * @return Reference to the requested element.
@@ -279,23 +283,37 @@ struct array<T>
     constexpr bool empty() const noexcept
     { return size() == 0; }
 
-    reference operator[](size_type n) noexcept
+    /*
+      The accessors for a 0-dimensional array are different than in the general
+      case. This is due to the natural extension of the grammar used access
+      elements.
+
+      Without bounds checking:
+      array2[i][k]; // 2-dimensional
+      array1[i];    // 1-dimensional
+      array0;       // 0-dimensional
+
+      With bounds checking:
+      array2.at(i, k);  // 2-dimensional
+      array1.at(i);     // 1-dimensional
+      array0.at();      // 0-dimensional
+
+      Hence the 0-dimensional array does not implement operator[]. Instead, it
+      is implicitly convertible to a value of the type it contains. This is
+      consistent with the concept of a 0-dimensional matrix.
+    */
+
+    operator reference() noexcept
     { return _elem; }
 
-    const_reference operator[](size_type n) const noexcept
+    operator const_reference() const noexcept
     { return _elem; }
 
-    reference at(size_type n)
-    {
-        if (n > 0) throw std::out_of_range("array::at");
-        return _elem;
-    }
+    reference at() noexcept
+    { return _elem; }
 
-    const_reference at(size_type n) const
-    {
-        if (n > 0) throw std::out_of_range("array::at");
-        return _elem;
-    }
+    const_reference at() const noexcept
+    { return _elem; }
 
 };
 

@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <iterator>
 #include <exception>
-#include "sky/type_traits.hpp"
 
 namespace sky {
 

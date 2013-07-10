@@ -514,6 +514,12 @@ struct array<T, N1, Ns...>
     row_type const&operator[](size_type n) const noexcept
     { return _rows[n]; }
 
+    array<T, N1, Ns...> &at()
+    { return *this; }
+
+    array<T, N1, Ns...> const&at() const
+    { return *this; }
+
     template<typename... Is>
     auto at(size_type i, Is&&... is)
         -> decltype(_rows[i].at(is...))

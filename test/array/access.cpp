@@ -90,6 +90,22 @@ TYPED_TEST(Array_Access, Operator_Const)
     }
 }
 
+TYPED_TEST(Array_Access, At_NoIndex)
+{
+    auto array = TypeParam::make_array();
+    auto &ref = array;
+    EXPECT_SAME(decltype((ref)), decltype(array.at()));
+    EXPECT_EQ(&array, &array.at());
+}
+
+TYPED_TEST(Array_Access, At_NoIndex_Const)
+{
+    const auto array = TypeParam::make_array();
+    auto &ref = array;
+    EXPECT_SAME(decltype((ref)), decltype(array.at()));
+    EXPECT_EQ(&array, &array.at());
+}
+
 TYPED_TEST(Array_Access, At)
 {
     auto array = TypeParam::make_array();

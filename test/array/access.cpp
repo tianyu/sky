@@ -131,3 +131,17 @@ TYPED_TEST(Array_Access, At_OneIndex_Const)
         expected += TypeParam::row_size;
     }
 }
+
+TYPED_TEST(Array_Access, At_OutOfRange)
+{
+    auto array = TypeParam::make_array();
+    auto bad_index = TypeParam::num_rows;
+    EXPECT_THROW(array.at(bad_index), std::out_of_range);
+}
+
+TYPED_TEST(Array_Access, At_OutOfRange_Const)
+{
+    const auto array = TypeParam::make_array();
+    auto bad_index = TypeParam::num_rows;
+    EXPECT_THROW(array.at(bad_index), std::out_of_range);
+}

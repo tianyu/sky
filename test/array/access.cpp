@@ -11,6 +11,18 @@
 
 using array_base = sky::array<int>;
 
+TEST(Array_Access_Base, Operator_IsNoExcept)
+{
+    auto array = array_base { 1 };
+    EXPECT_TRUE(noexcept(int(array)));
+}
+
+TEST(Array_Access_Base, Operator_Const_IsNoExcept)
+{
+    const auto array = array_base { 1 };
+    EXPECT_TRUE(noexcept(int(array)));
+}
+
 TEST(Array_Access_Base, Operator)
 {
     auto array = array_base{ 1 };
@@ -26,6 +38,18 @@ TEST(Array_Access_Base, Operator_Const)
 TEST(Array_Access_Base, Operator_Rvalue)
 {
     EXPECT_EQ(1, array_base{ 1 });
+}
+
+TEST(Array_Access_Base, At_IsNoExcept)
+{
+    auto array = array_base { 1 };
+    EXPECT_TRUE(noexcept(array.at()));
+}
+
+TEST(Array_Access_Base, At_Const_IsNoExcept)
+{
+    const auto array = array_base { 1 };
+    EXPECT_TRUE(noexcept(array.at()));
 }
 
 TEST(Array_Access_Base, At)
@@ -53,7 +77,8 @@ struct Array_Access : public ::testing::Test
 
 using Types = ::testing::Types<
     Param<2>,
-    Param<2, 2>
+    Param<2, 2>,
+    Param<2, 3, 3>
 >;
 
 template<typename T>
@@ -88,6 +113,18 @@ TYPED_TEST(Array_Access, Operator_Const)
         EXPECT_EQ(expected, front_of(row));
         expected += TypeParam::row_size;
     }
+}
+
+TYPED_TEST(Array_Access, At_NoIndex_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.at()));
+}
+
+TYPED_TEST(Array_Access, At_NoIndex_Const_IsNoExcept)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.at()));
 }
 
 TYPED_TEST(Array_Access, At_NoIndex)

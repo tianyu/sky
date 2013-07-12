@@ -412,10 +412,10 @@ struct array<T, N>
     const_reference operator[](size_type n) const noexcept
     { return _elems[n]; }
 
-    array<T, N> &at()
+    array<T, N> &at() noexcept
     { return *this; }
 
-    array<T, N> const&at() const
+    array<T, N> const&at() const noexcept
     { return *this; }
 
     reference at(size_type n)
@@ -514,10 +514,10 @@ struct array<T, N1, Ns...>
     row_type const&operator[](size_type n) const noexcept
     { return _rows[n]; }
 
-    array<T, N1, Ns...> &at()
+    array<T, N1, Ns...> &at() noexcept
     { return *this; }
 
-    array<T, N1, Ns...> const&at() const
+    array<T, N1, Ns...> const&at() const noexcept
     { return *this; }
 
     template<typename... Is>

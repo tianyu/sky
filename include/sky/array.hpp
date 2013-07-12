@@ -306,13 +306,13 @@ struct array<T>
     operator reference() noexcept
     { return _elem; }
 
-    operator const_reference() const noexcept
+    constexpr operator const_reference() const noexcept
     { return _elem; }
 
     reference at() noexcept
     { return _elem; }
 
-    const_reference at() const noexcept
+    constexpr const_reference at() const noexcept
     { return _elem; }
 
 };
@@ -409,13 +409,13 @@ struct array<T, N>
     reference operator[](size_type n) noexcept
     { return _elems[n]; }
 
-    const_reference operator[](size_type n) const noexcept
+    constexpr const_reference operator[](size_type n) const noexcept
     { return _elems[n]; }
 
     array<T, N> &at() noexcept
     { return *this; }
 
-    array<T, N> const&at() const noexcept
+    constexpr array<T, N> const&at() const noexcept
     { return *this; }
 
     reference at(size_type n)
@@ -424,10 +424,11 @@ struct array<T, N>
         return _elems[n];
     }
 
-    const_reference at(size_type n) const
+    constexpr const_reference at(size_type n) const
     {
-        if (n >= N) throw std::out_of_range("array::at");
-        return _elems[n];
+        return (n < N)? _elems[n] :
+                        throw std::out_of_range("array::at"),
+                        _elems[n];
     }
 
 };
@@ -511,13 +512,13 @@ struct array<T, N1, Ns...>
     row_type &operator[](size_type n) noexcept
     { return _rows[n]; }
 
-    row_type const&operator[](size_type n) const noexcept
+    constexpr row_type const&operator[](size_type n) const noexcept
     { return _rows[n]; }
 
     array<T, N1, Ns...> &at() noexcept
     { return *this; }
 
-    array<T, N1, Ns...> const&at() const noexcept
+    constexpr array<T, N1, Ns...> const&at() const noexcept
     { return *this; }
 
     template<typename... Is>
@@ -529,11 +530,12 @@ struct array<T, N1, Ns...>
     }
 
     template<typename... Is>
-    auto at(size_type i, Is&&... is) const
+    constexpr auto at(size_type i, Is&&... is) const
         -> decltype(_rows[i].at(is...))
     {
-        if (i >= N1) throw std::out_of_range("array::at");
-        return _rows[i].at(std::forward<Is>(is)...);
+        return (i < N1)? _rows[i].at(std::forward<Is>(is)...) :
+                         throw std::out_of_range("array::at"),
+                         _rows[i].at(std::forward<Is>(is)...);
     }
 
 };

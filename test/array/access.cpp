@@ -11,6 +11,13 @@
 
 using array_base = sky::array<int>;
 
+TEST(Array_Access_Base, Operator_IsConstexpr)
+{
+    constexpr auto array = array_base{ 1 };
+    constexpr int i = array;
+    EXPECT_EQ(1, i);
+}
+
 TEST(Array_Access_Base, Operator_IsNoExcept)
 {
     auto array = array_base { 1 };
@@ -38,6 +45,13 @@ TEST(Array_Access_Base, Operator_Const)
 TEST(Array_Access_Base, Operator_Rvalue)
 {
     EXPECT_EQ(1, array_base{ 1 });
+}
+
+TEST(Array_Access_Base, At_IsConstexpr)
+{
+    constexpr auto array = array_base{ 1 };
+    constexpr int i = array.at();
+    EXPECT_EQ(1, i);
 }
 
 TEST(Array_Access_Base, At_IsNoExcept)
@@ -89,6 +103,25 @@ int const&front_of(T const&array)
 
 TYPED_TEST_CASE(Array_Access, Types);
 
+TYPED_TEST(Array_Access, Operator_IsConstexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto row = array[0];
+    (void) row;
+}
+
+TYPED_TEST(Array_Access, Operator_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array[0]));
+}
+
+TYPED_TEST(Array_Access, Operator_Const_IsNoExcept)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array[0]));
+}
+
 TYPED_TEST(Array_Access, Operator)
 {
     auto array = TypeParam::make_array();
@@ -113,6 +146,13 @@ TYPED_TEST(Array_Access, Operator_Const)
         EXPECT_EQ(expected, front_of(row));
         expected += TypeParam::row_size;
     }
+}
+
+TYPED_TEST(Array_Access, At_NoIndex_IsConstexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto row = array.at();
+    (void) row;
 }
 
 TYPED_TEST(Array_Access, At_NoIndex_IsNoExcept)
@@ -141,6 +181,13 @@ TYPED_TEST(Array_Access, At_NoIndex_Const)
     auto &ref = array;
     EXPECT_SAME(decltype((ref)), decltype(array.at()));
     EXPECT_EQ(&array, &array.at());
+}
+
+TYPED_TEST(Array_Access, At_OneIndex_IsConstexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto row = array.at(0);
+    (void) row;
 }
 
 TYPED_TEST(Array_Access, At_OneIndex)

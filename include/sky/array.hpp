@@ -214,7 +214,8 @@ struct array
      *
      * @return Reference to the first element.
      */
-    reference front();
+    reference front() noexcept;
+    constexpr const_reference front() const noexcept; ///< @copydoc front()
 
 };
 

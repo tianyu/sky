@@ -83,6 +83,37 @@ TEST(Array_Access_Base, At_Rvalue)
     EXPECT_EQ(1, array_base{ 1 }.at());
 }
 
+TEST(Array_Access_Base, Front_IsConstexpr)
+{
+    constexpr auto array = array_base{ 1 };
+    constexpr auto front = array.front();
+    (void) front;
+}
+
+TEST(Array_Access_Base, Front_IsNoExcept)
+{
+    auto array = array_base{ 1 };
+    EXPECT_TRUE(noexcept(array.front()));
+}
+
+TEST(Array_Access_Base, Front_Const_IsNoExcept)
+{
+    const auto array = array_base{ 1 };
+    EXPECT_TRUE(noexcept(array.front()));
+}
+
+TEST(Array_Access_Base, Front)
+{
+    auto array = array_base{ 1 };
+    EXPECT_EQ(1, array.front());
+}
+
+TEST(Array_Access_Base, Front_Const)
+{
+    const auto array = array_base{ 1 };
+    EXPECT_EQ(1, array.front());
+}
+
 // General array access tests //
 
 template<typename P>
@@ -254,3 +285,33 @@ TYPED_TEST(Array_Access, At_Const_AllIndexes)
     }
 }
 
+TYPED_TEST(Array_Access, Front_Constexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto front = array.front();
+    (void) front;
+}
+
+TYPED_TEST(Array_Access, Front_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.front()));
+}
+
+TYPED_TEST(Array_Access, Front_Const_IsNoExcept)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.front()));
+}
+
+TYPED_TEST(Array_Access, Front)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_EQ(1, array.front());
+}
+
+TYPED_TEST(Array_Access, Front_Const)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_EQ(1, array.front());
+}

@@ -207,6 +207,15 @@ struct array
     template<typename... Is>
     constexpr const_reference at(Is&&... is) const; ///< @copydoc at()
 
+    /**
+     * Returns a reference to the first element of the array.
+     *
+     * Calling `front()` on an empty array is undefined.
+     *
+     * @return Reference to the first element.
+     */
+    reference front();
+
 };
 
 /*
@@ -235,43 +244,43 @@ struct array<T>
     pointer data() noexcept
     { return pointer(&_elem); }
 
-    const_pointer data() const noexcept
+    constexpr const_pointer data() const noexcept
     { return const_pointer(&_elem); }
 
     iterator begin() noexcept
     { return iterator(data()); }
 
-    const_iterator begin() const noexcept
+    constexpr const_iterator begin() const noexcept
     { return const_iterator(data()); }
 
-    const_iterator cbegin() const noexcept
+    constexpr const_iterator cbegin() const noexcept
     { return const_iterator(data()); }
 
     iterator end() noexcept
     { return iterator(data() + 1); }
 
-    const_iterator end() const noexcept
+    constexpr const_iterator end() const noexcept
     { return const_iterator(data() + 1); }
 
-    const_iterator cend() const noexcept
+    constexpr const_iterator cend() const noexcept
     { return const_iterator(data() + 1); }
 
     reverse_iterator rbegin() noexcept
     { return reverse_iterator(end()); }
 
-    const_reverse_iterator rbegin() const noexcept
+    constexpr const_reverse_iterator rbegin() const noexcept
     { return const_reverse_iterator(end()); }
 
-    const_reverse_iterator crbegin() const noexcept
+    constexpr const_reverse_iterator crbegin() const noexcept
     { return const_reverse_iterator(end()); }
 
     reverse_iterator rend() noexcept
     { return reverse_iterator(begin()); }
 
-    const_reverse_iterator rend() const noexcept
+    constexpr const_reverse_iterator rend() const noexcept
     { return const_reverse_iterator(begin()); }
 
-    const_reverse_iterator crend() const noexcept
+    constexpr const_reverse_iterator crend() const noexcept
     { return const_reverse_iterator(begin()); }
 
     constexpr size_type size() const noexcept
@@ -313,6 +322,12 @@ struct array<T>
     { return _elem; }
 
     constexpr const_reference at() const noexcept
+    { return _elem; }
+
+    reference front() noexcept
+    { return _elem; }
+
+    constexpr const_reference front() const noexcept
     { return _elem; }
 
 };
@@ -358,43 +373,43 @@ struct array<T, N>
     pointer data() noexcept
     { return pointer(&_elems[0]); }
 
-    const_pointer data() const noexcept
+    constexpr const_pointer data() const noexcept
     { return pointer(&_elems[0]); }
 
     iterator begin() noexcept
     { return iterator(data()); }
 
-    const_iterator begin() const noexcept
+    constexpr const_iterator begin() const noexcept
     { return const_iterator(data()); }
 
-    const_iterator cbegin() const noexcept
+    constexpr const_iterator cbegin() const noexcept
     { return const_iterator(data()); }
 
     iterator end() noexcept
     { return iterator(data() + N); }
 
-    const_iterator end() const noexcept
+    constexpr const_iterator end() const noexcept
     { return const_iterator(data() + N); }
 
-    const_iterator cend() const noexcept
+    constexpr const_iterator cend() const noexcept
     { return const_iterator(data() + N); }
 
     reverse_iterator rbegin() noexcept
     { return reverse_iterator(end()); }
 
-    const_reverse_iterator rbegin() const noexcept
+    constexpr const_reverse_iterator rbegin() const noexcept
     { return const_reverse_iterator(end()); }
 
-    const_reverse_iterator crbegin() const noexcept
+    constexpr const_reverse_iterator crbegin() const noexcept
     { return const_reverse_iterator(end()); }
 
     reverse_iterator rend() noexcept
     { return reverse_iterator(begin()); }
 
-    const_reverse_iterator rend() const noexcept
+    constexpr const_reverse_iterator rend() const noexcept
     { return const_reverse_iterator(begin()); }
 
-    const_reverse_iterator crend() const noexcept
+    constexpr const_reverse_iterator crend() const noexcept
     { return const_reverse_iterator(begin()); }
 
     constexpr size_type size() const noexcept
@@ -431,6 +446,12 @@ struct array<T, N>
                         _elems[n];
     }
 
+    reference front() noexcept
+    { return *begin(); }
+
+    constexpr const_reference front() const noexcept
+    { return *begin(); }
+
 };
 
 /*
@@ -461,43 +482,43 @@ struct array<T, N1, Ns...>
     pointer data() noexcept
     { return _rows[0].data(); }
 
-    const_pointer data() const noexcept
+    constexpr const_pointer data() const noexcept
     { return _rows[0].data(); }
 
     iterator begin() noexcept
     { return _rows[0].begin(); }
 
-    const_iterator begin() const noexcept
+    constexpr const_iterator begin() const noexcept
     { return _rows[0].begin(); }
 
-    const_iterator cbegin() const noexcept
+    constexpr const_iterator cbegin() const noexcept
     { return _rows[0].begin(); }
 
     iterator end() noexcept
     { return _rows[N1-1].end(); }
 
-    const_iterator end() const noexcept
+    constexpr const_iterator end() const noexcept
     { return _rows[N1-1].end(); }
 
-    const_iterator cend() const noexcept
+    constexpr const_iterator cend() const noexcept
     { return _rows[N1-1].end(); }
 
     reverse_iterator rbegin() noexcept
     { return reverse_iterator(end()); }
 
-    const_reverse_iterator rbegin() const noexcept
+    constexpr const_reverse_iterator rbegin() const noexcept
     { return const_reverse_iterator(end()); }
 
-    const_reverse_iterator crbegin() const noexcept
+    constexpr const_reverse_iterator crbegin() const noexcept
     { return const_reverse_iterator(end()); }
 
     reverse_iterator rend() noexcept
     { return reverse_iterator(begin()); }
 
-    const_reverse_iterator rend() const noexcept
+    constexpr const_reverse_iterator rend() const noexcept
     { return const_reverse_iterator(begin()); }
 
-    const_reverse_iterator crend() const noexcept
+    constexpr const_reverse_iterator crend() const noexcept
     { return const_reverse_iterator(begin()); }
 
     constexpr size_type size() const noexcept
@@ -537,6 +558,12 @@ struct array<T, N1, Ns...>
                          throw std::out_of_range("array::at"),
                          _rows[i].at(std::forward<Is>(is)...);
     }
+
+    reference front() noexcept
+    { return *begin(); }
+
+    constexpr const_reference front() const noexcept
+    { return *begin(); }
 
 };
 

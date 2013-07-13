@@ -3,6 +3,7 @@
 
 #include <array>
 
+#include "sky/tuple.hpp"
 #include "sky/type_list.hpp"
 
 #include "sky/array.hpp"
@@ -58,16 +59,14 @@ template<std::size_t... Ns> struct Param
     using row_type = typename helper::rows<Ns...>::type;
     using const_row_type = typename helper::rows<Ns...>::const_type;
 
+    using coordinate_type = std::tuple<decltype(Ns)...>;
+
     static const std::size_t size = sky::product<sky::index_list<Ns...>>::value;
 
     static const std::size_t num_rows = helper::rows<Ns...>::num;
     static const std::size_t row_size = helper::rows<Ns...>::size;
 
     static const bool empty = (size == 0);
-
-    static const int front = 1;
-
-    static const int back = size;
 
     static int const* begin_of(array_type const&array)
     {
@@ -96,6 +95,36 @@ template<std::size_t... Ns> struct Param
         // std::array should have the same layout.
         return reinterpret_cast<array_type&&>(
                     std::move(helper::make_array(values_t())));
+    }
+
+    static coordinate_type first_coordinate() {
+        return coordinate_type {};
+    }
+
+    template<std::size_t Dim = sizeof...(Ns)>
+    static void increment(coordinate_type &t)
+    {
+        if (Dim == 0) return;
+        enum { I = Dim? Dim-1 : 0 }; // If Dim = 0, don't try to compile things
+                                     // like std::get<0-1>(t);
+        auto &val = std::get<I>(t);
+        auto max = std::get<I>(coordinate_type{Ns...});
+        if (++val < max) return;
+        val = 0;
+        increment<I>(t);
+    }
+
+    template<std::size_t... Is>
+    static int &invoke_at(array_type &array, coordinate_type args,
+                   sky::index_list<Is...>)
+    {
+        return array.at(std::get<Is>(args)...);
+    }
+
+    static int &invoke_at(array_type &array, coordinate_type args)
+    {
+        using indexes = typename sky::index_range<0, sizeof...(Ns)>::type;
+        return invoke_at(array, args, indexes());
     }
 
 };

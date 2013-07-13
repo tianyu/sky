@@ -229,3 +229,15 @@ TYPED_TEST(Array_Access, At_OutOfRange_Const)
     auto bad_index = TypeParam::num_rows;
     EXPECT_THROW(array.at(bad_index), std::out_of_range);
 }
+
+TYPED_TEST(Array_Access, At_AllIndexes)
+{
+    auto array = TypeParam::make_array();
+    auto coord = TypeParam::first_coordinate();
+
+    for (int expected = 1; expected <= TypeParam::size; ++expected) {
+        auto actual = TypeParam::invoke_at(array, coord);
+        EXPECT_EQ(expected, actual);
+        TypeParam::increment(coord);
+    }
+}

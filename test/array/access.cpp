@@ -241,3 +241,16 @@ TYPED_TEST(Array_Access, At_AllIndexes)
         TypeParam::increment(coord);
     }
 }
+
+TYPED_TEST(Array_Access, At_Const_AllIndexes)
+{
+    const auto array = TypeParam::make_array();
+    auto coord = TypeParam::first_coordinate();
+
+    for (int expected = 1; expected <= TypeParam::size; ++expected) {
+        auto actual = TypeParam::invoke_at(array, coord);
+        EXPECT_EQ(expected, actual);
+        TypeParam::increment(coord);
+    }
+}
+

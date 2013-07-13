@@ -127,6 +127,19 @@ template<std::size_t... Ns> struct Param
         return invoke_at(array, args, indexes());
     }
 
+    template<std::size_t... Is>
+    static int const&invoke_at(array_type const&array, coordinate_type args,
+                   sky::index_list<Is...>)
+    {
+        return array.at(std::get<Is>(args)...);
+    }
+
+    static int const&invoke_at(array_type const&array, coordinate_type args)
+    {
+        using indexes = typename sky::index_range<0, sizeof...(Ns)>::type;
+        return invoke_at(array, args, indexes());
+    }
+
 };
 
 template<typename T>

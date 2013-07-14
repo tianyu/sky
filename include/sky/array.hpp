@@ -3,7 +3,7 @@
 
 #include <cstddef>
 #include <iterator>
-#include <exception>
+#include <stdexcept>
 
 namespace sky {
 

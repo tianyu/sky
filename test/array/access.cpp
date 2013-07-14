@@ -114,6 +114,37 @@ TEST(Array_Access_Base, Front_Const)
     EXPECT_EQ(1, array.front());
 }
 
+TEST(Array_Access_Base, Back_IsConstexpr)
+{
+    constexpr auto array = array_base{ 1 };
+    constexpr auto back = array.back();
+    (void) back;
+}
+
+TEST(Array_Access_Base, Back_IsNoExcept)
+{
+    auto array = array_base{ 1 };
+    EXPECT_TRUE(noexcept(array.back()));
+}
+
+TEST(Array_Access_Base, Back_Const_IsNoExcept)
+{
+    const auto array = array_base{ 1 };
+    EXPECT_TRUE(noexcept(array.back()));
+}
+
+TEST(Array_Access_Base, Back)
+{
+    auto array = array_base{ 1 };
+    EXPECT_EQ(1, array.back());
+}
+
+TEST(Array_Access_Base, Back_Const)
+{
+    const auto array = array_base{ 1 };
+    EXPECT_EQ(1, array.back());
+}
+
 // General array access tests //
 
 template<typename P>

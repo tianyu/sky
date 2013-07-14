@@ -217,6 +217,16 @@ struct array
     reference front() noexcept;
     constexpr const_reference front() const noexcept; ///< @copydoc front()
 
+    /**
+     * Returns a reference to the last element of the array.
+     *
+     * Calling `back()` on an empty array is undefined.
+     *
+     * @return Reference to the last element.
+     */
+    reference back() noexcept;
+    constexpr const_reference back() const noexcept; ///< @copydoc back()
+
 };
 
 /*
@@ -329,6 +339,12 @@ struct array<T>
     { return _elem; }
 
     constexpr const_reference front() const noexcept
+    { return _elem; }
+
+    reference back() noexcept
+    { return _elem; }
+
+    constexpr const_reference back() const noexcept
     { return _elem; }
 
 };
@@ -453,6 +469,12 @@ struct array<T, N>
     constexpr const_reference front() const noexcept
     { return *begin(); }
 
+    reference back() noexcept
+    { return N? *(end()-1) : *end(); }
+
+    constexpr const_reference back() const noexcept
+    { return N? *(end()-1) : *end(); }
+
 };
 
 /*
@@ -565,6 +587,12 @@ struct array<T, N1, Ns...>
 
     constexpr const_reference front() const noexcept
     { return *begin(); }
+
+    reference back() noexcept
+    { return empty()? *end() : *(end()-1); }
+
+    constexpr const_reference back() const noexcept
+    { return empty()? *end() : *(end()-1); }
 
 };
 

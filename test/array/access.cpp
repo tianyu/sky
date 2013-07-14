@@ -315,3 +315,36 @@ TYPED_TEST(Array_Access, Front_Const)
     const auto array = TypeParam::make_array();
     EXPECT_EQ(1, array.front());
 }
+
+TYPED_TEST(Array_Access, Back_Constexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto back = array.back();
+    (void) back;
+}
+
+TYPED_TEST(Array_Access, Back_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.back()));
+}
+
+TYPED_TEST(Array_Access, Back_Const_IsNoExcept)
+{
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.back()));
+}
+
+TYPED_TEST(Array_Access, Back)
+{
+    auto array = TypeParam::make_array();
+    auto expected = TypeParam::size;
+    EXPECT_EQ(expected, array.back());
+}
+
+TYPED_TEST(Array_Access, Back_Const)
+{
+    const auto array = TypeParam::make_array();
+    auto expected = TypeParam::size;
+    EXPECT_EQ(expected, array.back());
+}

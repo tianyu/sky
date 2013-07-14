@@ -16,6 +16,13 @@ using Types = ::testing::Types<
 
 TYPED_TEST_CASE(Array_Capacity, Types);
 
+TYPED_TEST(Array_Capacity, Size_IsConstexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto size = array.size();
+    (void) size;
+}
+
 TYPED_TEST(Array_Capacity, Size_IsNoExcept)
 {
     auto array = TypeParam::make_array();
@@ -31,6 +38,13 @@ TYPED_TEST(Array_Capacity, Size)
     EXPECT_EQ(expected, size);
 }
 
+TYPED_TEST(Array_Capacity, Max_Size_IsConstexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto max_size = array.max_size();
+    (void) max_size;
+}
+
 TYPED_TEST(Array_Capacity, Max_Size_IsNoExcept)
 {
     auto array = TypeParam::make_array();
@@ -44,6 +58,13 @@ TYPED_TEST(Array_Capacity, Max_Size)
     auto max_size = array.max_size();
 
     EXPECT_EQ(expected, max_size);
+}
+
+TYPED_TEST(Array_Capacity, Empty_IsConstexpr)
+{
+    constexpr auto array = typename TypeParam::array_type{};
+    constexpr auto empty = array.empty();
+    (void) empty;
 }
 
 TYPED_TEST(Array_Capacity, Empty_IsNoExcept)

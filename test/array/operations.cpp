@@ -48,3 +48,22 @@ TYPED_TEST(Array_Operation, Swap)
         EXPECT_EQ(0, value);
     }
 }
+
+TYPED_TEST(Array_Operation, NonMember_Swap)
+{
+    auto array1 = typename TypeParam::array_type{};
+    auto array2 = TypeParam::make_array();
+
+    std::swap(array1, array2);
+
+    int expected = 1;
+    for (auto &value : array1) {
+        EXPECT_EQ(expected, value);
+        expected++;
+    }
+
+    for (auto &value : array2) {
+        EXPECT_EQ(0, value);
+    }
+}
+

@@ -231,6 +231,8 @@ struct array
      * Assigns the given value to all elements of the array.
      *
      * The complexity of this operation is linear in the size of the array.
+     *
+     * @param value The value to fill the array with.
      */
     void fill(value_type const& value);
 
@@ -353,6 +355,9 @@ struct array<T>
 
     constexpr const_reference back() const noexcept
     { return _elem; }
+
+    void fill(value_type const& value)
+    { _elem = value; }
 
 };
 

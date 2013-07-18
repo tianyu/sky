@@ -2,9 +2,28 @@
 
 #include "common.hpp"
 
-TEST(Array_Operation, Fill)
+namespace {
+
+template<typename P>
+struct Array_Operation : public ::testing::Test
+{};
+
+using Types = ::testing::Types<
+    Param<>,
+    Param<2>,
+    Param<2, 3>,
+    Param<2, 0>,
+    Param<2, 3, 2>,
+    Param<2, 0, 2>
+>;
+
+TYPED_TEST_CASE(Array_Operation, Types);
+
+} // namespace
+
+TYPED_TEST(Array_Operation, Fill)
 {
-    auto array = sky::array<int>{};
+    auto array = typename TypeParam::array_type{};
     array.fill(3);
 
     for (auto &value : array) {

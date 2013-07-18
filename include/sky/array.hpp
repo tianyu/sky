@@ -1,6 +1,7 @@
 #ifndef ARRAY_HPP
 #define ARRAY_HPP
 
+#include <algorithm>
 #include <cstddef>
 #include <iterator>
 #include <stdexcept>
@@ -487,6 +488,9 @@ struct array<T, N>
     constexpr const_reference back() const noexcept
     { return N? *(end()-1) : *end(); }
 
+    void fill(value_type const& value)
+    { std::fill(begin(), end(), value); }
+
 };
 
 /*
@@ -605,6 +609,9 @@ struct array<T, N1, Ns...>
 
     constexpr const_reference back() const noexcept
     { return empty()? *end() : *(end()-1); }
+
+    void fill(value_type const& value)
+    { std::fill(begin(), end(), value); }
 
 };
 

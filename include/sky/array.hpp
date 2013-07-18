@@ -237,6 +237,17 @@ struct array
      */
     void fill(value_type const& value);
 
+    /**
+     * Exchanges the contents of this array with those of `other`.
+     *
+     * This operation does not cause iterators and references to associate with
+     * the `other` array.
+     *
+     * @param other The other array to swap contents with.
+     */
+    void swap(array &other)
+    noexcept(noexcept(std::swap(std::declval<T&>(), std::declval<T&>())));
+
 };
 
 /*
@@ -359,6 +370,10 @@ struct array<T>
 
     void fill(value_type const& value)
     { _elem = value; }
+
+    void swap(array &other)
+    noexcept(noexcept(std::swap(std::declval<T&>(), std::declval<T&>())))
+    { std::swap(_elem, other._elem); }
 
 };
 
@@ -491,6 +506,10 @@ struct array<T, N>
     void fill(value_type const& value)
     { std::fill(begin(), end(), value); }
 
+    void swap(array &other)
+    noexcept(noexcept(std::swap(std::declval<T&>(), std::declval<T&>())))
+    { std::swap_ranges(begin(), end(), other.begin()); }
+
 };
 
 /*
@@ -612,6 +631,10 @@ struct array<T, N1, Ns...>
 
     void fill(value_type const& value)
     { std::fill(begin(), end(), value); }
+
+    void swap(array &other)
+    noexcept(noexcept(std::swap(std::declval<T&>(), std::declval<T&>())))
+    { std::swap_ranges(begin(), end(), other.begin()); }
 
 };
 

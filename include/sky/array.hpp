@@ -227,6 +227,13 @@ struct array
     reference back() noexcept;
     constexpr const_reference back() const noexcept; ///< @copydoc back()
 
+    /**
+     * Assigns the given value to all elements of the array.
+     *
+     * The complexity of this operation is linear in the size of the array.
+     */
+    void fill(value_type const& value);
+
 };
 
 /*

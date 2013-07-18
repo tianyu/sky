@@ -147,6 +147,8 @@ TEST(Array_Access_Base, Back_Const)
 
 // General array access tests //
 
+namespace {
+
 template<typename P>
 struct Array_Access : public ::testing::Test
 {};
@@ -162,6 +164,8 @@ int const&front_of(T const&array)
 {
     return *reinterpret_cast<int const*>(&array);
 }
+
+} // namespace
 
 TYPED_TEST_CASE(Array_Access, Types);
 

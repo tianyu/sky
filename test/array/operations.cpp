@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include <vector>
+
 #include "common.hpp"
 
 namespace {
@@ -9,15 +11,28 @@ struct Array_Operation : public ::testing::Test
 {};
 
 using Types = ::testing::Types<
-    Param<>,
-    Param<2>,
-    Param<2, 3>,
-    Param<2, 0>,
-    Param<2, 3, 2>,
-    Param<2, 0, 2>
+    IntParam<>,
+    IntParam<2>,
+    IntParam<2, 3>,
+    IntParam<2, 0>,
+    IntParam<2, 3, 2>
 >;
 
 TYPED_TEST_CASE(Array_Operation, Types);
+
+template<typename P>
+struct Array_Operation_NotNoExcept : public ::testing::Test
+{};
+
+using NotNoExceptTypes = ::testing::Types<
+    Param<std::vector<int>>,
+    Param<std::vector<int>, 2>,
+    Param<std::vector<int>, 2, 3>,
+    Param<std::vector<int>, 2, 0>,
+    Param<std::vector<int>, 2, 3, 2>
+>;
+
+TYPED_TEST_CASE(Array_Operation_NotNoExcept, NotNoExceptTypes);
 
 } // namespace
 
@@ -29,6 +44,19 @@ TYPED_TEST(Array_Operation, Fill)
     for (auto &value : array) {
         EXPECT_EQ(3, value);
     }
+}
+
+TYPED_TEST(Array_Operation_NotNoExcept, Swap)
+{
+    auto array = typename TypeParam::array_type{};
+    auto other = array;
+    EXPECT_FALSE(noexcept(array.swap(other)));
+}
+
+TYPED_TEST(Array_Operation, Swap_IsNoExcept)
+{
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(array.swap(array)));
 }
 
 TYPED_TEST(Array_Operation, Swap)

@@ -191,7 +191,7 @@ TYPED_TEST(Array_Access, Operator_Const_IsNoExcept)
 TYPED_TEST(Array_Access, Operator)
 {
     auto array = TypeParam::make_array();
-    EXPECT_SAME(typename TypeParam::row_type, decltype(array[0]));
+    EXPECT_SAME(typename TypeParam::row_type&, decltype(array[0]));
 
     int expected = 1;
     for (std::size_t i = 0; i < TypeParam::num_rows; ++i) {
@@ -204,7 +204,7 @@ TYPED_TEST(Array_Access, Operator)
 TYPED_TEST(Array_Access, Operator_Const)
 {
     const auto array = TypeParam::make_array();
-    EXPECT_SAME(typename TypeParam::const_row_type, decltype(array[0]));
+    EXPECT_SAME(typename TypeParam::const_row_type&, decltype(array[0]));
 
     int expected = 1;
     for (std::size_t i = 0; i < TypeParam::num_rows; ++i) {
@@ -259,7 +259,7 @@ TYPED_TEST(Array_Access, At_OneIndex_IsConstexpr)
 TYPED_TEST(Array_Access, At_OneIndex)
 {
     auto array = TypeParam::make_array();
-    EXPECT_SAME(typename TypeParam::row_type, decltype(array.at(0)));
+    EXPECT_SAME(typename TypeParam::row_type&, decltype(array.at(0)));
 
     int expected = 1;
     for (std::size_t i = 0; i < TypeParam::num_rows; ++i) {
@@ -272,7 +272,7 @@ TYPED_TEST(Array_Access, At_OneIndex)
 TYPED_TEST(Array_Access, At_OneIndex_Const)
 {
     const auto array = TypeParam::make_array();
-    EXPECT_SAME(typename TypeParam::const_row_type, decltype(array.at(0)));
+    EXPECT_SAME(typename TypeParam::const_row_type&, decltype(array.at(0)));
 
     int expected = 1;
     for (std::size_t i = 0; i < TypeParam::num_rows; ++i) {

@@ -25,8 +25,8 @@ struct rows;
 template<typename T>
 struct rows<T>
 {
-    using type = T&;
-    using const_type = T const&;
+    using type = T;
+    using const_type = T const;
     enum { num = 1 };
     enum { size = 1 };
 };
@@ -34,8 +34,8 @@ struct rows<T>
 template<typename T, std::size_t First>
 struct rows<T, First>
 {
-    using type = T&;
-    using const_type = T const&;
+    using type = T;
+    using const_type = T const;
     enum { num = First };
     enum { size = 1 };
 };
@@ -43,8 +43,8 @@ struct rows<T, First>
 template<typename T, std::size_t First, std::size_t... Rest>
 struct rows<T, First, Rest...>
 {
-    using type = sky::array<T, Rest...> &;
-    using const_type = sky::array<T, Rest...> const&;
+    using type = sky::array<T, Rest...>;
+    using const_type = sky::array<T, Rest...> const;
     enum { num = First };
     enum { size = sky::product<sky::index_list<Rest...>>::value };
 };
@@ -63,7 +63,7 @@ struct Param
     using coordinate_type = std::tuple<decltype(Ns)...>;
 
     enum { size = sky::product<sky::index_list<Ns...>>::value };
-    enum {empty = (size == 0) };
+    enum { empty = (size == 0) };
 
     enum { num_rows = helper::rows<T, Ns...>::num };
     enum { row_size = helper::rows<T, Ns...>::size };

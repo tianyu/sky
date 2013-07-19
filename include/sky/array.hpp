@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <iterator>
 #include <stdexcept>
-#include <tuple>
 
 namespace sky {
 
@@ -275,7 +274,7 @@ noexcept(noexcept(one.swap(two)));
 
 namespace std {
 
-template<typename T>
+template<typename>
 class tuple_size;
 
 template<typename T>
@@ -287,6 +286,21 @@ template<typename T, std::size_t N, std::size_t... Ns>
 class tuple_size<sky::array<T, N, Ns...>> :
         public std::integral_constant<std::size_t, N>
 {};
+
+template<std::size_t, typename>
+struct tuple_element;
+
+template<std::size_t I, typename T>
+struct tuple_element<I, sky::array<T>>
+{ using type = T; };
+
+template<std::size_t I, typename T, std::size_t N>
+struct tuple_element<I, sky::array<T, N>>
+{ using type = T; };
+
+template<std::size_t I, typename T, std::size_t N, std::size_t... Ns>
+struct tuple_element<I, sky::array<T, N, Ns...>>
+{ using type = sky::array<T, Ns...>; };
 
 } // namespace std
 

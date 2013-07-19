@@ -283,6 +283,8 @@ class tuple_size;
  *
  * Note that this facility is not provided for 0-dimensional arrays, `array<T>`,
  * since they are not considered tuples.
+ *
+ * @relates sky::array
  */
 template<typename T, std::size_t... Ns>
 class tuple_size<sky::array<T>>;
@@ -303,6 +305,8 @@ struct tuple_element;
  *
  * Note that this facility is not provided for 0-dimensional arrays, `array<T>`,
  * since they are not considered tuples.
+ *
+ * @relates sky::array
  */
 template<std::size_t I, typename T, std::size_t... Ns>
 struct tuple_element<I, sky::array<T, Ns...>>;

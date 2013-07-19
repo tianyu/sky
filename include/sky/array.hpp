@@ -714,19 +714,10 @@ noexcept(noexcept(a1.swap(a2)))
 
 namespace std {
 
-template<typename T>
-class tuple_size<sky::array<T>> :
-        public std::integral_constant<std::size_t, 1>
-{};
-
 template<typename T, std::size_t N, std::size_t... Ns>
 class tuple_size<sky::array<T, N, Ns...>> :
         public std::integral_constant<std::size_t, N>
 {};
-
-template<std::size_t I, typename T>
-struct tuple_element<I, sky::array<T>>
-{ using type = T; };
 
 template<std::size_t I, typename T, std::size_t N>
 struct tuple_element<I, sky::array<T, N>>

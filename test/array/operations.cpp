@@ -76,6 +76,13 @@ TYPED_TEST(Array_Operation, Swap)
     }
 }
 
+TYPED_TEST(Array_Operation_NotNoExcept, NonMember_Swap)
+{
+    auto array = typename TypeParam::array_type{};
+    auto other = array;
+    EXPECT_FALSE(noexcept(std::swap(array, other)));
+}
+
 TYPED_TEST(Array_Operation, NonMember_Swap)
 {
     auto array1 = typename TypeParam::array_type{};

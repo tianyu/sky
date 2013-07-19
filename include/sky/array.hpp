@@ -277,30 +277,35 @@ namespace std {
 template<typename>
 class tuple_size;
 
-template<typename T>
-class tuple_size<sky::array<T>> :
-        public std::integral_constant<std::size_t, 1>
-{};
-
-template<typename T, std::size_t N, std::size_t... Ns>
-class tuple_size<sky::array<T, N, Ns...>> :
-        public std::integral_constant<std::size_t, N>
-{};
+/**
+ * Provides access to the number of elements in a sky::array as a compile-time
+ * constant expression.
+ *
+ * Note that this facility is not provided for 0-dimensional arrays, `array<T>`,
+ * since they are not considered tuples.
+ */
+template<typename T, std::size_t... Ns>
+class tuple_size<sky::array<T>>;
 
 template<std::size_t, typename>
 struct tuple_element;
 
-template<std::size_t I, typename T>
-struct tuple_element<I, sky::array<T>>
-{ using type = T; };
-
-template<std::size_t I, typename T, std::size_t N>
-struct tuple_element<I, sky::array<T, N>>
-{ using type = T; };
-
-template<std::size_t I, typename T, std::size_t N, std::size_t... Ns>
-struct tuple_element<I, sky::array<T, N, Ns...>>
-{ using type = sky::array<T, Ns...>; };
+/**
+ * Provides the compile-time indexed access to the type of the elements of the
+ * std::array.
+ *
+ * Note that the type of every element in a std::array is the same.
+ * Specifically, the type of any element of an m-dimensional array,
+ * `array<T, N1, N2, ..., Nm>` is `array<T, N2, ..., Nm>`.
+ *
+ * In the base case, the type of any element in a one dimensional array,
+ * `array<T, N>`, is `T`.
+ *
+ * Note that this facility is not provided for 0-dimensional arrays, `array<T>`,
+ * since they are not considered tuples.
+ */
+template<std::size_t I, typename T, std::size_t... Ns>
+struct tuple_element<I, sky::array<T, Ns...>>;
 
 } // namespace std
 
@@ -702,5 +707,31 @@ noexcept(noexcept(a1.swap(a2)))
 { a1.swap(a2); }
 
 } // namespace sky
+
+namespace std {
+
+template<typename T>
+class tuple_size<sky::array<T>> :
+        public std::integral_constant<std::size_t, 1>
+{};
+
+template<typename T, std::size_t N, std::size_t... Ns>
+class tuple_size<sky::array<T, N, Ns...>> :
+        public std::integral_constant<std::size_t, N>
+{};
+
+template<std::size_t I, typename T>
+struct tuple_element<I, sky::array<T>>
+{ using type = T; };
+
+template<std::size_t I, typename T, std::size_t N>
+struct tuple_element<I, sky::array<T, N>>
+{ using type = T; };
+
+template<std::size_t I, typename T, std::size_t N, std::size_t... Ns>
+struct tuple_element<I, sky::array<T, N, Ns...>>
+{ using type = sky::array<T, Ns...>; };
+
+} // namespace std
 
 #endif // ARRAY_HPP

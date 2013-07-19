@@ -154,9 +154,9 @@ struct Array_Access : public ::testing::Test
 {};
 
 using Types = ::testing::Types<
-    Param<2>,
-    Param<2, 2>,
-    Param<2, 3, 3>
+    IntParam<2>,
+    IntParam<2, 2>,
+    IntParam<2, 3, 3>
 >;
 
 template<typename T>

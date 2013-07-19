@@ -11,10 +11,10 @@ struct Array_MemTypes : public ::testing::Test
 {};
 
 using Types = ::testing::Types<
-    Param<>,
-    Param<1>,
-    Param<2, 2>,
-    Param<3, 3, 3>
+    IntParam<>,
+    IntParam<1>,
+    IntParam<2, 2>,
+    IntParam<3, 3, 3>
 >;
 
 TYPED_TEST_CASE(Array_MemTypes, Types);

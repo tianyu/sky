@@ -7,11 +7,11 @@ struct Array_Capacity : public ::testing::Test
 {};
 
 using Types = ::testing::Types<
-    Param<>,
-    Param<2>,
-    Param<2, 2>,
-    Param<0>,
-    Param<2, 0>
+    IntParam<>,
+    IntParam<2>,
+    IntParam<2, 2>,
+    IntParam<0>,
+    IntParam<2, 0>
 >;
 
 TYPED_TEST_CASE(Array_Capacity, Types);

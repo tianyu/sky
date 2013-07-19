@@ -103,3 +103,8 @@ TYPED_TEST(Array_Operation, NonMember_Swap)
     }
 }
 
+TYPED_TEST(Array_Operation, Tuple_Size)
+{
+    auto tuple_size = std::tuple_size<typename TypeParam::array_type>::value;
+    EXPECT_EQ((TypeParam::num_rows), tuple_size);
+}

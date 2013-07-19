@@ -62,12 +62,11 @@ struct Param
 
     using coordinate_type = std::tuple<decltype(Ns)...>;
 
-    static const std::size_t size = sky::product<sky::index_list<Ns...>>::value;
+    enum { size = sky::product<sky::index_list<Ns...>>::value };
+    enum {empty = (size == 0) };
 
-    static const std::size_t num_rows = helper::rows<T, Ns...>::num;
-    static const std::size_t row_size = helper::rows<T, Ns...>::size;
-
-    static const bool empty = (size == 0);
+    enum { num_rows = helper::rows<T, Ns...>::num };
+    enum { row_size = helper::rows<T, Ns...>::size };
 
     static T const* begin_of(array_type const&array)
     {

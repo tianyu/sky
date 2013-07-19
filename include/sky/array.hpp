@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <iterator>
 #include <stdexcept>
+#include <tuple>
 
 namespace sky {
 
@@ -249,6 +250,47 @@ struct array
     noexcept(noexcept(std::swap(std::declval<T&>(), std::declval<T&>())));
 
 };
+
+/**
+ * Specialization of the std::swap algorithm.
+ *
+ * Exchanges the contents if `one` with those of `two`.
+ *
+ * The proper way to access this function is to use Argument Dependent Lookup
+ * (ADL), in the following way:
+ *
+ *     using std::swap;
+ *     swap(one, two);
+ *
+ * @param one The first array.
+ * @param two The second array, to swap with the first.
+ * @relates sky::array
+ * @see sky::array::swap(array&)
+ */
+template<typename T, std::size_t... Ns>
+void swap(sky::array<T, Ns...> &one, sky::array<T, Ns...> &two)
+noexcept(noexcept(one.swap(two)));
+
+} // namespace sky
+
+namespace std {
+
+template<typename T>
+class tuple_size;
+
+template<typename T>
+class tuple_size<sky::array<T>> :
+        public std::integral_constant<std::size_t, 1>
+{};
+
+template<typename T, std::size_t N, std::size_t... Ns>
+class tuple_size<sky::array<T, N, Ns...>> :
+        public std::integral_constant<std::size_t, N>
+{};
+
+} // namespace std
+
+namespace sky {
 
 /*
   The 0-dimensional base case, which contains exactly one element.

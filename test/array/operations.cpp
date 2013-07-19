@@ -28,7 +28,6 @@ using NotNoExceptTypes = ::testing::Types<
     Param<std::vector<int>>,
     Param<std::vector<int>, 2>,
     Param<std::vector<int>, 2, 3>,
-    Param<std::vector<int>, 2, 0>,
     Param<std::vector<int>, 2, 3, 2>
 >;
 

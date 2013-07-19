@@ -638,10 +638,6 @@ struct array<T, N1, Ns...>
 
 };
 
-} // namespace sky
-
-namespace std {
-
 // Specialized algorithms //
 
 template<typename T, std::size_t... Ns>
@@ -649,6 +645,6 @@ inline void swap(sky::array<T, Ns...> &a1, sky::array<T, Ns...> &a2)
 noexcept(noexcept(a1.swap(a2)))
 { a1.swap(a2); }
 
-} // namespace std
+} // namespace sky
 
 #endif // ARRAY_HPP

@@ -287,7 +287,7 @@ class tuple_size;
  * @relates sky::array
  */
 template<typename T, std::size_t... Ns>
-class tuple_size<sky::array<T>>;
+class tuple_size<sky::array<T, Ns...>>;
 
 template<std::size_t, typename>
 struct tuple_element;

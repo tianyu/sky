@@ -311,6 +311,24 @@ struct tuple_element;
 template<std::size_t I, typename T, std::size_t... Ns>
 struct tuple_element<I, sky::array<T, Ns...>>;
 
+/**
+ * Extracts the I'th element from the array.
+ *
+ * I must be an integer in the range '[0, tuple_size<array<T, Ns...>>::value)'.
+ * This is enforced at compile time as opposed to sky::array::operator [] or
+ * sky:: array::at(size_type).
+ *
+ * Note that this facility is not provided for 0-dimensional arrays, `array<T>`,
+ * since they are not considered tuples.
+ *
+ * @relates sky::arrayr
+ * @param array The array to get an element from.
+ * @return The I'th element of the array.
+ */
+template<std::size_t I, typename T, std::size_t... Ns>
+typename tuple_element<I, sky::array<T, Ns...>>::type
+get(sky::array<T, Ns...> &array);
+
 } // namespace std
 
 namespace sky {

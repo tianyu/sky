@@ -26,6 +26,14 @@ namespace sky {
  *
  * `array` is an aggregate (it has no user-defined constructors and no private
  * or protected members), which allows it to use aggregate-initialization.
+ *
+ * ## Tuple Features
+ *
+ * Any array that has more than 0 dimensions is also considered a tuple.
+ * Specifically, a 1-dimensional array, `array<T, N>`, is a tuple of `N`
+ * elements of type `T`. And an m-dimensional array,
+ * `array<T, N1, N2, ..., Nm>`, is a tuple of `N1` elements of type
+ * `array<T, N2, ..., Nm>`.
  */
 template<typename T, std::size_t... Ns>
 struct array

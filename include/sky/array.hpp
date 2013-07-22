@@ -754,4 +754,26 @@ struct tuple_element<I, sky::array<T, N, Ns...>>
 
 } // namespace std
 
+namespace sky {
+
+template<std::size_t I, typename T, std::size_t... Ns>
+typename std::tuple_element<I, sky::array<T, Ns...>>::type &
+get(sky::array<T, Ns...> &a)
+{
+    enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
+    static_assert(I < N, "get<I>: Index I is out of range.");
+    return a[I];
+}
+
+template<std::size_t I, typename T, std::size_t... Ns>
+typename std::tuple_element<I, sky::array<T, Ns...>>::type &&
+get(sky::array<T, Ns...> &&a)
+{
+    enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
+    static_assert(I < N, "get<I>: Index I is out of range.");
+    return a[I];
+}
+
+} // namespace sky
+
 #endif // ARRAY_HPP

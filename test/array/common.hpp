@@ -3,10 +3,10 @@
 
 #include <array>
 
+#include "sky/array.hpp"
+
 #include "sky/tuple.hpp"
 #include "sky/type_list.hpp"
-
-#include "sky/array.hpp"
 
 namespace  {
 

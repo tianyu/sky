@@ -311,27 +311,34 @@ struct tuple_element;
 template<std::size_t I, typename T, std::size_t... Ns>
 struct tuple_element<I, sky::array<T, Ns...>>;
 
+} // namespace std
+
+namespace sky {
+
 /**
  * Extracts the I'th element from the array.
  *
- * I must be an integer in the range '[0, tuple_size<array<T, Ns...>>::value)'.
- * This is enforced at compile time as opposed to sky::array::operator [] or
- * sky:: array::at(size_type).
+ * I must be an integer in the range '[0, N)', where N is the size of the array
+ * as defined by `std::tuple_size`.
+ * This is enforced at compile time as opposed to sky::array::operator[]() or
+ * sky::array::at().
+ *
+ * Since this function is not provided in the standard namespace, it should be
+ * accessed via Argument Dependent Lookup, for example:
+ *
+ *     using std::get;
+ *     get<1>(array);
  *
  * Note that this facility is not provided for 0-dimensional arrays, `array<T>`,
  * since they are not considered tuples.
  *
- * @relates sky::arrayr
- * @param array The array to get an element from.
+ * @relates sky::array
+ * @param a The array to get an element from.
  * @return The I'th element of the array.
  */
 template<std::size_t I, typename T, std::size_t... Ns>
-typename tuple_element<I, sky::array<T, Ns...>>::type
-get(sky::array<T, Ns...> &array);
-
-} // namespace std
-
-namespace sky {
+typename std::tuple_element<I, sky::array<T, Ns...>>::type &
+get(sky::array<T, Ns...> &a);
 
 /*
   The 0-dimensional base case, which contains exactly one element.

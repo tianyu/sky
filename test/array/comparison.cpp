@@ -28,6 +28,10 @@ TYPED_TEST(Array_Comparison, Equal)
 
     EXPECT_TRUE(array1 == array2);
     EXPECT_FALSE(array1 != array2);
+    EXPECT_FALSE(array1 < array2);
+    EXPECT_FALSE(array1 > array2);
+    EXPECT_TRUE(array1 <= array2);
+    EXPECT_TRUE(array1 >= array2);
 }
 
 TYPED_TEST(Array_Comparison, NotEqual)
@@ -38,4 +42,8 @@ TYPED_TEST(Array_Comparison, NotEqual)
 
     EXPECT_FALSE(array1 == array2);
     EXPECT_TRUE(array1 != array2);
+    EXPECT_TRUE(array1 < array2);
+    EXPECT_FALSE(array1 > array2);
+    EXPECT_TRUE(array1 <= array2);
+    EXPECT_FALSE(array1 >= array2);
 }

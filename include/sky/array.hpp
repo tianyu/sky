@@ -381,7 +381,11 @@ bool operator !=(sky::array<T, Ns...> const&one,
  */
 template<typename T, std::size_t... Ns>
 bool operator < (sky::array<T, Ns...> const&one,
-                 sky::array<T, Ns...> const&two);
+                 sky::array<T, Ns...> const&two)
+{
+    return std::lexicographical_compare(one.begin(), one.end(),
+                                        two.begin(), two.end());
+}
 
 /**
  * Performs a lexicographical comparison between the two arrays.
@@ -392,7 +396,8 @@ bool operator < (sky::array<T, Ns...> const&one,
  */
 template<typename T, std::size_t... Ns>
 bool operator > (sky::array<T, Ns...> const&one,
-                 sky::array<T, Ns...> const&two);
+                 sky::array<T, Ns...> const&two)
+{ return two < one; }
 
 /**
  * Performs a lexicographical comparison between the two arrays.
@@ -403,7 +408,8 @@ bool operator > (sky::array<T, Ns...> const&one,
  */
 template<typename T, std::size_t... Ns>
 bool operator <=(sky::array<T, Ns...> const&one,
-                 sky::array<T, Ns...> const&two);
+                 sky::array<T, Ns...> const&two)
+{ return !(one > two); }
 
 /**
  * Performs a lexicographical comparison between the two arrays.
@@ -414,7 +420,8 @@ bool operator <=(sky::array<T, Ns...> const&one,
  */
 template<typename T, std::size_t... Ns>
 bool operator >=(sky::array<T, Ns...> const&one,
-                 sky::array<T, Ns...> const&two);
+                 sky::array<T, Ns...> const&two)
+{ return !(one < two); }
 
 /*
   The 0-dimensional base case, which contains exactly one element.

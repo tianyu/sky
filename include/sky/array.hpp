@@ -771,7 +771,7 @@ get(sky::array<T, Ns...> &&a)
 {
     enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
     static_assert(I < N, "get<I>: Index I is out of range.");
-    return a[I];
+    return std::move(a[I]);
 }
 
 } // namespace sky

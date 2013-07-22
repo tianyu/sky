@@ -66,3 +66,19 @@ TYPED_TEST(Array_AsTuple, Get_Lvalue)
     auto actual = get<halfway>(array);
     expect_eq(expected, actual);
 }
+
+TYPED_TEST(Array_AsTuple, Get_Rvalue)
+{
+    using std::get;
+
+    auto array = TypeParam::make_array();
+
+    using expected_type = typename TypeParam::row_type&&;
+    using return_type = decltype(get<0>(std::move(array)));
+    EXPECT_SAME(expected_type, return_type);
+
+    constexpr auto halfway = std::size_t(TypeParam::num_rows/2);
+    auto expected = array[halfway];
+    auto actual = get<halfway>(std::move(array));
+    expect_eq(expected, actual);
+}

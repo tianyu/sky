@@ -357,7 +357,8 @@ get(sky::array<T, Ns...> &a) noexcept;
  */
 template<typename T, std::size_t... Ns>
 bool operator ==(sky::array<T, Ns...> const&one,
-                 sky::array<T, Ns...> const&two);
+                 sky::array<T, Ns...> const&two)
+{ return std::equal(one.begin(), one.end(), two.begin()); }
 
 /**
  * Performs a lexicographical comparison between the two arrays.
@@ -368,7 +369,8 @@ bool operator ==(sky::array<T, Ns...> const&one,
  */
 template<typename T, std::size_t... Ns>
 bool operator !=(sky::array<T, Ns...> const&one,
-                 sky::array<T, Ns...> const&two);
+                 sky::array<T, Ns...> const&two)
+{ return !(one == two); }
 
 /**
  * Performs a lexicographical comparison between the two arrays.

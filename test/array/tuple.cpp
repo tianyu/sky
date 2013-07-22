@@ -52,6 +52,13 @@ TYPED_TEST(Array_AsTuple, Tuple_Element)
     EXPECT_SAME(expected_type, tuple_element);
 }
 
+TYPED_TEST(Array_AsTuple, Get_Lvalue_IsNoExcept)
+{
+    using std::get;
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(get<0>(array)));
+}
+
 TYPED_TEST(Array_AsTuple, Get_Lvalue)
 {
     using std::get;
@@ -68,6 +75,13 @@ TYPED_TEST(Array_AsTuple, Get_Lvalue)
     expect_eq(expected, actual);
 }
 
+TYPED_TEST(Array_AsTuple, Get_Rvalue_IsNoExcept)
+{
+    using std::get;
+    auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(get<0>(std::move(array))));
+}
+
 TYPED_TEST(Array_AsTuple, Get_Rvalue)
 {
     using std::get;
@@ -82,6 +96,13 @@ TYPED_TEST(Array_AsTuple, Get_Rvalue)
     auto expected = array[halfway];
     auto actual = get<halfway>(std::move(array));
     expect_eq(expected, actual);
+}
+
+TYPED_TEST(Array_AsTuple, Get_ConstLvalue_IsNoExcept)
+{
+    using std::get;
+    const auto array = TypeParam::make_array();
+    EXPECT_TRUE(noexcept(get<0>(array)));
 }
 
 TYPED_TEST(Array_AsTuple, Get_ConstLvalue_IsConstexpr)

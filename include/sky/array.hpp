@@ -338,7 +338,7 @@ namespace sky {
  */
 template<std::size_t I, typename T, std::size_t... Ns>
 typename std::tuple_element<I, sky::array<T, Ns...>>::type &
-get(sky::array<T, Ns...> &a);
+get(sky::array<T, Ns...> &a) noexcept;
 
 /*
   The 0-dimensional base case, which contains exactly one element.
@@ -758,7 +758,7 @@ namespace sky {
 
 template<std::size_t I, typename T, std::size_t... Ns>
 typename std::tuple_element<I, sky::array<T, Ns...>>::type &
-get(sky::array<T, Ns...> &a)
+get(sky::array<T, Ns...> &a) noexcept
 {
     enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
     static_assert(I < N, "get<I>: Index I is out of range.");
@@ -767,7 +767,7 @@ get(sky::array<T, Ns...> &a)
 
 template<std::size_t I, typename T, std::size_t... Ns>
 typename std::tuple_element<I, sky::array<T, Ns...>>::type &&
-get(sky::array<T, Ns...> &&a)
+get(sky::array<T, Ns...> &&a) noexcept
 {
     enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
     static_assert(I < N, "get<I>: Index I is out of range.");
@@ -777,7 +777,7 @@ get(sky::array<T, Ns...> &&a)
 template<std::size_t I, typename T, std::size_t... Ns>
 constexpr
 typename std::tuple_element<I, sky::array<T, Ns...>>::type const&
-get(sky::array<T, Ns...> const&a)
+get(sky::array<T, Ns...> const&a) noexcept
 {
     enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
     static_assert(I < N, "get<I>: Index I is out of range.");

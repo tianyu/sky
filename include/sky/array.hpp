@@ -775,6 +775,7 @@ get(sky::array<T, Ns...> &&a)
 }
 
 template<std::size_t I, typename T, std::size_t... Ns>
+constexpr
 typename std::tuple_element<I, sky::array<T, Ns...>>::type const&
 get(sky::array<T, Ns...> const&a)
 {

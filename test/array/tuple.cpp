@@ -84,6 +84,15 @@ TYPED_TEST(Array_AsTuple, Get_Rvalue)
     expect_eq(expected, actual);
 }
 
+TYPED_TEST(Array_AsTuple, Get_ConstLvalue_IsConstexpr)
+{
+    using std::get;
+
+    constexpr const auto array = typename TypeParam::array_type{};
+    constexpr auto row = get<0>(array);
+    (void) row;
+}
+
 TYPED_TEST(Array_AsTuple, Get_ConstLvalue)
 {
     using std::get;

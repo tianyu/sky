@@ -46,7 +46,8 @@ TYPED_TEST(Array_AsTuple, Tuple_Size)
 
 TYPED_TEST(Array_AsTuple, Tuple_Element)
 {
-    using tuple_element = typename std::tuple_element<0, typename TypeParam::array_type>::type;
+    using tuple_element = typename std::tuple_element<0,
+                            typename TypeParam::array_type>::type;
     using expected_type = typename TypeParam::row_type;
     EXPECT_SAME(expected_type, tuple_element);
 }

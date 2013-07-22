@@ -348,6 +348,72 @@ template<std::size_t I, typename T, std::size_t... Ns>
 typename std::tuple_element<I, sky::array<T, Ns...>>::type &
 get(sky::array<T, Ns...> &a) noexcept;
 
+/**
+ * Performs a lexicographical comparison between the two arrays.
+ * @param one The first array to compare.
+ * @param two The second array to compare.
+ * @return true if and only of `one` is lexicographically equal to `two`.
+ * @relates sky::array
+ */
+template<typename T, std::size_t... Ns, std::size_t... Ms>
+bool operator ==(sky::array<T, Ns...> const&one,
+                 sky::array<T, Ms...> const&two);
+
+/**
+ * Performs a lexicographical comparison between the two arrays.
+ * @param one The first array to compare.
+ * @param two The second array to compare.
+ * @return true if and only of `one` is not lexicographically equal to `two`.
+ * @relates sky::array
+ */
+template<typename T, std::size_t... Ns, std::size_t... Ms>
+bool operator !=(sky::array<T, Ns...> const&one,
+                 sky::array<T, Ms...> const&two);
+
+/**
+ * Performs a lexicographical comparison between the two arrays.
+ * @param one The first array to compare.
+ * @param two The second array to compare.
+ * @return true if and only of `one` is lexicographically before `two`.
+ * @relates sky::array
+ */
+template<typename T, std::size_t... Ns, std::size_t... Ms>
+bool operator < (sky::array<T, Ns...> const&one,
+                 sky::array<T, Ms...> const&two);
+
+/**
+ * Performs a lexicographical comparison between the two arrays.
+ * @param one The first array to compare.
+ * @param two The second array to compare.
+ * @return true if and only of `one` is lexicographically after `two`.
+ * @relates sky::array
+ */
+template<typename T, std::size_t... Ns, std::size_t... Ms>
+bool operator > (sky::array<T, Ns...> const&one,
+                 sky::array<T, Ms...> const&two);
+
+/**
+ * Performs a lexicographical comparison between the two arrays.
+ * @param one The first array to compare.
+ * @param two The second array to compare.
+ * @return true if and only of `one` is not lexicographically after `two`.
+ * @relates sky::array
+ */
+template<typename T, std::size_t... Ns, std::size_t... Ms>
+bool operator <=(sky::array<T, Ns...> const&one,
+                 sky::array<T, Ms...> const&two);
+
+/**
+ * Performs a lexicographical comparison between the two arrays.
+ * @param one The first array to compare.
+ * @param two The second array to compare.
+ * @return true if and only of `one` is not lexicographically before `two`.
+ * @relates sky::array
+ */
+template<typename T, std::size_t... Ns, std::size_t... Ms>
+bool operator >=(sky::array<T, Ns...> const&one,
+                 sky::array<T, Ms...> const&two);
+
 /*
   The 0-dimensional base case, which contains exactly one element.
 

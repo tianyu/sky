@@ -586,13 +586,13 @@ struct array<T, N>
     using reverse_iterator = typename row_type::reverse_iterator;
     using const_reverse_iterator = typename row_type::const_reverse_iterator;
 
-    value_type _elems[N];
+    value_type _elems[N? N : 1];
 
     pointer data() noexcept
-    { return pointer(&_elems[0]); }
+    { return empty()? nullptr : pointer(&_elems[0]); }
 
     constexpr const_pointer data() const noexcept
-    { return pointer(&_elems[0]); }
+    { return empty()? nullptr : pointer(&_elems[0]); }
 
     iterator begin() noexcept
     { return iterator(data()); }
@@ -708,7 +708,7 @@ struct array<T, N1, Ns...>
     using reverse_iterator = typename row_type::reverse_iterator;
     using const_reverse_iterator = typename row_type::const_reverse_iterator;
 
-    row_type _rows[N1];
+    row_type _rows[N1? N1 : 1];
 
     pointer data() noexcept
     { return _rows[0].data(); }

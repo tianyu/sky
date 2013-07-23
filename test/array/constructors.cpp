@@ -55,7 +55,7 @@ TEST(Array_Construct, Dim0_Aggregate)
 TEST(Array_Construct, Dim1_Size)
 {
     EXPECT_EQ(2*sizeof(int), sizeof(sky::array<int,2>));
-    EXPECT_EQ(0, sizeof(sky::array<int,0>));
+    EXPECT_NE(0, sizeof(sky::array<int,0>));
 }
 
 TEST(Array_Construct, Dim1_Default)
@@ -76,8 +76,8 @@ TEST(Array_Construct, Dim1_Aggregate)
 TEST(Array_Construct, Dim2_Size)
 {
     EXPECT_EQ(4*sizeof(int), sizeof(sky::array<int, 2, 2>));
-    EXPECT_EQ(0, sizeof(sky::array<int, 0, 2>));
-    EXPECT_EQ(0, sizeof(sky::array<int, 2, 0>));
+    EXPECT_NE(0, sizeof(sky::array<int, 0, 2>));
+    EXPECT_NE(0, sizeof(sky::array<int, 2, 0>));
 }
 
 TEST(Array_Construct, Dim2_Default)
@@ -104,9 +104,9 @@ TEST(Array_Construct, Dim2_Aggregate)
 TEST(Array_Construct, Dim3_Size)
 {
     EXPECT_EQ(12*sizeof(int), sizeof(sky::array<int, 2, 3, 2>));
-    EXPECT_EQ(0, sizeof(sky::array<int, 2, 3, 0>));
-    EXPECT_EQ(0, sizeof(sky::array<int, 2, 0, 3>));
-    EXPECT_EQ(0, sizeof(sky::array<int, 0, 3, 2>));
+    EXPECT_NE(0, sizeof(sky::array<int, 2, 3, 0>));
+    EXPECT_NE(0, sizeof(sky::array<int, 2, 0, 3>));
+    EXPECT_NE(0, sizeof(sky::array<int, 0, 3, 2>));
 }
 
 TEST(Array_Construct, Dim3_Default)

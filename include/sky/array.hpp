@@ -725,6 +725,96 @@ struct array<T, N>
 
 };
 
+namespace _ {
+
+template<typename row_type, std::size_t N>
+struct multi_array_traits
+{
+    using data_type = row_type[N];
+
+    static constexpr decltype(std::declval<row_type>().data())
+    get_data(data_type &d) noexcept
+    { return d[0].data(); }
+
+    static constexpr decltype(std::declval<const row_type>().data())
+    get_data(data_type const&d) noexcept
+    { return d[0].data(); }
+
+    static constexpr decltype(std::declval<row_type>().begin())
+    get_begin(data_type &d) noexcept
+    { return d[0].begin(); }
+
+    static constexpr decltype(std::declval<const row_type>().begin())
+    get_begin(data_type const&d) noexcept
+    { return d[0].begin(); }
+
+    static constexpr decltype(std::declval<row_type>().end())
+    get_end(data_type &d) noexcept
+    { return d[N-1].end(); }
+
+    static constexpr decltype(std::declval<const row_type>().end())
+    get_end(data_type const&d) noexcept
+    { return d[N-1].end(); }
+
+    static constexpr decltype(std::declval<const row_type>().size())
+    elem_size(data_type const&d) noexcept
+    { return d[0].size(); }
+
+    static constexpr row_type&
+    get(data_type &d, std::size_t n) noexcept
+    { return d[n]; }
+
+    static constexpr row_type const&
+    get(data_type const&d, std::size_t n) noexcept
+    { return d[n]; }
+
+};
+
+template<typename row_type>
+struct multi_array_traits<row_type, 0>
+{
+    struct data_type {};
+
+    static constexpr decltype(std::declval<row_type>().data())
+    get_data(data_type &d) noexcept
+    { return nullptr; }
+
+    static constexpr decltype(std::declval<const row_type>().data())
+    get_data(data_type const&d) noexcept
+    { return nullptr; }
+
+    static constexpr decltype(std::declval<row_type>().begin())
+    get_begin(data_type &d) noexcept
+    { return nullptr; }
+
+    static constexpr decltype(std::declval<const row_type>().begin())
+    get_begin(data_type const&d) noexcept
+    { return nullptr; }
+
+    static constexpr decltype(std::declval<row_type>().end())
+    get_end(data_type &d) noexcept
+    { return nullptr; }
+
+    static constexpr decltype(std::declval<const row_type>().end())
+    get_end(data_type const&d) noexcept
+    { return nullptr; }
+
+    static constexpr decltype(std::declval<const row_type>().size())
+    elem_size(data_type const&d) noexcept
+    { return 0; }
+
+    static constexpr row_type&
+    get(data_type &d, std::size_t n) noexcept
+    { return *static_cast<row_type*>(nullptr); }
+
+    static constexpr row_type const&
+    get(data_type const&d, std::size_t n) noexcept
+    { return *static_cast<row_type const*>(nullptr); }
+
+};
+
+} // namespace _
+
 /*
   The general m-dimensional case.
 
@@ -748,31 +838,32 @@ struct array<T, N1, Ns...>
     using reverse_iterator = typename row_type::reverse_iterator;
     using const_reverse_iterator = typename row_type::const_reverse_iterator;
 
-    row_type _rows[N1? N1 : 1];
+    using array_traits = _::multi_array_traits<row_type, N1>;
+    typename array_traits::data_type _rows;
 
     pointer data() noexcept
-    { return _rows[0].data(); }
+    { return array_traits::get_data(_rows); }
 
     constexpr const_pointer data() const noexcept
-    { return _rows[0].data(); }
+    { return array_traits::get_data(_rows); }
 
     iterator begin() noexcept
-    { return _rows[0].begin(); }
+    { return array_traits::get_begin(_rows); }
 
     constexpr const_iterator begin() const noexcept
-    { return _rows[0].begin(); }
+    { return array_traits::get_begin(_rows); }
 
     constexpr const_iterator cbegin() const noexcept
-    { return _rows[0].begin(); }
+    { return array_traits::get_begin(_rows); }
 
     iterator end() noexcept
-    { return _rows[N1-1].end(); }
+    { return array_traits::get_end(_rows); }
 
     constexpr const_iterator end() const noexcept
-    { return _rows[N1-1].end(); }
+    { return array_traits::get_end(_rows); }
 
     constexpr const_iterator cend() const noexcept
-    { return _rows[N1-1].end(); }
+    { return array_traits::get_end(_rows); }
 
     reverse_iterator rbegin() noexcept
     { return reverse_iterator(end()); }
@@ -793,7 +884,7 @@ struct array<T, N1, Ns...>
     { return const_reverse_iterator(begin()); }
 
     constexpr size_type size() const noexcept
-    { return N1 * _rows[0].size(); }
+    { return N1 * array_traits::elem_size(_rows); }
 
     constexpr size_type max_size() const noexcept
     { return size(); }
@@ -802,10 +893,10 @@ struct array<T, N1, Ns...>
     { return size() == 0; }
 
     row_type &operator[](size_type n) noexcept
-    { return _rows[n]; }
+    { return array_traits::get(_rows, n); }
 
     constexpr row_type const&operator[](size_type n) const noexcept
-    { return _rows[n]; }
+    { return array_traits::get(_rows, n); }
 
     array<T, N1, Ns...> &at() noexcept
     { return *this; }
@@ -815,19 +906,19 @@ struct array<T, N1, Ns...>
 
     template<typename... Is>
     auto at(size_type i, Is&&... is)
-        -> decltype(_rows[i].at(is...))
+        -> decltype(std::declval<row_type>().at(is...))
     {
         if (i >= N1) throw std::out_of_range("array::at");
-        return _rows[i].at(std::forward<Is>(is)...);
+        return array_traits::get(_rows, i).at(std::forward<Is>(is)...);
     }
 
     template<typename... Is>
     constexpr auto at(size_type i, Is&&... is) const
-        -> decltype(_rows[i].at(is...))
+        -> decltype(std::declval<const row_type>().at(is...))
     {
-        return (i < N1)? _rows[i].at(std::forward<Is>(is)...) :
+        return (i < N1)? array_traits::get(_rows, i).at(std::forward<Is>(is)...) :
                          throw std::out_of_range("array::at"),
-                         _rows[i].at(std::forward<Is>(is)...);
+                         array_traits::get(_rows, i).at(std::forward<Is>(is)...);
     }
 
     reference front() noexcept

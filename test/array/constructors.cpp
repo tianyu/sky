@@ -81,8 +81,7 @@ TEST(Array_Construct, Dim1_Aggregate)
 
 TEST(Array_Construct, Empty_Dim1_NotDefaultConstructibleType)
 {
-    auto array = sky::array<NotDefaultConstructible, 0>{};
-    (void) array;
+    (void) sky::array<NotDefaultConstructible, 0>{};
 }
 
 TEST(Array_Construct, Dim2_Size)
@@ -111,6 +110,12 @@ TEST(Array_Construct, Dim2_Aggregate)
         {{ {}, {} }}
     }};
     expect_default_constructed(array2);
+}
+
+TEST(Array_Construct, Empty_Dim2_NotDefaultConstructibleType)
+{
+    (void) sky::array<NotDefaultConstructible, 2, 0>{};
+    (void) sky::array<NotDefaultConstructible, 0, 2>{};
 }
 
 TEST(Array_Construct, Dim3_Size)

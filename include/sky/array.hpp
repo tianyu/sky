@@ -550,6 +550,61 @@ struct array<T>
 
 };
 
+namespace _ {
+
+/*
+ * See this bug: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53248
+ * Which also affected this code as well.
+ */
+
+template<typename value_type, std::size_t N>
+struct array_traits
+{
+    using data_type = value_type[N];
+
+    static constexpr value_type *
+    get_data(data_type &d) noexcept
+    { return &d[0]; }
+
+    static constexpr value_type const*
+    get_data(data_type const&d) noexcept
+    { return &d[0]; }
+
+    static constexpr value_type &
+    get_elem(data_type &d, std::size_t n) noexcept
+    { return d[n]; }
+
+    static constexpr value_type const&
+    get_elem(data_type const&d, std::size_t n) noexcept
+    { return d[n]; }
+
+};
+
+template<typename value_type>
+struct array_traits<value_type, 0>
+{
+    struct data_type {};
+
+    static constexpr value_type *
+    get_data(data_type &d) noexcept
+    { return static_cast<value_type*>(nullptr); }
+
+    static constexpr value_type const*
+    get_data(data_type const&d) noexcept
+    { return static_cast<value_type const*>(nullptr); }
+
+    static constexpr value_type &
+    get_elem(data_type &d, std::size_t n) noexcept
+    { return *static_cast<value_type*>(nullptr); }
+
+    static constexpr value_type const&
+    get_elem(data_type const&d, std::size_t n) noexcept
+    { return *static_cast<value_type const*>(nullptr); }
+
+};
+
+} // namespace _
+
 /*
   The 1-dimensional special case.
 
@@ -586,13 +641,14 @@ struct array<T, N>
     using reverse_iterator = typename row_type::reverse_iterator;
     using const_reverse_iterator = typename row_type::const_reverse_iterator;
 
-    value_type _elems[N? N : 1];
+    using array_traits = _::array_traits<value_type, N>;
+    typename array_traits::data_type _elems;
 
     pointer data() noexcept
-    { return empty()? nullptr : pointer(&_elems[0]); }
+    { return array_traits::get_data(_elems); }
 
     constexpr const_pointer data() const noexcept
-    { return empty()? nullptr : pointer(&_elems[0]); }
+    { return array_traits::get_data(_elems); }
 
     iterator begin() noexcept
     { return iterator(data()); }

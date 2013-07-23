@@ -30,6 +30,12 @@ void expect_sequence_constructed(sky::array<int, Ns...> const&array)
     }
 }
 
+struct NotDefaultConstructible
+{
+    NotDefaultConstructible() = delete;
+    NotDefaultConstructible(int) {}
+};
+
 } // namespace
 
 TEST(Array_Construct, Dim0_Size)
@@ -71,6 +77,12 @@ TEST(Array_Construct, Dim1_Aggregate)
 
     auto array2 = sky::array<int, 2>{{{}, {}}};
     expect_default_constructed(array2);
+}
+
+TEST(Array_Construct, Empty_Dim1_NotDefaultConstructibleType)
+{
+    auto array = sky::array<NotDefaultConstructible, 0>{};
+    (void) array;
 }
 
 TEST(Array_Construct, Dim2_Size)

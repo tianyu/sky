@@ -570,14 +570,6 @@ struct array_traits
     get_data(data_type const&d) noexcept
     { return &d[0]; }
 
-    static constexpr value_type &
-    get_elem(data_type &d, std::size_t n) noexcept
-    { return d[n]; }
-
-    static constexpr value_type const&
-    get_elem(data_type const&d, std::size_t n) noexcept
-    { return d[n]; }
-
 };
 
 template<typename value_type>
@@ -592,14 +584,6 @@ struct array_traits<value_type, 0>
     static constexpr value_type const*
     get_data(data_type const&d) noexcept
     { return static_cast<value_type const*>(nullptr); }
-
-    static constexpr value_type &
-    get_elem(data_type &d, std::size_t n) noexcept
-    { return *static_cast<value_type*>(nullptr); }
-
-    static constexpr value_type const&
-    get_elem(data_type const&d, std::size_t n) noexcept
-    { return *static_cast<value_type const*>(nullptr); }
 
 };
 

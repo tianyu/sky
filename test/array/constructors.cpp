@@ -160,3 +160,10 @@ TEST(Array_Construct, Dim3_Aggregate)
     }};
     expect_default_constructed(array2);
 }
+
+TEST(Array_Construct, Empty_Dim3_NotDefaultConstructibleType)
+{
+    (void) sky::array<NotDefaultConstructible, 2, 3, 0>{};
+    (void) sky::array<NotDefaultConstructible, 2, 0, 3>{};
+    (void) sky::array<NotDefaultConstructible, 0, 3, 2>{};
+}

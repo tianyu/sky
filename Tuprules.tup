@@ -15,6 +15,7 @@ ifeq (@(VARIANT),debug)
 
 CXX = clang++
 CFLAGS += -g
+CFLAGS += -Wno-mismatched-tags
 
 else
 

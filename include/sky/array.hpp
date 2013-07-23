@@ -974,8 +974,8 @@ template<std::size_t I, typename T, std::size_t... Ns>
 typename std::tuple_element<I, sky::array<T, Ns...>>::type &
 get(sky::array<T, Ns...> &a) noexcept
 {
-    enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
-    static_assert(I < N, "get<I>: Index I is out of range.");
+    static_assert(I < std::tuple_size<sky::array<T, Ns...>>::value,
+                  "get<I>: Index I is out of range.");
     return a[I];
 }
 
@@ -983,8 +983,8 @@ template<std::size_t I, typename T, std::size_t... Ns>
 typename std::tuple_element<I, sky::array<T, Ns...>>::type &&
 get(sky::array<T, Ns...> &&a) noexcept
 {
-    enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
-    static_assert(I < N, "get<I>: Index I is out of range.");
+    static_assert(I < std::tuple_size<sky::array<T, Ns...>>::value,
+                  "get<I>: Index I is out of range.");
     return std::move(a[I]);
 }
 
@@ -993,8 +993,8 @@ constexpr
 typename std::tuple_element<I, sky::array<T, Ns...>>::type const&
 get(sky::array<T, Ns...> const&a) noexcept
 {
-    enum { N = std::tuple_size<sky::array<T, Ns...>>::value };
-    static_assert(I < N, "get<I>: Index I is out of range.");
+    static_assert(I < std::tuple_size<sky::array<T, Ns...>>::value,
+                  "get<I>: Index I is out of range.");
     return a[I];
 }
 

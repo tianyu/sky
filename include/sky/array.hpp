@@ -916,9 +916,10 @@ struct array<T, N1, Ns...>
     constexpr auto at(size_type i, Is&&... is) const
         -> decltype(std::declval<const row_type>().at(is...))
     {
-        return (i < N1)? array_traits::get(_rows, i).at(std::forward<Is>(is)...) :
-                         throw std::out_of_range("array::at"),
-                         array_traits::get(_rows, i).at(std::forward<Is>(is)...);
+        return (i < N1)?
+            array_traits::get(_rows, i).at(std::forward<Is>(is)...) :
+            throw std::out_of_range("array::at"),
+            array_traits::get(_rows, i).at(std::forward<Is>(is)...);
     }
 
     reference front() noexcept

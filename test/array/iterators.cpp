@@ -34,11 +34,13 @@ TYPED_TEST(Array_Iterator, Data)
     auto expected = TypeParam::begin_of(array);
     auto data = array.data();
 
-    if (TypeParam::empty) return;
-
-    EXPECT_NE(nullptr, data);
     EXPECT_FALSE(is_const(*data));
-    EXPECT_EQ(expected, data);
+    if (TypeParam::empty) {
+        EXPECT_EQ(nullptr, data);
+    } else {
+        EXPECT_NE(nullptr, data);
+        EXPECT_EQ(expected, data);
+    }
 }
 
 TYPED_TEST(Array_Iterator, Data_Const)
@@ -47,11 +49,13 @@ TYPED_TEST(Array_Iterator, Data_Const)
     auto expected = TypeParam::begin_of(array);
     auto data = array.data();
 
-    if (TypeParam::empty) return;
-
-    EXPECT_NE(nullptr, data);
     EXPECT_TRUE(is_const(*data));
-    EXPECT_EQ(expected, data);
+    if (TypeParam::empty) {
+        EXPECT_EQ(nullptr, data);
+    } else {
+        EXPECT_NE(nullptr, data);
+        EXPECT_EQ(expected, data);
+    }
 }
 
 TYPED_TEST(Array_Iterator, Begin_IsNoExcept)
@@ -78,9 +82,9 @@ TYPED_TEST(Array_Iterator, Begin)
     auto expected = TypeParam::begin_of(array);
     auto begin = array.begin();
 
-    if (TypeParam::empty) return;
-
     EXPECT_FALSE(is_const(*begin));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, begin);
 }
 
@@ -90,9 +94,9 @@ TYPED_TEST(Array_Iterator, Begin_Const)
     auto expected = TypeParam::begin_of(array);
     auto begin = array.begin();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*begin));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, begin);
 }
 
@@ -102,9 +106,9 @@ TYPED_TEST(Array_Iterator, CBegin)
     auto expected = TypeParam::begin_of(array);
     auto cbegin = array.cbegin();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*cbegin));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, cbegin);
 }
 
@@ -144,9 +148,9 @@ TYPED_TEST(Array_Iterator, End_Const)
     auto expected = TypeParam::end_of(array);
     auto end = array.end();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*end));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, end);
 }
 
@@ -156,9 +160,9 @@ TYPED_TEST(Array_Iterator, CEnd)
     auto expected = TypeParam::end_of(array);
     auto cend = array.cend();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*cend));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, cend);
 }
 
@@ -213,9 +217,9 @@ TYPED_TEST(Array_Iterator, RBegin)
     auto expected = TypeParam::rbegin_of(array);
     auto rbegin = array.rbegin();
 
-    if (TypeParam::empty) return;
-
     EXPECT_FALSE(is_const(*rbegin));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, &*rbegin);
 }
 
@@ -225,9 +229,9 @@ TYPED_TEST(Array_Iterator, RBegin_Const)
     auto expected = TypeParam::rbegin_of(array);
     auto rbegin = array.rbegin();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*rbegin));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, &*rbegin);
 }
 
@@ -237,9 +241,9 @@ TYPED_TEST(Array_Iterator, CRBegin)
     auto expected = TypeParam::rbegin_of(array);
     auto crbegin = array.crbegin();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*crbegin));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, &*crbegin);
 }
 
@@ -267,9 +271,9 @@ TYPED_TEST(Array_Iterator, REnd)
     auto expected = TypeParam::rend_of(array);
     auto rend = array.rend();
 
-    if (TypeParam::empty) return;
-
     EXPECT_FALSE(is_const(*rend));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, &*rend);
 }
 
@@ -279,9 +283,9 @@ TYPED_TEST(Array_Iterator, REnd_Const)
     auto expected = TypeParam::rend_of(array);
     auto rend = array.rend();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*rend));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, &*rend);
 }
 
@@ -291,9 +295,9 @@ TYPED_TEST(Array_Iterator, CREnd)
     auto expected = TypeParam::rend_of(array);
     auto crend = array.crend();
 
-    if (TypeParam::empty) return;
-
     EXPECT_TRUE(is_const(*crend));
+
+    if (TypeParam::empty) return;
     EXPECT_EQ(expected, &*crend);
 }
 
